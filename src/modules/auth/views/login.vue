@@ -38,12 +38,12 @@ const init = async () => {
             <div>
               <input v-model="email" type="Email" name="email" id="email"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Email" required="">
+                placeholder="Email">
             </div>
             <div>
               <input v-model="password" type="password" name="password" id="password" placeholder="Password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required="">
+              >
             </div>
             <button @click="login()"
               class="w-full flex justify-center text-white bg-yellow-300 hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-yellow-200 font-medium rounded-2xl text-sm px-5 py-3 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
