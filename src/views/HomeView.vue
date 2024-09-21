@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="antialiased bg-gray-50 dark:bg-gray-900">
+  <div class="antialiased h-screen bg-gray-50 dark:bg-gray-900">
     <nav
       class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
       <div class="flex flex-wrap justify-between items-center">
@@ -333,8 +333,9 @@
       <!-- End Sibar! -->
 
     </aside>
+    <ShapeBgAnimate />
     <!-- Body -->
-    <main class="p-4 md:ml-64 h-auto pt-20">
+    <main class="absolute z-10 p-4 md:ml-64 h-auto pt-20">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <!-- Banner -->
         <div class="rounded-lg dark:border-gray-600 h-32 md:h-64">
@@ -447,6 +448,7 @@
               Logout
             </div>
           </a>
+          <div>{{ token }}99</div>
         </div>
       </div>
     </main>
@@ -537,3 +539,13 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+  // import { computed, onMounted } from 'vue'
+  // import { getFromCache } from '@/composables/useCache'
+  // const token = computed(() => getFromCache('access_token')?.value)
+  
+  // onMounted(() => {
+  //   console.log(token.value && `access_token ${token.value}`)
+  // })
+</script>
