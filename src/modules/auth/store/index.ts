@@ -1,18 +1,18 @@
 import { defineStore } from 'pinia'
 import { authService } from '@/modules/auth/services/api.service'
-
-interface IAuthStore {}
+import router from '@/router'
 
 export const useAuthStore = defineStore('authStore', () => {
   const login = async (payload: object) => {
     await authService
-      .login(payload)
-      .then((res) => {
-        console.log(res.data, 'log')
-        alert(res)
-      })
-      .catch((error) => {
-        alert(error.message)
+      .login(payload).then(res => {
+        if (res.data.success) {
+          router.push('/')
+        } else {
+          alert(res.data.error)
+        }
+      }).catch(error => {
+        alert(error)
       })
   }
   return {
