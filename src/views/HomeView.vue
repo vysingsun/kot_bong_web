@@ -448,7 +448,6 @@
               Logout
             </div>
           </a>
-          <div>{{ token }}99</div>
         </div>
       </div>
     </main>
