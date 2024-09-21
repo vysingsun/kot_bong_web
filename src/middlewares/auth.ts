@@ -1,5 +1,5 @@
 import { useAppStore } from '@/modules/app/store/index'
-export function isAuthenticated(to, form, next) {
+export function isAuthenticated(to: any, from: any, next: any) {
   const appStore = useAppStore()
   appStore
     .init()
