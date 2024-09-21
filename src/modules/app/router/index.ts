@@ -1,6 +1,3 @@
-
-import prefetchResources from '@/middlewares/prefetch-resources'
-
 const MODULE_NAME = 'App'
 const MODULE_PATH = '/app'
 
@@ -24,7 +21,7 @@ const APP_ROUTES = [
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
-            middleware: [prefetchResources],
+            // middleware: [prefetchResources],
             moduleName: MODULE_NAME,
         },
         beforeEnter: async (to: any, from: any, next: any) => {
