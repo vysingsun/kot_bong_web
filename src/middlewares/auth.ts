@@ -1,6 +1,7 @@
 import { useAppStore } from '@/modules/app/store/index'
 export function isAuthenticated(to: any, from: any, next: any) {
   const appStore = useAppStore()
+  setTimeout(() => {
   appStore
     .init()
     .then(() => {
@@ -19,4 +20,5 @@ export function isAuthenticated(to: any, from: any, next: any) {
     //     next({ name: 'Login', query: { returnUrl: returnUrl } })
     //   }
     })
+}, 5000)
 }
