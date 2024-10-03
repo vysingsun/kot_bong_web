@@ -1,15 +1,23 @@
 <template>
-    <div class="spinner"></div>
+   <div class="fixed inset-0 z-50 flex justify-center items-center bg-white bg-opacity-10 backdrop-blur-[2px]">
+      <div class="spinner">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div>
+      </div>
+   </div>
 </template>
 
 <style>
 .spinner {
-   width: 28px;
-   height: 28px;
+   width: 56px;
+   height: 56px;
    border-radius: 50%;
-   background: radial-gradient(farthest-side,#fff 94%,#0000) top/9px 9px no-repeat,
-          conic-gradient(#0000 30%,#fff);
-   -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 4px),#000 0);
+   background: radial-gradient(farthest-side, #faca15 94%, #0000) top/9px 9px no-repeat,
+      conic-gradient(#0000 30%, #faca15);
+   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
    animation: spinner-c7wet2 1s infinite linear;
 }
 
