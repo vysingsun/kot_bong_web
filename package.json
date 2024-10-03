@@ -13,6 +13,7 @@
     "create-module": "node src/utils/module.js"
   },
   "dependencies": {
+    "apexcharts": "^3.54.0",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "flowbite": "^2.5.1",

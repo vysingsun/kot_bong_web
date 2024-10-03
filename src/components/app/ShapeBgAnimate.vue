@@ -83,32 +83,30 @@ $animation-durations: (
     list-style: none;
     width: 20px;
     height: 20px;
-    background: #d2d2d2;
+    background: #fff;
     animation: animate 25s linear infinite;
     bottom: -150px;
     z-index: 0;
 
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        @include circle-style(
-            map-get($circle-positions, $i),
-            map-get($circle-sizes, $i),
-            map-get($animation-delays, $i),
-            map-get($animation-durations, $i)
-        );
+        @include circle-style(map-get($circle-positions, $i),
+          map-get($circle-sizes, $i),
+          map-get($animation-delays, $i),
+          map-get($animation-durations, $i));
       }
     }
   }
 }
 
 @keyframes animate {
-  0%{
+  0% {
     transform: translateY(0) rotate(0deg);
     opacity: 1;
     border-radius: 0;
   }
 
-  100%{
+  100% {
     transform: translateY(-1000px) rotate(720deg);
     opacity: 0;
     border-radius: 50%;
