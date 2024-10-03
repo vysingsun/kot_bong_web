@@ -1,12 +1,12 @@
 <template>
   <BaseLoading v-if="loading" />
-  <div v-for="(item, index) in fuelStocks" :key="item._id"
+  <div v-for="(item, index) in fuelStocks" :key="item?._id"
     class="w-full flex px-2.5 mb-5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700">
     <div class="w-[120px] bg-inherit pb-4" :id="'radial-chart-do-' + index"></div>
     <div class="flex items-center mr-3">
       <div
         class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg">
-        Total Stock: {{ item.current_stock_liter.toFixed(2) }} L
+        Total Stock: {{ item?.current_stock_liter.toFixed(2) }} L
       </div>
     </div>
   </div>
@@ -17,8 +17,7 @@ import { onMounted, ref, nextTick } from 'vue'
 import { initFlowbite } from 'flowbite'
 import ApexCharts from 'apexcharts'
 import { useCurrentStockStore } from '@/modules/current-stock/store'
-import ApiService from '@/modules/current-stock/services/api.service'
-import BaseLoading from '@/components/app/BaseLoading.vue'
+import { current_stockService } from '@/modules/current-stock/services/api.service'
 
 const store = useCurrentStockStore()
 const fuelStocks = ref<any[]>([])
@@ -26,8 +25,11 @@ const loading = ref(false)
 onMounted(async () => {
   loading.value = true
   initFlowbite()
-  const data = await ApiService.getAll<any[]>()
-  fuelStocks.value = data?.data?.data
+  const response = await current_stockService.getAll()
+  const result = response?.data
+
+  fuelStocks.value = result?.data
+  
   await nextTick()
   loading.value = false
   fuelStocks.value.forEach((item: any, index: number) => {
