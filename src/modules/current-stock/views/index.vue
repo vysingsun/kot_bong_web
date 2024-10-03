@@ -1,5 +1,5 @@
 <template>
-  <BaseLoading v-if="loading"/>
+  <BaseLoading v-if="loading" />
   <div v-for="(item, index) in fuelStocks" :key="item._id"
     class="w-full flex px-2.5 mb-5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700">
     <div class="w-[120px] bg-inherit pb-4" :id="'radial-chart-do-' + index"></div>
@@ -21,13 +21,13 @@ import ApiService from '@/modules/current-stock/services/api.service'
 import BaseLoading from '@/components/app/BaseLoading.vue'
 
 const store = useCurrentStockStore()
-const fuelStocks = ref([])
+const fuelStocks = ref<any[]>([])
 const loading = ref(false)
 onMounted(async () => {
   loading.value = true
   initFlowbite()
-  const data = await ApiService.getAll()
-  fuelStocks.value = data.data.data
+  const data = await ApiService.getAll<any[]>()
+  fuelStocks.value = data?.data?.data
   await nextTick()
   loading.value = false
   fuelStocks.value.forEach((item: any, index: number) => {
