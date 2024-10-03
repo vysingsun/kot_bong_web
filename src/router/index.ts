@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import Default_header from '@/layouts/Default_header.vue'
+import Default_header from '@/layouts/default_header.vue'
 import { MODULE_APP_ROUTES } from '@/modules'
 import { AUTH } from '@/modules/auth/router/index'
 import { isAuthenticated } from '@/middlewares/auth'
