@@ -1,2 +1,2 @@
-import { AUTH } from '@/modules/auth/router/index'
-export const MODULE_APP_ROUTES = [...AUTH.AUTH_ROUTES]
+import { CURRENT_STOCK } from '@/modules/current-stock/router/index'
+export const MODULE_APP_ROUTES = [...CURRENT_STOCK.CURRENT_STOCK_ROUTES]
