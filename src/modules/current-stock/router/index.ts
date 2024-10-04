@@ -1,19 +1,21 @@
-const MODULE_NAME = 'App'
-const MODULE_PATH = '/app'
+// import prefetchResources from '@/middlewares/prefetch-resources'
+
+const MODULE_NAME = 'Current stock'
+const MODULE_PATH = '/current-stock'
 
 export const routes = [
     {
         module: MODULE_NAME,
-        name: 'list',
+        name: 'Current Stock',
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
         },
-        component: () => import('@/modules/app/views/index.vue'),
+        component: () => import('@/modules/current-stock/views/index.vue'),
     },
 ]
 
-const APP_ROUTES = [
+const CURRENT_STOCK_ROUTES = [
     {
         children: routes,
         initModule: MODULE_NAME.toLowerCase(),
@@ -30,5 +32,4 @@ const APP_ROUTES = [
     },
 ]
 
-export const APP = { APP_ROUTES, MODULE_NAME, MODULE_PATH }
-        
+export const CURRENT_STOCK = { CURRENT_STOCK_ROUTES, MODULE_NAME, MODULE_PATH }

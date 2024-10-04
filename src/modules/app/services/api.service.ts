@@ -1,22 +1,23 @@
-
 import axios from 'axios'
-class ApiService {
-    async getAll<T>(params?: object): Promise<T> {
-        return axios.get('app', params)
-    }
-    async read<T>(id: number): Promise<T> {
-         return axios.get('app/' + id)
-    }
-    async create<T>(formData: object): Promise<T> {
-        return axios.post('app', formData)
-    }
-    async update<T>(id: number, formData: object): Promise<T> {
-        return axios.put('app/' + id, formData)
-    }
+import { getFromCache } from '@/composables/useCache'
 
-    async delete<T>(id: number): Promise<T> {
-        return axios.delete('app/' + id)
-    }
+const getToken = () => {
+    const token = getFromCache('token')?.value
+
+    return token && `Bearer ${token}`
 }
-export default new ApiService()
-        
+
+const xAxios = axios.create({
+    withCredentials: true,
+    baseURL: import.meta.env.VITE_API_BASE_URL,
+})
+
+export const appService = {
+    init: async () => {
+        return xAxios.get('auth/me', {
+            headers: {
+                Authorization: getToken(),
+            },
+        })
+    },
+}
