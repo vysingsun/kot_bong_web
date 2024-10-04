@@ -34,11 +34,9 @@ onMounted(async () => {
   loading.value = false
   fuelStocks.value.forEach((item: any, index: number) => {
     const chartElementId = `#radial-chart-do-${index}`
-    const current_stock_as_percent = (100 * item.current_stock_liter) / 5000
-    const colors = ['#1C64F2', '#2e7d32', '#faca15']
-    const color = colors[index % colors.length]
+    const current_stock_as_percent = (100 * item?.current_stock_liter) / 5000
     if (document.querySelector(chartElementId)) {
-      const chart = new ApexCharts(document.querySelector(chartElementId), store.getChartOptions(current_stock_as_percent, item.fuel_id.fuel_name, color))
+      const chart = new ApexCharts(document.querySelector(chartElementId), store.getChartOptions(current_stock_as_percent, item?.fuel_id?.fuel_name, item?.fuel_id?.color))
       chart.render()
     }
   })

@@ -11,7 +11,7 @@ import { initFlowbite } from 'flowbite'
 import BaseLoading from './components/app/BaseLoading.vue'
 import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
 import { getFromCache, removeCaches } from '@/composables/useCache'
-
+import BaseModal from '@/components/app/BaseModal.vue'
 const getToken = () => {
     const token = getFromCache('token')?.value
 
@@ -72,4 +72,5 @@ app.use(router)
 
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
+app.component('BaseModal', BaseModal)
 app.mount('#app')
