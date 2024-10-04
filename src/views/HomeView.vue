@@ -1,4 +1,5 @@
 <template>
+  <BaseLoading v-if="loading" />
   <div class="antialiased h-screen bg-gray-50 dark:bg-gray-900">
     <nav
       class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
@@ -112,7 +113,7 @@
               </li>
             </ul>
             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
-              <li @click="onLogout()">
+              <li @click="showModal">
                 <button
                   class="w-100 block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
                   out</button>
@@ -315,7 +316,7 @@
               Coefficients
             </div>
           </a>
-          <button @click="onLogout()" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
+          <button @click="showModal" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
             <svg aria-hidden="true"
               class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
               fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -331,8 +332,10 @@
       </div>
     </main>
   </div>
+  <BaseModal :isVisible="isVisible" type="error" title="Are you sure you want to logout?" @confirm="handleConfirm"
+    @close="closeModal">
 
-
+  </BaseModal>
   <div
     class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
     <div class="grid h-full max-w-lg grid-cols-5 mx-auto">
@@ -419,18 +422,22 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { initFlowbite } from 'flowbite'
 import { useAuthStore } from '@/modules/auth/store/index'
+import { useModal } from '@/composables/useModal'
 
+const { isVisible, showModal, closeModal } = useModal()
+const loading = ref(false)
 const authStore = useAuthStore()
 const onLogout = async () => {
   await authStore.logout()
 }
-const test = () => {
-  console.log('call');
-
+const handleConfirm = () => {
+  loading.value = true
+  onLogout()
 }
+
 // initialize components based on data attribute selectors
 onMounted(() => {
   initFlowbite()
