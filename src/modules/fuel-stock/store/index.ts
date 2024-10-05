@@ -26,7 +26,6 @@ class FormData {
 export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const formData = ref(new FormData())
     const saveFuelStock = async () => {
-        console.log(formData.value, 'pay')
         await fuel_stockService.create(formData.value)
     }
     return {
