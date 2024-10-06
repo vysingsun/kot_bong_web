@@ -210,9 +210,9 @@
     import { useCurrentStockStore } from '@/modules/current-stock/store'
     import { current_stockService } from '@/modules/current-stock/services/api.service'
     import { lookupService } from '@/atoms/lookup/lookup.services'
-    import { appService } from '@/modules/app/services/api.service'
     import { useFuelStockStore } from '@/modules/fuel-stock/store'
     import { useModal } from '@/composables/useModal'
+    import { getFromCache } from '@/composables/useCache'
 
     const { isVisible, showModal, closeModal } = useModal()
     const store = useCurrentStockStore()
@@ -223,10 +223,8 @@
     const stationId = ref('')
 
     const onSelect = async () => {
-        const res = await appService.init()
-        const appInit = res?.data
-        const appResult = appInit?.data
-        stationId.value = appResult.stations[0]._id
+        let appData = getFromCache('app_data')
+        stationId.value = appData.value.stations[0]._id
         const response = await lookupService.getFuelByStationId(stationId.value)
         const result = response?.data
         fuels.value = result?.data
@@ -235,19 +233,15 @@
         loading.value = true
         fuelStockStore.formData.station_id = stationId.value
         await fuelStockStore.saveFuelStock()
-        const modal = document.getElementById('stock-modal')
-        modal?.classList.add('hidden')
-        loading.value = false
-        showModal()
-        // if (res) {
-        //     const modal = document.getElementById('stock-modal')
-        //     modal?.classList.add('hidden')
-        //     loading.value = false
-        //     showModal()
-        // } else {
-        //     alert('Unsuccessfully!')
-        //     handleConfirm()
-        // }
+        if (fuelStockStore.isCreatedSuccess) {
+            const modal = document.getElementById('stock-modal')
+            modal?.classList.add('hidden')
+            loading.value = false
+            showModal()
+        } else {
+            alert('Unsuccessfully!')
+            handleConfirm()
+        }
     }
 
     const handleConfirm = () => {

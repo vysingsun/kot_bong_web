@@ -25,11 +25,16 @@ class FormData {
 
 export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const formData = ref(new FormData())
+    const isCreatedSuccess = ref(true)
     const saveFuelStock = async () => {
-        await fuel_stockService.create(formData.value)
+        const res = await fuel_stockService.create(formData.value)
+        if (!res.data.success) {
+            isCreatedSuccess.value = false
+        }
     }
     return {
         formData,
         saveFuelStock,
+        isCreatedSuccess,
     }
 })
