@@ -43,7 +43,7 @@ axios.interceptors.response.use(
     },
     function (error) {
         if (error.response.status === 401) {
-            removeCaches(['token'])
+            removeCaches(['token', 'app_data'])
             sessionStorage.removeItem('has-show-fireworks')
             router.push({ name: 'Login' })
             if (error?.response?.data?.error?.errors?.detail) {
