@@ -1,11 +1,4 @@
 import axios from 'axios'
-import { getFromCache } from '@/composables/useCache'
-
-const getToken = () => {
-    const token = getFromCache('token')?.value
-
-    return token && `Bearer ${token}`
-}
 
 const xAxios = axios.create({
     withCredentials: true,
@@ -14,10 +7,6 @@ const xAxios = axios.create({
 
 export const appService = {
     init: async () => {
-        return xAxios.get('auth/me', {
-            headers: {
-                Authorization: getToken(),
-            },
-        })
+        return xAxios.get('auth/me')
     },
 }
