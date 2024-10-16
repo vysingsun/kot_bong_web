@@ -15,7 +15,8 @@
         </div>
     </div>
     <div class="w-100 flex justify-between">
-        <button
+        <RouterLink
+            to="/fuel-stock"
             type="button"
             class="w-100 px-9 py-2.5 text-sm font-medium text-white inline-flex items-center bg-[#169c48] hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg text-center dark:bg-green-600 dark:hover:bg-green-600 dark:focus:ring-green-600"
         >
@@ -35,7 +36,7 @@
                 />
             </svg>
             All Records
-        </button>
+        </RouterLink>
         <button
             data-modal-target="stock-modal"
             data-modal-toggle="stock-modal"

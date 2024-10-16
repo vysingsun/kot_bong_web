@@ -4,7 +4,7 @@ const MODULE_PATH = '/fuel-stock'
 export const routes = [
     {
         module: MODULE_NAME,
-        name: 'list',
+        name: MODULE_NAME,
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
