@@ -26,6 +26,48 @@ class FormData {
 export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
+    const headers = ref([
+        {
+            text: 'Fuel Type',
+            value: 'fuel_id.fuel_name',
+        },
+        {
+            text: 'Quantity In Ton',
+            value: 'quantity_ton',
+        },
+        {
+            text: 'Quantity In Liter',
+            value: 'quantity_liter',
+        },
+        {
+            text: 'Amount In Ton',
+            value: 'amount_ton',
+        },
+        {
+            text: 'Amount Per liter USD',
+            value: 'amount_liter_us',
+        },
+        {
+            text: 'Amount Per liter KHR',
+            value: 'amount_liter_khr',
+        },
+        {
+            text: 'Exchange Rate',
+            value: 'exchange_rate',
+        },
+        {
+            text: 'Total Amount USD',
+            value: 'total_amount_us',
+        },
+        {
+            text: 'From',
+            value: 'supplier_name',
+        },
+        {
+            text: 'Date',
+            value: 'createdAt',
+        },
+    ])
     const saveFuelStock = async () => {
         const res = await fuel_stockService.create(formData.value)
         if (!res.data.success) {
@@ -33,6 +75,7 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
         }
     }
     return {
+        headers,
         formData,
         saveFuelStock,
         isCreatedSuccess,
