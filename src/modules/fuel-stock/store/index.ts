@@ -32,12 +32,12 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
             value: 'fuel_id.fuel_name',
         },
         {
-            text: 'Quantity In Ton',
-            value: 'quantity_ton',
-        },
-        {
             text: 'Quantity In Liter',
             value: 'quantity_liter',
+        },
+        {
+            text: 'Quantity In Ton',
+            value: 'quantity_ton',
         },
         {
             text: 'Amount In Ton',

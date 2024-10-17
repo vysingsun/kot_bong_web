@@ -5,6 +5,7 @@
         column-no
         :api-service="fuel_stockService"
         get-service-key="get"
+        is-global-search
     />
 </template>
 
