@@ -1,142 +1,9 @@
 <template>
     <div class="relative sm:rounded-lg">
-        <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            <div>
-                <button
-                    id="dropdownRadioButton"
-                    data-dropdown-toggle="dropdownRadio"
-                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                    type="button"
-                >
-                    <svg
-                        class="w-3 h-3 text-gray-500 dark:text-gray-400 me-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path
-                            d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"
-                        />
-                    </svg>
-                    Last 30 days
-                    <svg
-                        class="w-2.5 h-2.5 ms-2.5"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                    >
-                        <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="m1 1 4 4 4-4"
-                        />
-                    </svg>
-                </button>
-                <!-- Dropdown menu -->
-                <div
-                    id="dropdownRadio"
-                    class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                    data-popper-reference-hidden=""
-                    data-popper-escaped=""
-                    data-popper-placement="top"
-                    style="
-                        position: absolute;
-                        inset: auto auto 0px 0px;
-                        margin: 0px;
-                        transform: translate3d(522.5px, 3847.5px, 0px);
-                    "
-                >
-                    <ul
-                        class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
-                        aria-labelledby="dropdownRadioButton"
-                    >
-                        <li>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input
-                                    id="filter-radio-example-1"
-                                    type="radio"
-                                    value=""
-                                    name="filter-radio"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                />
-                                <label
-                                    for="filter-radio-example-1"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                    >Last day</label
-                                >
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input
-                                    id="filter-radio-example-2"
-                                    type="radio"
-                                    value=""
-                                    name="filter-radio"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                />
-                                <label
-                                    for="filter-radio-example-2"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                    >Last 7 days</label
-                                >
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input
-                                    id="filter-radio-example-3"
-                                    type="radio"
-                                    value=""
-                                    name="filter-radio"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                />
-                                <label
-                                    for="filter-radio-example-3"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                    >Last 30 days</label
-                                >
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input
-                                    id="filter-radio-example-4"
-                                    type="radio"
-                                    value=""
-                                    name="filter-radio"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                />
-                                <label
-                                    for="filter-radio-example-4"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                    >Last month</label
-                                >
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input
-                                    id="filter-radio-example-5"
-                                    type="radio"
-                                    value=""
-                                    name="filter-radio"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                />
-                                <label
-                                    for="filter-radio-example-5"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                    >Last year</label
-                                >
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div
+            v-if="isGlobalSearch"
+            class="flex flex-column sm:flex-row flex-wrap sm:space-y-0 items-center justify-between pb-4"
+        >
             <label for="table-search" class="sr-only">Search</label>
             <div class="relative">
                 <div
@@ -157,10 +24,12 @@
                     </svg>
                 </div>
                 <input
-                    type="text"
                     id="table-search"
+                    v-model="search"
+                    type="text"
                     class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Search for items"
+                    @input="updateSearch"
                 />
             </div>
         </div>
@@ -187,7 +56,7 @@
                         :key="item"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                        <td v-if="columnNo" class="px-6 py-4">{{ ridx + 1 }}</td>
+                        <td v-if="columnNo" class="px-6 py-4">{{ getRowNumber(ridx) }}</td>
                         <template v-for="({ align, value, visible, exportOnly }, cidx) of headers" :key="cidx">
                             <td class="px-6 py-4">
                                 <slot :name="value" :item="item" :search="search || params.search">
@@ -201,6 +70,78 @@
                 </tbody>
             </table>
         </div>
+        <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
+            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                Total Records:
+                <span class="font-semibold text-gray-900 dark:text-white">{{ totalRecords }}</span></span
+            >
+            <select
+                id="small"
+                v-model="tableParams.page_size"
+                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                @click="updatePageSize(tableParams.page_size)"
+            >
+                <option value="7">7</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="60">60</option>
+                <option value="120">120</option>
+            </select>
+            <ul class="inline-flex items-stretch -space-x-px">
+                <li>
+                    <button
+                        :disabled="disable_btn_decrease_page"
+                        class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        @click="updatePageDecrease"
+                    >
+                        <span class="sr-only">Previous</span>
+                        <svg
+                            class="w-5 h-5"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </button>
+                </li>
+                <li>
+                    <a
+                        href="#"
+                        class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >{{ tableParams.page_number }}</a
+                    >
+                </li>
+                <li>
+                    <button
+                        :disabled="disable_btn_increase_page"
+                        class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        @click="updatePageIncrease"
+                    >
+                        <span class="sr-only">Next</span>
+                        <svg
+                            class="w-5 h-5"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -241,7 +182,10 @@
             default: false,
         },
     })
-
+    const disable_btn_decrease_page = ref(true)
+    const disable_btn_increase_page = ref(false)
+    const totalRecords = ref(0)
+    const paginationLength = computed(() => Math.ceil(totalRecords.value / tableParams.page_size))
     const getColSpan = computed(() => (props.columnNo ? getHeaders?.value.length + 1 : getHeaders?.value.length))
 
     const getHeaders = computed(() => {
@@ -264,6 +208,15 @@
         return _.get(obj, key)
     }
 
+    const getRowNumber = (idx: number) => {
+        const idxNum = idx + 1
+        if (totalRecords.value > tableParams.page_size && tableParams.page_number > 1) {
+            return (tableParams.page_number - 1) * tableParams.page_size + idxNum
+        }
+
+        return idxNum
+    }
+
     const getData = async (renew: boolean = false) => {
         if (renew) {
             tableParams.page_number = 1
@@ -273,7 +226,7 @@
             const { data } = await props.apiService[props.getServiceKey]({ ...tableParams, ...extraParams.value })
             items.value = data?.data
             console.log(items.value, 'T')
-
+            totalRecords.value = data?.count ?? data.data?.length
             emits('retrieveResult', {
                 totalRecord: data?.count,
                 data: data?.results,
@@ -283,6 +236,43 @@
         } catch (error: any) {
             items.value = []
         }
+    }
+
+    const updateSearch = _.debounce(async () => {
+        tableParams.search = search.value
+        tableParams.page_number = 1
+        getData()
+    }, 1000)
+
+    const updatePageSize = async (pageSize: any) => {
+        if (pageSize * tableParams.page_number > totalRecords.value) {
+            tableParams.page_number = 1
+        }
+
+        tableParams.page_size = pageSize
+        getData()
+    }
+
+    const updatePageDecrease = async () => {
+        tableParams.page_number -= 1
+        if (tableParams.page_number === 1) {
+            disable_btn_decrease_page.value = true
+        }
+        if (tableParams.page_number <= paginationLength.value) {
+            disable_btn_increase_page.value = false
+        }
+        getData()
+    }
+
+    const updatePageIncrease = async () => {
+        tableParams.page_number += 1
+        if (tableParams.page_number >= paginationLength.value) {
+            disable_btn_increase_page.value = true
+        }
+        if (tableParams.page_number > 1) {
+            disable_btn_decrease_page.value = false
+        }
+        getData()
     }
 
     onMounted(() => {
