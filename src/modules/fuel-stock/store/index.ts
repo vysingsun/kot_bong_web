@@ -23,9 +23,15 @@ class FormData {
     createdAt: any
 }
 
+class ReportFilters {
+    date_range?: any
+    fuel_type?: any
+}
+
 export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
+    const filterForm = ref<any>(new ReportFilters())
     const headers = ref([
         {
             text: 'Fuel Type',
@@ -68,6 +74,20 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
             value: 'createdAt',
         },
     ])
+
+    function prepareFuelStockParams() {
+        const params: any = {}
+        const filter = filterForm.value
+        if (filter.fuel_type) params['fuelId'] = filter.fuel_type
+
+        if (filter.date_range) {
+            params['start_date'] = filter.date_range?.start
+            params['end_date'] = filter.date_range?.end
+        }
+
+        return params
+    }
+
     const saveFuelStock = async () => {
         const res = await fuel_stockService.create(formData.value)
         if (!res.data.success) {
@@ -77,7 +97,9 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     return {
         headers,
         formData,
+        filterForm,
         saveFuelStock,
         isCreatedSuccess,
+        prepareFuelStockParams,
     }
 })
