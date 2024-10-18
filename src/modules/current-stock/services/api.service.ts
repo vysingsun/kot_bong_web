@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const current_stockService = {
-    getAll: async (params?: object) => {
-        return axios.get('/current_stock/all', params)
+    getCurrentStock: async (station_id: any, params?: object) => {
+        return axios.get(`/current_stock/station/${station_id}`, { params })
     },
 }

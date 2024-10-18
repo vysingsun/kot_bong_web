@@ -79,7 +79,7 @@
                 id="small"
                 v-model="tableParams.page_size"
                 class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                @click="updatePageSize(tableParams.page_size)"
+                @change="updatePageSize(tableParams.page_size)"
             >
                 <option value="7">7</option>
                 <option value="10">10</option>
@@ -235,6 +235,12 @@
                 params: { ...extraParams.value },
                 allData: data,
             })
+            if (tableParams.page_number >= paginationLength.value) {
+                disable_btn_increase_page.value = true
+            }
+            if (tableParams.page_number > 1) {
+                disable_btn_decrease_page.value = false
+            }
         } catch (error: any) {
             items.value = []
         }
