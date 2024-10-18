@@ -10,16 +10,26 @@
             :enable-time-picker="false"
             @update:model-value="onChangeDateRange"
         />
-        <select
-            v-model="fuel_type"
-            class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            @change="onChangeFuelType"
-        >
-            <option value="" class="text-gray-100" disabled selected hidden>Fuel Type</option>
-            <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
-                {{ item.fuel_name }}
-            </option>
-        </select>
+        <div class="relative">
+            <select
+                v-model="fuel_type"
+                class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                @change="onChangeFuelType"
+            >
+                <option value="" class="text-gray-100" disabled selected hidden>Fuel Type</option>
+                <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
+                    {{ item.fuel_name }}
+                </option>
+            </select>
+            <button
+                v-if="fuel_type"
+                class="absolute right-8 top-1.5 text-gray-500 hover:text-gray-700"
+                type="button"
+                @click="clearSelection"
+            >
+                &times;
+            </button>
+        </div>
     </div>
     <TablePaging
         :key="table_key"
@@ -73,14 +83,24 @@
     })
 
     const onChangeDateRange = () => {
-        store.filterForm.date_range = {
-            start: moment(date_range.value[0]).format('YYYY-MM-DD'),
-            end: moment(date_range.value[1]).format('YYYY-MM-DD'),
+        if (date_range.value?.length) {
+            store.filterForm.date_range = {
+                start: moment(date_range.value[0]).format('YYYY-MM-DD'),
+                end: moment(date_range.value[1]).format('YYYY-MM-DD'),
+            }
+        } else {
+            store.filterForm.date_range = {}
         }
         prepareFilterParams()
     }
 
     const onChangeFuelType = () => {
+        store.filterForm.fuel_type = fuel_type.value
+        prepareFilterParams()
+    }
+
+    const clearSelection = () => {
+        fuel_type.value = ''
         store.filterForm.fuel_type = fuel_type.value
         prepareFilterParams()
     }

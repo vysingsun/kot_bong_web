@@ -252,7 +252,7 @@
     onMounted(async () => {
         onSelect()
         loading.value = true
-        const response = await current_stockService.getAll()
+        const response = await current_stockService.getCurrentStock(stationId.value)
         const result = response?.data
 
         fuelStocks.value = result?.data
