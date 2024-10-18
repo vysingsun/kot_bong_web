@@ -279,6 +279,7 @@
 
     onMounted(() => {
         initFlowbite()
+        extraParams.value = { ...props.params }
         if (props.loadDataOnMount) {
             getData()
         }
