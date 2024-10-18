@@ -291,7 +291,6 @@
 <style lang="scss" scoped>
     .progress {
         height: 4.5px;
-        width: 145.6px;
         background: linear-gradient(#faca15 0 0), linear-gradient(#faca15 0 0), #dbdcef;
         background-size: 60% 100%;
         background-repeat: no-repeat;
