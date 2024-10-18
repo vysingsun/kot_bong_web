@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isLoading" class="progress"></div>
+    <div v-if="isLoading" class="progress w-full mb-1"></div>
     <div class="relative sm:rounded-lg">
         <div
             v-if="isGlobalSearch"
@@ -49,7 +49,9 @@
                         v-if="items?.length == 0"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                        <span>No matching records found</span>
+                        <td :colspan="columnNo ? getHeaders?.length + 1 : getHeaders?.length" class="text-center">
+                            <span>No matching records found</span>
+                        </td>
                     </tr>
 
                     <tr
@@ -57,9 +59,9 @@
                         :key="item"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                        <td v-if="columnNo" class="px-6 py-4">{{ getRowNumber(ridx) }}</td>
+                        <th v-if="columnNo" scope="row" class="px-6 py-4">{{ getRowNumber(ridx) }}</th>
                         <template v-for="({ align, value, visible, exportOnly }, cidx) of headers" :key="cidx">
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 text-no-wrap">
                                 <slot :name="value" :item="item" :search="search || params.search">
                                     <span>
                                         {{ getItem(item, value) ?? '--' }}
