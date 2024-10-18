@@ -1,4 +1,5 @@
 <template>
+    <div v-if="isLoading" class="progress"></div>
     <div class="relative sm:rounded-lg">
         <div
             v-if="isGlobalSearch"
@@ -193,6 +194,7 @@
     })
 
     /* data */
+    const isLoading = ref(false)
     const my_key = ref(0)
     const tableParams = reactive({
         page_number: 1,
@@ -221,12 +223,13 @@
         if (renew) {
             tableParams.page_number = 1
         }
-
+        items.value = []
+        isLoading.value = true
         try {
             const { data } = await props.apiService[props.getServiceKey]({ ...tableParams, ...extraParams.value })
             items.value = data?.data
-            console.log(items.value, 'T')
             totalRecords.value = data?.count ?? data.data?.length
+            isLoading.value = false
             emits('retrieveResult', {
                 totalRecord: data?.count,
                 data: data?.results,
@@ -283,4 +286,33 @@
     })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+    .progress {
+        height: 4.5px;
+        width: 145.6px;
+        background: linear-gradient(#faca15 0 0), linear-gradient(#faca15 0 0), #dbdcef;
+        background-size: 60% 100%;
+        background-repeat: no-repeat;
+        animation: progress-7x9cg2 2.4000000000000004s infinite;
+    }
+
+    @keyframes progress-7x9cg2 {
+        0% {
+            background-position:
+                -150% 0,
+                -150% 0;
+        }
+
+        66% {
+            background-position:
+                250% 0,
+                -150% 0;
+        }
+
+        100% {
+            background-position:
+                250% 0,
+                250% 0;
+        }
+    }
+</style>
