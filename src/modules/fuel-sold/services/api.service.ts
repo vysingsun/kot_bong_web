@@ -9,5 +9,5 @@ export const fuel_soldService = {
     },
     create: async (paylaod: object) => {
         return axios.post('fuel_sold/create', paylaod)
-    }
+    },
 }

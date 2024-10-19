@@ -1,4 +1,5 @@
 <template>
+    <BaseLoading v-if="loading" />
     <div class="pb-4">
         <VueDatePicker
             v-model="date_range"
@@ -17,7 +18,7 @@
                 @change="onChangeFuelType"
             >
                 <option value="" class="text-gray-100" disabled selected hidden>Fuel Type</option>
-                <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
+                <option v-for="item in fuels" :key="item?._id" :value="item._id">
                     {{ item.fuel_name }}
                 </option>
             </select>
@@ -94,45 +95,44 @@
                 <!-- Modal body -->
                 <div class="p-4 md:p-5">
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fuel Type</label>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
                         <select
-                            v-model="fuelStockStore.formData.fuel_id"
+                            v-model="store.formData.fuel_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                            <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
+                            <option v-for="item in fuels" :key="item?._id" :value="item._id">
                                 {{ item.fuel_name }}
                             </option>
                         </select>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Quantity as Liter</label
-                        >
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Quantity Sold as Liter
+                        </label>
                         <input
-                            v-model="fuelStockStore.formData.quantity_liter"
+                            v-model="store.formData.quantity_sold_liter"
                             type="number"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required
                         />
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Amount as Ton</label
-                        >
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Amount per Liter (KHR)
+                        </label>
                         <input
-                            v-model="fuelStockStore.formData.amount_ton"
+                            v-model="store.formData.amount_per_liter_khr"
                             type="number"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required
                         />
                     </div>
-                    
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Exchange Rate</label
-                        >
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Exchange Rate
+                        </label>
                         <input
-                            v-model="fuelStockStore.formData.exchange_rate"
+                            v-model="store.formData.exchange_rate"
                             type="number"
                             step="0.01"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
@@ -144,8 +144,8 @@
                     >
                         <button
                             type="button"
-                            @click="onSave()"
                             class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                            @click="onSave()"
                         >
                             Submit
                         </button>
@@ -178,10 +178,10 @@
         </div>
     </div>
     <BaseModal
-        :isVisible="isVisible"
+        :is-visible="isVisible"
         type="success"
         title="Add Stock Successfully"
-        confirmLabel="Done"
+        confirm-label="Done"
         @confirm="handleConfirm"
     />
     <TablePaging
@@ -208,7 +208,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
-    
+
     const { isVisible, showModal, closeModal } = useModal()
     const table_key = ref(0)
     const store = useFuelSoldStore()
@@ -218,8 +218,6 @@
     const stationId = ref('')
     const params = ref<any>({})
     const filterParams = computed(() => params.value)
-
-    const fuelSolds = ref<any[]>([])
     const loading = ref(false)
 
     const onSelect = async () => {
@@ -228,6 +226,21 @@
         const response = await lookupService.getFuelByStationId(stationId.value)
         const result = response?.data
         fuels.value = result?.data
+    }
+
+    const onSave = async () => {
+        loading.value = true
+        store.formData.station_id = stationId.value
+        await store.saveFuelSold()
+        if (store.isCreatedSuccess) {
+            const modal = document.getElementById('sold-modal')
+            modal?.classList.add('hidden')
+            loading.value = false
+            showModal()
+        } else {
+            alert('Unsuccessfully!')
+            handleConfirm()
+        }
     }
 
     const handleConfirm = () => {

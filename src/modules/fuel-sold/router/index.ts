@@ -1,4 +1,3 @@
-
 const MODULE_NAME = 'Fuel-Sold'
 const MODULE_PATH = '/fuel-sold'
 
@@ -31,4 +30,3 @@ const FUEL_SOLD_ROUTES = [
 ]
 
 export const FUEL_SOLD = { FUEL_SOLD_ROUTES, MODULE_NAME, MODULE_PATH }
-        

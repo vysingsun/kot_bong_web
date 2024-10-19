@@ -1,7 +1,6 @@
-
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { fuel_soldService } from '@/modules/fuel-sold/services/api.service' 
+import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
 
 interface Ifuel {
     _id: any
@@ -12,18 +11,11 @@ interface Ifuel {
 }
 
 class FormData {
-    _id: any
     fuel_id?: Ifuel
-    quantity_ton?: number | null
-    quantity_liter?: number | null
-    amount_ton?: number | null
-    amount_liter_us?: number | null
-    amount_liter_khr?: number | null
-    supplier_name?: string
+    quantity_sold_liter?: number | null
     exchange_rate?: number | null
-    total_amount_us?: number | null
+    amount_per_liter_khr?: number | null
     station_id: any
-    createdAt: any
 }
 
 class ReportFilters {
@@ -40,6 +32,38 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             text: 'Fuel Type',
             value: 'fuel_id.fuel_name',
         },
+        {
+            text: 'Quantity Sold Liter',
+            value: 'quantity_sold_liter',
+        },
+        {
+            text: 'Quantity Sold Ton',
+            value: 'quantity_sold_ton',
+        },
+        {
+            text: 'Amount per Liter (KHR)',
+            value: 'amount_per_liter_khr',
+        },
+        {
+            text: 'Amount per Liter (USD)',
+            value: 'amount_per_liter_us',
+        },
+        {
+            text: 'Exchange Rate',
+            value: 'exchange_rate',
+        },
+        {
+            text: 'Total Amount (KHR)',
+            value: 'total_amount_khr',
+        },
+        {
+            text: 'Total Amount (USD)',
+            value: 'total_amount_us',
+        },
+        {
+            text: 'Date',
+            value: 'createdAt',
+        },
     ])
 
     function prepareFuelSoldParams() {
@@ -55,14 +79,19 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         return params
     }
 
+    const saveFuelSold = async () => {
+        const res = await fuel_soldService.create(formData.value)
+        if (!res.data.success) {
+            isCreatedSuccess.value = false
+        }
+    }
+
     return {
         headers,
         formData,
         filterForm,
-        // saveFuelSold,
+        saveFuelSold,
         isCreatedSuccess,
-        prepareFuelSoldParams
+        prepareFuelSoldParams,
     }
 })
-
-        
