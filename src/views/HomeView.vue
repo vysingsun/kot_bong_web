@@ -320,11 +320,19 @@
         </aside>
         <ShapeBgAnimate />
         <!-- Body -->
-        <main class="absolute z-10 p-4 md:ml-64 h-auto pt-20">
+        <main class="absolute w-full z-10 p-4 md:ml-64 h-auto pt-20">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <!-- Banner -->
-                <div class="rounded-lg dark:border-gray-600 h-32 md:h-64">
-                    <img class="rounded-lg" :src="banner_img" alt="banner" />
+                <div class="rounded-lg dark:border-gray-600 h-28 md:h-64">
+                    <!-- <img class="rounded-lg" :src="banner_img" alt="banner" /> -->
+                    <!-- Card Banner -->
+                    <div class="relative bg-yellow-300 w-full h-24 rounded-lg">
+                        <div class="font-semibold text-white text-sm absolute top-2 left-3">
+                            <div>Welcome Vysing Sun</div>
+                            <div class="pt-1">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
+                        </div>
+                        <img class="absolute rounded-lg right-0 bottom-0" :src="banner_img" alt="banner" />
+                    </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     <a href="#" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
