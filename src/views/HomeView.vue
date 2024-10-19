@@ -331,11 +331,14 @@
                             <div>Welcome Vysing Sun</div>
                             <div class="pt-1">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
                         </div>
-                        <img class="absolute rounded-lg right-0 bottom-0" :src="banner_img" alt="banner" />
+                        <img class="absolute h-full rounded-lg right-0 bottom-0" :src="banner_img" alt="banner" />
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4">
-                    <a href="#" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
+                    <RouterLink
+                        to="/fuel-sold"
+                        class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group"
+                    >
                         <svg
                             aria-hidden="true"
                             class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
@@ -350,7 +353,7 @@
                             ></path>
                         </svg>
                         <div class="text-sm text-gray-900 dark:text-white">Sales</div>
-                    </a>
+                    </RouterLink>
                     <a href="#" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
                         <svg
                             aria-hidden="true"
