@@ -100,12 +100,13 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 md:p-5">
+                <form class="p-4 md:p-5" @submit.prevent="onSave">
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fuel Type</label>
                         <select
                             v-model="fuelStockStore.formData.fuel_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required
                         >
                             <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
                                 {{ item.fuel_name }}
@@ -161,8 +162,7 @@
                         class="bottom-0 left-0 flex justify-center w-full py-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0"
                     >
                         <button
-                            type="button"
-                            @click="onSave()"
+                            type="submit"
                             class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                         >
                             Submit
@@ -191,7 +191,7 @@
                             Cancel
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -231,17 +231,25 @@
         fuels.value = result?.data
     }
     const onSave = async () => {
-        loading.value = true
-        fuelStockStore.formData.station_id = stationId.value
-        await fuelStockStore.saveFuelStock()
-        if (fuelStockStore.isCreatedSuccess) {
-            const modal = document.getElementById('stock-modal')
-            modal?.classList.add('hidden')
-            loading.value = false
-            showModal()
-        } else {
-            alert('Unsuccessfully!')
-            handleConfirm()
+        if (
+            fuelStockStore.formData.fuel_id &&
+            fuelStockStore.formData.quantity_liter &&
+            fuelStockStore.formData.amount_ton &&
+            fuelStockStore.formData.supplier_name &&
+            fuelStockStore.formData.exchange_rate
+        ) {
+            loading.value = true
+            fuelStockStore.formData.station_id = stationId.value
+            await fuelStockStore.saveFuelStock()
+            if (fuelStockStore.isCreatedSuccess) {
+                const modal = document.getElementById('stock-modal')
+                modal?.classList.add('hidden')
+                loading.value = false
+                showModal()
+            } else {
+                alert('Unsuccessfully!')
+                handleConfirm()
+            }
         }
     }
 

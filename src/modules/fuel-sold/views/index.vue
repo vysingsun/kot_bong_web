@@ -93,12 +93,13 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 md:p-5">
+                <form class="p-4 md:p-5" @submit.prevent="onSave">
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
                         <select
                             v-model="store.formData.fuel_id"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required
                         >
                             <option v-for="item in fuels" :key="item?._id" :value="item._id">
                                 {{ item.fuel_name }}
@@ -121,6 +122,7 @@
                             Amount per Liter (KHR)
                         </label>
                         <input
+                            id="error"
                             v-model="store.formData.amount_per_liter_khr"
                             type="number"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
@@ -136,16 +138,15 @@
                             type="number"
                             step="0.01"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            required
                         />
                     </div>
                     <div
                         class="bottom-0 left-0 flex justify-center w-full py-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0"
                     >
                         <button
-                            type="button"
+                            type="submit"
                             class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            @click="onSave()"
+                            
                         >
                             Submit
                         </button>
@@ -173,7 +174,7 @@
                             Cancel
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -229,17 +230,19 @@
     }
 
     const onSave = async () => {
-        loading.value = true
-        store.formData.station_id = stationId.value
-        await store.saveFuelSold()
-        if (store.isCreatedSuccess) {
-            const modal = document.getElementById('sold-modal')
-            modal?.classList.add('hidden')
-            loading.value = false
-            showModal()
-        } else {
-            alert('Unsuccessfully!')
-            handleConfirm()
+        if (store.formData.fuel_id && store.formData.quantity_sold_liter && store.formData.amount_per_liter_khr) {
+            loading.value = true
+            store.formData.station_id = stationId.value
+            await store.saveFuelSold()
+            if (store.isCreatedSuccess) {
+                const modal = document.getElementById('sold-modal')
+                modal?.classList.add('hidden')
+                loading.value = false
+                showModal()
+            } else {
+                alert('Unsuccessfully!')
+                handleConfirm()
+            }
         }
     }
 
