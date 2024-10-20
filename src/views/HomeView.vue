@@ -328,7 +328,7 @@
                     <!-- Card Banner -->
                     <div class="relative bg-yellow-300 w-full h-24 rounded-lg">
                         <div class="font-semibold text-white text-sm absolute top-2 left-3">
-                            <div>Welcome Vysing Sun</div>
+                            <div class="text-lg">Welcome Vysing Sun</div>
                             <div class="pt-1">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
                         </div>
                         <img class="absolute h-full rounded-lg right-0 bottom-0" :src="banner_img" alt="banner" />
