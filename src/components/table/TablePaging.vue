@@ -55,6 +55,7 @@
                         v-for="(item, ridx) of items"
                         :key="item"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                        @click="clickableRow && isRowClickable(item) && onClickRow(item)"
                     >
                         <th v-if="columnNo" scope="row" class="px-6 py-4">{{ getRowNumber(ridx) }}</th>
                         <template v-for="({ align, value, visible, exportOnly }, cidx) of headers" :key="cidx">
@@ -172,6 +173,14 @@
             type: Object,
             default: {},
         },
+        clickableRow: {
+            type: Boolean,
+            default: false,
+        },
+        isRowClickable: {
+            type: Function,
+            default: () => true,
+        },
         columnNo: Boolean,
         loadDataOnMount: {
             type: Boolean,
@@ -244,6 +253,10 @@
         } catch (error: any) {
             items.value = []
         }
+    }
+
+    const onClickRow = (item: any) => {
+        emits('rowClick', item)
     }
 
     const updateSearch = _.debounce(async () => {

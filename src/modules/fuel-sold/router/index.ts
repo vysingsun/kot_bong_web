@@ -11,6 +11,15 @@ export const routes = [
         },
         component: () => import('@/modules/fuel-sold/views/index.vue'),
     },
+    {
+        module: MODULE_NAME,
+        name: `${MODULE_NAME}-Create`,
+        path: `${MODULE_PATH}/:mode/:id?`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/fuel-sold/views/form.vue'),
+    },
 ]
 
 const FUEL_SOLD_ROUTES = [
