@@ -114,6 +114,10 @@
             type: String,
             default: 'create',
         },
+        editingId: {
+            type: String,
+            required: true,
+        },
     })
 
     const onBack = () => {
@@ -131,7 +135,12 @@
     }
 
     const handleConfirm = () => {
-        const newPath = route.fullPath.replace('create', `view/${id.value}`)
+        let newPath = ''
+        if (mode.value == 'create') {
+            newPath = route.fullPath.replace('create', `view/${id.value}`)
+        } else if (mode.value == 'edit') {
+            newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
+        }
         router.push(newPath).catch(err => {
             if (err.name !== 'NavigationDuplicated') {
                 throw err
@@ -142,14 +151,26 @@
 
     const onSave = async () => {
         isLoading.value = true
-        const res = await props.apiService[props.getServiceKey](props.formData)
-        if (res.data.success) {
-            id.value = res.data.data._id
-            isLoading.value = false
-            showModal()
+        if (mode.value == 'create') {
+            const res = await props.apiService[props.getServiceKey](props.formData)
+            if (res.data.success) {
+                id.value = res.data.data._id
+                isLoading.value = false
+                showModal()
+            } else {
+                alert('Unsuccessfully!')
+                handleConfirm()
+            }
         } else {
-            alert('Unsuccessfully!')
-            handleConfirm()
+            const res = await props.apiService['edit'](props.editingId, props.formData)
+            if (res.data.result.success) {
+                id.value = res.data.result.data._id
+                isLoading.value = false
+                showModal()
+            } else {
+                alert('Unsuccessfully!')
+                handleConfirm()
+            }
         }
     }
 
