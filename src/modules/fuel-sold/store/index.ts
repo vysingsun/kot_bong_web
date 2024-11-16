@@ -16,6 +16,8 @@ class FormData {
     exchange_rate?: number | null
     amount_per_liter_khr?: number | null
     station_id: any
+    old_quantity_sold_ton?: number | null
+    old_quantity_sold_liter?: number | null
 }
 
 class ReportFilters {
@@ -95,6 +97,9 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         const { data } = await fuel_soldService.get(id)
         readFuedSold(data.data)
         fuels.value = [data.data.fuel_id]
+
+        formData.value.old_quantity_sold_ton = data.data.quantity_sold_ton
+        formData.value.old_quantity_sold_liter = data.data.quantity_sold_liter
     }
 
     const readFuedSold = ({

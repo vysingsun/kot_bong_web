@@ -1,5 +1,5 @@
 <template>
-    <BaseForm title="Fuel Sold" :form-data="store.formData" :api-service="fuel_soldService">
+    <BaseForm title="Fuel Sold" :editing-id="fuel_sold_id" :form-data="store.formData" :api-service="fuel_soldService">
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
             <select
@@ -62,8 +62,8 @@
     const route = useRoute()
     const mode = ref(route.params.mode)
     const loading = ref(false)
-
     const stationId = ref('')
+    const fuel_sold_id = route.path.split('/').pop()
 
     const getFuelService = async () => {
         loading.value = true
@@ -86,7 +86,6 @@
         let appData = getFromCache('app_data')
         stationId.value = appData.value.stations[0]._id
         store.formData.station_id = stationId.value
-        const fuel_sold_id = route.path.split('/').pop()
         if (mode.value !== 'create') {
             store.readDataFromApi(fuel_sold_id)
         }
