@@ -11,7 +11,7 @@ interface Ifuel {
 }
 
 class FormData {
-    fuel_id?: Ifuel
+    fuel_id: Ifuel | null = null
     quantity_sold_liter?: number | null
     exchange_rate?: number | null
     amount_per_liter_khr?: number | null
@@ -27,6 +27,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
     const filterForm = ref<any>(new ReportFilters())
+    const fuels = ref<any[]>([])
     const headers = ref([
         {
             text: 'Fuel Type',
@@ -86,11 +87,40 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         }
     }
 
+    const resetData = () => {
+        formData.value = new FormData()
+    }
+
+    const readDataFromApi = async (id: any) => {
+        const { data } = await fuel_soldService.get(id)
+        readFuedSold(data.data)
+        fuels.value = [data.data.fuel_id]
+    }
+
+    const readFuedSold = ({
+        fuel_id = null,
+        quantity_sold_liter = undefined,
+        exchange_rate = undefined,
+        amount_per_liter_khr = undefined,
+        station_id = undefined,
+    }: Partial<FormData> = {}) => {
+        formData.value = {
+            fuel_id,
+            quantity_sold_liter,
+            exchange_rate,
+            amount_per_liter_khr,
+            station_id,
+        }
+    }
+
     return {
+        fuels,
         headers,
         formData,
+        resetData,
         filterForm,
         saveFuelSold,
+        readDataFromApi,
         isCreatedSuccess,
         prepareFuelSoldParams,
     }

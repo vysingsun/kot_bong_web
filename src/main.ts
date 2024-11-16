@@ -12,6 +12,7 @@ import BaseLoading from './components/app/BaseLoading.vue'
 import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
 import BaseModal from '@/components/app/BaseModal.vue'
 import TablePaging from '@/components/table/TablePaging.vue'
+import BaseForm from '@/components/form/BaseForm.vue'
 
 import { getFromCache, removeCaches } from '@/composables/useCache'
 
@@ -75,4 +76,5 @@ app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
+app.component('BaseForm', BaseForm)
 app.mount('#app')
