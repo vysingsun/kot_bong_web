@@ -11,13 +11,13 @@ interface Ifuel {
 }
 
 class FormData {
-    fuel_id: Ifuel | null = null
+    fuel_id: any
     quantity_sold_liter?: number | null
     exchange_rate?: number | null
     amount_per_liter_khr?: number | null
     station_id: any
-    old_quantity_sold_ton?: number | null
-    old_quantity_sold_liter?: number | null
+    fuel_id_old?: string | null
+    createdAt: any
 }
 
 class ReportFilters {
@@ -97,17 +97,17 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         const { data } = await fuel_soldService.get(id)
         readFuedSold(data.data)
         fuels.value = [data.data.fuel_id]
-
-        formData.value.old_quantity_sold_ton = data.data.quantity_sold_ton
-        formData.value.old_quantity_sold_liter = data.data.quantity_sold_liter
+        formData.value.fuel_id = data.data.fuel_id._id
+        formData.value.fuel_id_old = data.data.fuel_id._id
     }
 
     const readFuedSold = ({
-        fuel_id = null,
+        fuel_id = undefined,
         quantity_sold_liter = undefined,
         exchange_rate = undefined,
         amount_per_liter_khr = undefined,
         station_id = undefined,
+        createdAt = undefined,
     }: Partial<FormData> = {}) => {
         formData.value = {
             fuel_id,
@@ -115,6 +115,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             exchange_rate,
             amount_per_liter_khr,
             station_id,
+            createdAt,
         }
     }
 
