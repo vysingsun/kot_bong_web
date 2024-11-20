@@ -1,5 +1,5 @@
 <template>
-   <div class="fixed inset-0 z-50 flex justify-center items-center bg-white bg-opacity-10 backdrop-blur-[2px]">
+   <div class="fixed inset-0 z-[1000] flex justify-center items-center bg-white bg-opacity-10 backdrop-blur-[2px]">
       <div class="spinner">
          <div></div>
          <div></div>

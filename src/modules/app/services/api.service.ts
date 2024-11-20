@@ -6,7 +6,6 @@ const getToken = () => {
 
     return token && `Bearer ${token}`
 }
-
 const xAxios = axios.create({
     withCredentials: true,
     baseURL: import.meta.env.VITE_API_BASE_URL,

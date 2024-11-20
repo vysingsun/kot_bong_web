@@ -10,8 +10,12 @@ import { initFlowbite } from 'flowbite'
 
 import BaseLoading from './components/app/BaseLoading.vue'
 import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
-import { getFromCache, removeCaches } from '@/composables/useCache'
 import BaseModal from '@/components/app/BaseModal.vue'
+import TablePaging from '@/components/table/TablePaging.vue'
+import BaseForm from '@/components/form/BaseForm.vue'
+
+import { getFromCache, removeCaches } from '@/composables/useCache'
+
 const getToken = () => {
     const token = getFromCache('token')?.value
 
@@ -25,11 +29,9 @@ axios.interceptors.request.use(
     function (req) {
         if (req.url === 'login') isUnauthorized.value = false
         if (isUnauthorized.value) throw new Error('Unauthorized access detected. Further requests blocked.')
-
         const token = req.headers.has('Authorization') ? req.headers.Authorization : getToken()
 
         req.headers['Authorization'] = token
-
         return req
     },
     err => {
@@ -43,7 +45,7 @@ axios.interceptors.response.use(
     },
     function (error) {
         if (error.response.status === 401) {
-            removeCaches(['token'])
+            removeCaches(['token', 'app_data'])
             sessionStorage.removeItem('has-show-fireworks')
             router.push({ name: 'Login' })
             if (error?.response?.data?.error?.errors?.detail) {
@@ -73,4 +75,6 @@ app.use(router)
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
+app.component('TablePaging', TablePaging)
+app.component('BaseForm', BaseForm)
 app.mount('#app')
