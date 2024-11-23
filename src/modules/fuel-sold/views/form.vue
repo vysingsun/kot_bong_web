@@ -1,5 +1,12 @@
 <template>
-    <BaseForm title="Fuel Sold" :editing-id="fuel_sold_id" :form-data="store.formData" :api-service="fuel_soldService">
+    <BaseForm
+        title="Fuel Sold"
+        :is-loading="loadingFrom"
+        :editing-id="fuel_sold_id"
+        :form-data="store.formData"
+        :api-service="fuel_soldService"
+        @on-save="handleSaveLoading"
+    >
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
             <select
@@ -62,6 +69,7 @@
     const route = useRoute()
     const mode = ref(route.params.mode)
     const loading = ref(false)
+    const loadingFrom = ref(true)
     const stationId = ref('')
     const fuel_sold_id = route.path.split('/').pop()
 
@@ -82,12 +90,18 @@
         },
     })
 
-    onMounted(() => {
+    const handleSaveLoading = (isLoading: boolean) => {
+        loadingFrom.value = isLoading
+        console.log(loadingFrom.value)
+    }
+
+    onMounted(async () => {
         let appData = getFromCache('app_data')
         stationId.value = appData.value.stations[0]._id
         store.formData.station_id = stationId.value
         if (mode.value !== 'create') {
-            store.readDataFromApi(fuel_sold_id)
+            await store.readDataFromApi(fuel_sold_id)
+            loadingFrom.value = false
         }
     })
 

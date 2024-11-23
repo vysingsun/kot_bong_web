@@ -1,4 +1,5 @@
 <template>
+    <BaseLoading v-if="isLoading" />
     <div class="flex justify-between shadow-b-md pb-6">
         <div class="text-lg font-medium flex items-center">
             {{ mode === 'create' ? `Create ${title}` : mode === 'view' ? `View ${title}` : `Edit ${title}` }}
@@ -94,8 +95,7 @@
     import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
     import { useModal } from '@/composables/useModal'
 
-    const { isVisible, showModal, closeModal } = useModal()
-    const isLoading = ref(false)
+    const { isVisible, showModal } = useModal()
     const router = useRouter()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -118,7 +118,14 @@
             type: String,
             required: true,
         },
+        isLoading: {
+            type: Boolean,
+            default: false,
+        },
     })
+
+    /* emits */
+    const emits = defineEmits(['on-save'])
 
     const onBack = () => {
         const pathSegments = route.path.split('/')
@@ -135,27 +142,21 @@
     }
 
     const handleConfirm = () => {
-        let newPath = ''
-        if (mode.value == 'create') {
-            newPath = route.fullPath.replace('create', `view/${id.value}`)
-        } else if (mode.value == 'edit') {
-            newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
-        }
-        router.push(newPath).catch(err => {
-            if (err.name !== 'NavigationDuplicated') {
-                throw err
-            }
-        })
-        closeModal()
+        window.location.reload()
     }
 
     const onSave = async () => {
-        isLoading.value = true
+        emits('on-save', true)
         if (mode.value == 'create') {
             const res = await props.apiService[props.getServiceKey](props.formData)
             if (res.data.success) {
                 id.value = res.data.data._id
-                isLoading.value = false
+                const newPath = route.fullPath.replace('create', `view/${id.value}`)
+                router.push(newPath).catch(err => {
+                    if (err.name !== 'NavigationDuplicated') {
+                        throw err
+                    }
+                })
                 showModal()
             } else {
                 alert('Unsuccessfully!')
@@ -165,13 +166,19 @@
             const res = await props.apiService['edit'](props.editingId, props.formData)
             if (res.data.result.success) {
                 id.value = res.data.result.data._id
-                isLoading.value = false
+                const newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
+                router.push(newPath).catch(err => {
+                    if (err.name !== 'NavigationDuplicated') {
+                        throw err
+                    }
+                })
                 showModal()
             } else {
                 alert('Unsuccessfully!')
                 handleConfirm()
             }
         }
+        emits('on-save', false)
     }
 
     const enableEdit = () => {
