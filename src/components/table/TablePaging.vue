@@ -71,7 +71,7 @@
                                 </slot>
                             </td>
                         </template>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">{{ item }}
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
                             <a
                                 class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
                                 @click.stop="onRemove(item)"
