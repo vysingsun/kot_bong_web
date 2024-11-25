@@ -25,7 +25,7 @@
                     id="table-search"
                     v-model="search"
                     type="text"
-                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg w-80 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Search for items"
                     @input="updateSearch"
                 />
@@ -35,10 +35,13 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th v-if="columnNo" id="#" scope="col" class="px-6 py-3">#</th>
+                        <th v-if="columnNo" id="#" scope="col" class="px-6 py-3 whitespace-nowrap">#</th>
                         <template v-for="(item, idx) of getHeaders" :key="idx">
-                            <th :id="`header-${idx}`" scope="col" class="px-6 py-3">{{ item.text }}</th>
+                            <th :id="`header-${idx}`" scope="col" class="px-6 py-3 whitespace-nowrap">
+                                {{ item.text }}
+                            </th>
                         </template>
+                        <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,16 +53,17 @@
                             <span>No matching records found</span>
                         </td>
                     </tr>
-
                     <tr
                         v-for="(item, ridx) of items"
                         :key="item"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                         @click="clickableRow && isRowClickable(item) && onClickRow(item)"
                     >
-                        <th v-if="columnNo" scope="row" class="px-6 py-4">{{ getRowNumber(ridx) }}</th>
+                        <th v-if="columnNo" scope="row" class="px-6 py-4 whitespace-nowrap">
+                            {{ getRowNumber(ridx) }}
+                        </th>
                         <template v-for="({ align, value, visible, exportOnly }, cidx) of headers" :key="cidx">
-                            <td class="px-6 py-4 text-no-wrap">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <slot :name="value" :item="item" :search="search || params.search">
                                     <span>
                                         {{ getItem(item, value) ?? '--' }}
@@ -67,6 +71,20 @@
                                 </slot>
                             </td>
                         </template>
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <a
+                                class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
+                                @click.stop="onRemove(item._id)"
+                            >
+                                Remove
+                            </a>
+                            <a
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline inline-block"
+                                @click.stop="onEdit(item._id)"
+                            >
+                                Edit
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -144,12 +162,26 @@
             </ul>
         </nav>
     </div>
+    <BaseModal
+        :is-visible="isVisible"
+        type="error"
+        :title="`Are you sure you want to delete this ${name}?`"
+        confirm-label="Confirm"
+        @close="closeModal()"
+        @confirm="handleConfirmToDelete"
+    />
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, reactive, computed, onBeforeMount } from 'vue'
+    import { onMounted, ref, reactive, computed } from 'vue'
     import _ from 'lodash'
     import { initFlowbite } from 'flowbite'
+    import { useRoute, useRouter } from 'vue-router'
+    import { useModal } from '@/composables/useModal'
+
+    const { isVisible, showModal, closeModal } = useModal()
+    const router = useRouter()
+    const route = useRoute()
 
     /* emits */
     const emits = defineEmits(['rowClick', 'retrieveResult'])
@@ -213,6 +245,7 @@
     const extraParams = ref<any>({})
     const items = ref([])
     const search = ref('')
+    const record_id = ref('')
     /* methods */
     const getItem = (obj: any, key: any) => {
         return _.get(obj, key)
@@ -257,6 +290,27 @@
 
     const onClickRow = (item: any) => {
         emits('rowClick', item)
+    }
+
+    const onRemove = (id: string) => {
+        console.log(id, 'Rm')
+        record_id.value = id
+        showModal()
+    }
+
+    const handleConfirmToDelete = async () => {
+        const res = await props.apiService['delete'](record_id.value)
+        if (res.data.result.success) {
+            alert(`Delete ${props.name} Successfully`)
+        } else {
+            alert(`Delete ${props.name} Unsuccessfully`)
+        }
+        window.location.reload()
+    }
+
+    const onEdit = (id: string) => {
+        const baseUrl = route.path.split('/edit')[0]
+        router.push(`${baseUrl}/edit/${id}`)
     }
 
     const updateSearch = _.debounce(async () => {

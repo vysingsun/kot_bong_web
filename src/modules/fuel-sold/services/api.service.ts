@@ -16,4 +16,7 @@ export const fuel_soldService = {
     edit: async (id: string, paylaod: object) => {
         return axios.post(`fuel_sold/update/${id}`, paylaod)
     },
+    delete: async (id: any) => {
+        return axios.post(`fuel_sold/delete/${id}`)
+    },
 }
