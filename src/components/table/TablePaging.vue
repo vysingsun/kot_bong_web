@@ -71,16 +71,16 @@
                                 </slot>
                             </td>
                         </template>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                        <td class="px-6 py-4 text-center whitespace-nowrap">{{ item }}
                             <a
                                 class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
-                                @click.stop="onRemove(item._id)"
+                                @click.stop="onRemove(item)"
                             >
                                 Remove
                             </a>
                             <a
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline inline-block"
-                                @click.stop="onEdit(item._id)"
+                                @click.stop="onEdit(item)"
                             >
                                 Edit
                             </a>
@@ -292,9 +292,8 @@
         emits('rowClick', item)
     }
 
-    const onRemove = (id: string) => {
-        console.log(id, 'Rm')
-        record_id.value = id
+    const onRemove = (item: any) => {
+        record_id.value = item._id
         showModal()
     }
 
@@ -308,9 +307,9 @@
         window.location.reload()
     }
 
-    const onEdit = (id: string) => {
+    const onEdit = (item: any) => {
         const baseUrl = route.path.split('/edit')[0]
-        router.push(`${baseUrl}/edit/${id}`)
+        router.push(`${baseUrl}/edit/${item._id}`)
     }
 
     const updateSearch = _.debounce(async () => {
