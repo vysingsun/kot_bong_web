@@ -74,11 +74,13 @@
     const fuel_sold_id = route.path.split('/').pop()
 
     const getFuelService = async () => {
-        loading.value = true
-        const response = await lookupService.getFuelByStationId(stationId.value)
-        const result = response?.data
-        store.fuels = result?.data
-        loading.value = false
+        if (store.fuels.length <= 1) {
+            loading.value = true
+            const response = await lookupService.getFuelByStationId(stationId.value)
+            const result = response?.data
+            store.fuels = result?.data
+            loading.value = false
+        }
     }
 
     const selectedFuelId = computed({
@@ -92,7 +94,6 @@
 
     const handleSaveLoading = (isLoading: boolean) => {
         loadingFrom.value = isLoading
-        console.log(loadingFrom.value)
     }
 
     onMounted(async () => {
@@ -103,6 +104,7 @@
             await store.readDataFromApi(fuel_sold_id)
             loadingFrom.value = false
         }
+        loadingFrom.value = false
     })
 
     onBeforeUnmount(() => {
