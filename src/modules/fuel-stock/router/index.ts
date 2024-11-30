@@ -4,12 +4,21 @@ const MODULE_PATH = '/fuel-stock'
 export const routes = [
     {
         module: MODULE_NAME,
-        name: MODULE_NAME,
+        name: `${MODULE_NAME}`,
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
         },
         component: () => import('@/modules/fuel-stock/views/index.vue'),
+    },
+    {
+        module: MODULE_NAME,
+        name: `${MODULE_NAME}-Detail`,
+        path: `${MODULE_PATH}/:mode/:id?`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/fuel-stock/views/form.vue'),
     },
 ]
 
