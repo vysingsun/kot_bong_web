@@ -91,6 +91,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
 
     const resetData = () => {
         formData.value = new FormData()
+        fuels.value = []
     }
 
     const readDataFromApi = async (id: any) => {
