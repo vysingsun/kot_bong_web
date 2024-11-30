@@ -17,7 +17,7 @@
                 @change="onChangeFuelType"
             >
                 <option value="" class="text-gray-100" disabled selected hidden>Fuel Type</option>
-                <option v-for="(item, index) in fuels" :key="item?._id" :value="item._id">
+                <option v-for="item in fuels" :key="item?._id" :value="item._id">
                     {{ item.fuel_name }}
                 </option>
             </select>
@@ -38,8 +38,10 @@
         :headers="store.headers"
         column-no
         :api-service="fuel_stockService"
-        get-service-key="get"
+        get-service-key="getFuelStockByStationId"
         is-global-search
+        clickable-row
+        @row-click="getRow"
     />
 </template>
 
@@ -53,7 +55,9 @@
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
+    import { useRouter } from 'vue-router'
 
+    const router = useRouter()
     const table_key = ref(0)
     const store = useFuelStockStore()
     const date_range = ref([])
@@ -81,6 +85,10 @@
         initFlowbite()
         onSelect()
     })
+
+    const getRow = (item: any) => {
+        router.push(`/fuel-stock/view/${item._id}`)
+    }
 
     const onChangeDateRange = () => {
         if (date_range.value?.length) {
