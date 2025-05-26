@@ -10,7 +10,7 @@
             <div
                 class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg"
             >
-                Total Stock: {{ item?.current_stock_liter.toFixed(2) }} L
+                {{ $t('total_stock') }} : {{ item?.current_stock_liter.toFixed(2) }} L
             </div>
         </div>
     </div>
