@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import i18n from '@/plugins/i18n'
 // register Flowbite
 import { initFlowbite } from 'flowbite'
 
@@ -71,6 +72,7 @@ initFlowbite()
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
+app.use(i18n)
 
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
