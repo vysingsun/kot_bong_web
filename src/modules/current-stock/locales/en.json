@@ -1,5 +1,4 @@
-
 {
-    "current-stock": "Current-stock"
+    "current_stock": "Current-stock",
+    "total_stock": "Total Stock"
 }
-        

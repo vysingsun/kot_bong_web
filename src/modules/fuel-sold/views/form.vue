@@ -54,6 +54,20 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
             />
         </div>
+
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
+
+            <div class="relative max-w-sm">
+                <VueDatePicker
+                    v-model="store.formData.createdAt"
+                    class="DatePicker"
+                    auto-apply
+                    :partial-range="false"
+                    :enable-time-picker="false"
+                />
+            </div>
+        </div>
     </BaseForm>
 </template>
 
@@ -64,6 +78,8 @@
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
     import { lookupService } from '@/atoms/lookup/lookup.services'
     import { getFromCache } from '@/composables/useCache'
+    import VueDatePicker from '@vuepic/vue-datepicker'
+    import '@vuepic/vue-datepicker/dist/main.css'
 
     const store = useFuelSoldStore()
     const route = useRoute()
@@ -102,7 +118,8 @@
         store.formData.station_id = stationId.value
         if (mode.value !== 'create') {
             await store.readDataFromApi(fuel_sold_id)
-            loadingFrom.value = false
+        } else {
+            store.formData.createdAt = new Date()
         }
         loadingFrom.value = false
     })
@@ -117,4 +134,12 @@
     })
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+    :deep(.DatePicker) {
+        .dp__pointer {
+            border-radius: 8px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    }
+</style>

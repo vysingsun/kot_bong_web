@@ -36,11 +36,19 @@
 </template>
 
 <script setup lang="ts">
-    import { useRouter } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
 
     const router = useRouter()
+    const route = useRoute()
 
     const goBack = () => {
-        router.go(-1)
+        const pathSegments = route.path.split('/').filter(segment => segment !== '')
+
+        if (pathSegments.length >= 3 && (pathSegments[1] === 'view' || pathSegments[1] === 'edit')) {
+            router.push(`/${pathSegments[0]}`)
+        } else {
+            const newPath = pathSegments.slice(0, -1).join('/')
+            router.push(`/${newPath}`)
+        }
     }
 </script>
