@@ -235,7 +235,7 @@
                 tessedit_char_whitelist: '0123456789',
             } as any)
 
-            const numbers = text.replace(/\D/g, '')
+            const numbers = text.replace(/[^\d.]/g, '').trim()
 
             if (numbers) {
                 store.formData.quantity_sold_liter = parseFloat(numbers)
