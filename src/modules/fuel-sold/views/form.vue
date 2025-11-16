@@ -129,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, computed, onBeforeUnmount, onUnmounted } from 'vue'
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
     import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
@@ -138,7 +138,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import { initFlowbite } from 'flowbite'
-    import Tesseract from 'tesseract.js'
+    import { createWorker, type Worker } from 'tesseract.js'
 
     const videoRef = ref<HTMLVideoElement | null>(null)
     const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -153,6 +153,14 @@
     const loadingFrom = ref(true)
     const stationId = ref('')
     const fuel_sold_id = route.path.split('/').pop()
+    let ocrWorker: Worker | null = null
+
+    const initializeOCR = async () => {
+        ocrWorker = await createWorker('eng')
+        await ocrWorker.setParameters({
+            tessedit_char_whitelist: '0123456789.',
+        })
+    }
 
     const getFuelService = async () => {
         if (store.fuels.length <= 1) {
@@ -187,7 +195,6 @@
                     height: { ideal: 1080 },
                 },
             })
-            // Wait for next tick to ensure video element is rendered
             await new Promise(resolve => setTimeout(resolve, 100))
             if (videoRef.value) {
                 videoRef.value.srcObject = stream
@@ -209,6 +216,8 @@
     }
 
     const captureAndScan = async () => {
+        if (!ocrWorker || scanning.value) return
+
         scanning.value = true
         const video = videoRef.value
         const canvas = canvasRef.value
@@ -231,15 +240,12 @@
         try {
             const {
                 data: { text },
-            } = await Tesseract.recognize(canvas, 'eng', {
-                tessedit_char_whitelist: '0123456789',
-            } as any)
+            } = await ocrWorker.recognize(canvas)
 
             const numbers = text.replace(/[^\d.]/g, '').trim()
 
             if (numbers) {
                 store.formData.quantity_sold_liter = parseFloat(numbers)
-                console.log('Scanned number:', numbers)
                 closeScanner()
             } else {
                 alert('No numbers detected. Please try again.')
@@ -248,11 +254,13 @@
         } catch (error) {
             console.error('OCR Error:', error)
             alert('Failed to scan. Please try again.')
+        } finally {
             scanning.value = false
         }
     }
 
     onMounted(async () => {
+        initializeOCR()
         initFlowbite()
         let appData = getFromCache('app_data')
         stationId.value = appData.value.stations[0]._id
@@ -268,6 +276,12 @@
     onBeforeUnmount(() => {
         closeScanner()
         store.resetData()
+    })
+
+    onUnmounted(() => {
+        if (ocrWorker) {
+            ocrWorker.terminate()
+        }
     })
 
     onBeforeRouteUpdate((to, from, next) => {
