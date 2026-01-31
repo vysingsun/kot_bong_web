@@ -12,6 +12,25 @@ export const routes = [
         },
         component: () => import('@/modules/auth/views/login.vue'),
     },
+    {
+        module: MODULE_NAME,
+        name: 'GoogleAuthSuccess',
+        path: `${MODULE_PATH}/google/success`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/auth/views/GoogleAuthSuccess.vue'),
+    },
+
+    {
+        module: MODULE_NAME,
+        name: 'FacebookAuthSuccess',
+        path: `${MODULE_PATH}/facebook/success`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/auth/views/FacebookAuthSuccess.vue'),
+    },
 ]
 
 const AUTH_ROUTES = [

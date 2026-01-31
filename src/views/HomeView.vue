@@ -328,7 +328,7 @@
                     <!-- Card Banner -->
                     <div class="relative bg-yellow-300 w-full h-24 rounded-lg">
                         <div class="font-semibold text-white text-sm absolute top-2 left-3">
-                            <div class="text-lg">Welcome Vysing Sun</div>
+                            <div class="text-lg">Welcome {{ user?.firstName }} {{ user?.lastName }}</div>
                             <div class="pt-1">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
                         </div>
                         <img class="absolute h-full rounded-lg right-0 bottom-0" :src="banner_img" alt="banner" />
@@ -662,12 +662,16 @@
     import { initFlowbite } from 'flowbite'
     import { useAuthStore } from '@/modules/auth/store/index'
     import { useModal } from '@/composables/useModal'
+    import { getFromCache } from '@/composables/useCache'
+    import type { IUser } from '@/data/constants'
+import { first } from 'lodash'
 
     const { isVisible, showModal, closeModal } = useModal()
     const loading = ref(false)
     const authStore = useAuthStore()
     const banner_img = new URL(`../assets/images/${import.meta.env.VITE_APP_BANNER}`, import.meta.url).href
     const logo_img = new URL(`../assets/images/${import.meta.env.VITE_APP_LOGO}`, import.meta.url).href
+    const user = ref<IUser>()
     const onLogout = async () => {
         await authStore.logout()
     }
@@ -679,5 +683,7 @@
     // initialize components based on data attribute selectors
     onMounted(() => {
         initFlowbite()
+        let appData = getFromCache('app_data')?.value
+        user.value = appData
     })
 </script>
