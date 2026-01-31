@@ -1,5 +1,15 @@
-
 {
-    "auth": "Auth"
+    "auth": {
+        "login": {
+            "title": "ចូលប្រើប្រាស់",
+            "email_placeholder": "អ៊ីមែល",
+            "password_placeholder": "លេខសម្ងាត់",
+            "sign_in_button": "ចូល",
+            "or_continue_with": "ឬបន្តជាមួយ",
+            "continue_with_google": "បន្តជាមួយ Google",
+            "continue_with_facebook": "បន្តជាមួយ Facebook",
+            "no_account": "មិនទាន់មានគណនីមែនទេ?",
+            "sign_up": "ចុះឈ្មោះ"
+        }
+    }
 }
-        

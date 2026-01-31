@@ -1,10 +1,14 @@
 <script setup lang="ts">
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
+    import { useI18n } from 'vue-i18n'
     import { useAuthStore } from '@/modules/auth/store/index'
+    import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
     const router = useRouter()
     const authStore = useAuthStore()
+    const { t } = useI18n()
+
     const email = ref('')
     const password = ref('')
     const loading = ref(false)
@@ -28,12 +32,17 @@
     }
 
     const goToRegister = () => {
-        router.push('/register') // Adjust the route path as needed
+        router.push('/register')
     }
 </script>
 
 <template>
-    <section class="bg-gray-50 dark:bg-gray-900">
+    <section class="bg-gray-50 dark:bg-gray-900 relative">
+        <!-- Language Switcher - Top Right -->
+        <div class="absolute top-6 right-6 z-10">
+            <LanguageSwitcher />
+        </div>
+
         <div class="flex items-end h-screen pb-28">
             <div class="bg-red flex flex-col items-center justify-center mx-auto lg:py-0">
                 <img class="w-2/3" src="@/assets/images/base_station.svg" alt="logo" />
@@ -47,7 +56,7 @@
                                 name="email"
                                 id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Email"
+                                :placeholder="t('auth.login.email_placeholder')"
                             />
                         </div>
 
@@ -58,7 +67,7 @@
                                 type="password"
                                 name="password"
                                 id="password"
-                                placeholder="Password"
+                                :placeholder="t('auth.login.password_placeholder')"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             />
                         </div>
@@ -86,13 +95,15 @@
                                     fill="currentColor"
                                 />
                             </svg>
-                            <div v-else>Sign In</div>
+                            <div v-else>{{ t('auth.login.sign_in_button') }}</div>
                         </button>
 
                         <!-- Divider -->
                         <div class="flex items-center">
                             <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
-                            <span class="px-4 text-sm text-gray-500 dark:text-gray-400">or continue with</span>
+                            <span class="px-4 text-sm text-gray-500 dark:text-gray-400">
+                                {{ t('auth.login.or_continue_with') }}
+                            </span>
                             <div class="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
                         </div>
 
@@ -122,7 +133,9 @@
                                         fill="#EA4335"
                                     />
                                 </svg>
-                                <span class="text-gray-700 dark:text-gray-300">Continue with Google</span>
+                                <span class="text-gray-700 dark:text-gray-300">
+                                    {{ t('auth.login.continue_with_google') }}
+                                </span>
                             </button>
 
                             <!-- Facebook Button -->
@@ -141,19 +154,19 @@
                                         d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
                                     />
                                 </svg>
-                                <span>Continue with Facebook</span>
+                                <span>{{ t('auth.login.continue_with_facebook') }}</span>
                             </button>
                         </div>
 
                         <!-- Register Link -->
                         <p class="text-sm text-center text-gray-500 dark:text-gray-400">
-                            Don't have an account?
+                            {{ t('auth.login.no_account') }}
                             <button
                                 @click="goToRegister"
                                 type="button"
                                 class="font-medium text-yellow-400 hover:text-yellow-500 dark:text-yellow-300 dark:hover:text-yellow-400"
                             >
-                                Sign up
+                                {{ t('auth.login.sign_up') }}
                             </button>
                         </p>
                     </div>
