@@ -1,0 +1,21 @@
+{
+    "onboarding": {
+        "welcome": "Welcome! Let's set up your station",
+        "subtitle": "Complete your profile to start managing your fuel stock",
+        "select_company": "Select Your Company",
+        "choose_company": "Choose a company",
+        "selected": "Selected:",
+        "configure_tanks": "Configure Fuel Tank Sizes",
+        "tank_capacity": "Tank Capacity",
+        "enter_capacity": "Enter tank capacity",
+        "coefficient": "Coefficient",
+        "liters_per_ton": "Liters/Ton",
+        "liters": "Liters",
+        "complete_setup": "Complete Setup",
+        "skip": "Skip",
+        "saving": "Saving...",
+        "loading": "Loading...",
+        "select_company_error": "Please select a company",
+        "save_error": "Failed to save data. Please try again."
+    }
+}

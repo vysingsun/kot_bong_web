@@ -4,6 +4,7 @@ import Default_header from '@/layouts/default_header.vue'
 import { MODULE_APP_ROUTES } from '@/modules'
 import { AUTH } from '@/modules/auth/router/index'
 import { isAuthenticated } from '@/middlewares/auth'
+import { ONBOARDINGVIEW } from '@/modules/OnboardingView/router'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,7 @@ const router = createRouter({
             component: Default_header,
             children: [...MODULE_APP_ROUTES],
         },
+        ...ONBOARDINGVIEW.ONBOARDINGVIEW_ROUTES,
     ],
 })
 

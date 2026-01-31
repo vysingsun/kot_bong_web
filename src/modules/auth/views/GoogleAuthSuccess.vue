@@ -22,8 +22,13 @@
             // Store token and redirect
             await authStore.handleGoogleCallback(token)
 
+            // Redirect based on user status
             if (isNewUser) {
-                console.log('Welcome new user!')
+                // New user - go to onboarding
+                router.push('/onboarding')
+            } else {
+                // Existing user - go to home
+                router.push('/')
             }
         } catch (err: any) {
             console.error('Google auth callback error:', err)
