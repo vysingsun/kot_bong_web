@@ -1,7 +1,7 @@
 {
     "onboarding": {
         "welcome": "Welcome! Let's set up your station",
-        "subtitle": "Complete your profile to start managing your fuel stock",
+        "subtitle": "Complete your info to start managing your fuel stock",
         "select_company": "Select Your Company",
         "choose_company": "Choose a company",
         "selected": "Selected:",
