@@ -2,7 +2,7 @@
     "auth": {
         "login": {
             "title": "Sign In",
-            "email_placeholder": "Email",
+            "identifier_placeholder": "Email or Phone Number",
             "password_placeholder": "Password",
             "sign_in_button": "Sign In",
             "or_continue_with": "or continue with",
@@ -10,6 +10,67 @@
             "continue_with_facebook": "Continue with Facebook",
             "no_account": "Don't have an account?",
             "sign_up": "Sign up"
+        }
+    },
+
+    "register": {
+        "title": "Create Account",
+        "subtitle": "Start your journey with us",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter your first name",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name",
+        "emailOrPhone": "Email or Phone Number",
+        "emailOrPhonePlaceholder": "Enter email or phone number",
+        "password": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "confirmPassword": "Confirm Password",
+        "confirmPasswordPlaceholder": "Re-enter your password",
+        "passwordRequirements": "Password must contain:",
+        "minLength": "At least 8 characters",
+        "lowercase": "One lowercase letter",
+        "uppercase": "One uppercase letter",
+        "number": "One number",
+        "special": "One special character (@$!%*?&)",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "continue": "Continue",
+        "loading": "Loading...",
+        "verifyEmail": "Verify Your Email",
+        "otpSent": "We've sent a verification code to",
+        "otpCode": "Verification Code",
+        "otpPlaceholder": "Enter 6-digit code",
+        "didntReceive": "Didn't receive the code?",
+        "resend": "Resend",
+        "back": "Back",
+        "verify": "Verify",
+        "verifying": "Verifying...",
+        "almostDone": "Almost Done!",
+        "completeRegistration": "Complete your registration to get started",
+        "createAccount": "Create Account",
+        "creating": "Creating Account...",
+        "orContinueWith": "Or continue with",
+        "haveAccount": "Already have an account?",
+        "login": "Login",
+        "success": {
+            "title": "Account Created Successfully!",
+            "message": "Redirecting you to the dashboard..."
+        },
+        "errors": {
+            "firstNameRequired": "First name is required",
+            "lastNameRequired": "Last name is required",
+            "emailOrPhoneRequired": "Email or phone number is required",
+            "invalidEmail": "Please enter a valid email address",
+            "passwordRequired": "Password is required",
+            "passwordWeak": "Password does not meet requirements",
+            "confirmPasswordRequired": "Please confirm your password",
+            "passwordMismatch": "Passwords do not match",
+            "invalidOtp": "Please enter a valid 6-digit code",
+            "sendOtpFailed": "Failed to send verification code",
+            "resendFailed": "Failed to resend code",
+            "verifyFailed": "Invalid verification code"
         }
     }
 }

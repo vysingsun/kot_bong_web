@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getFromCache } from '@/composables/useCache'
+import type { RegisterPayload, SendOTPPayload, VerifyOTPPayload } from '@/modules/auth/interfaces/index'
 
 const getToken = () => {
     const token = getFromCache('token')?.value
@@ -20,5 +21,16 @@ export const authService = {
                 },
             },
         )
+    },
+    sendOTP: async (payload: SendOTPPayload) => {
+        return axios.post('auth/send-otp', payload)
+    },
+
+    verifyOTP: async (payload: VerifyOTPPayload) => {
+        return axios.post('auth/verify-otp', payload)
+    },
+
+    register: async (payload: RegisterPayload) => {
+        return axios.post('auth/register', payload, { withCredentials: true })
     },
 }

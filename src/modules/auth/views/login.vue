@@ -9,14 +9,14 @@
     const authStore = useAuthStore()
     const { t } = useI18n()
 
-    const email = ref('')
+    const identifier = ref('') // Can be email or phone
     const password = ref('')
     const loading = ref(false)
 
     const onlogin = async () => {
         loading.value = true
         const payload = {
-            email: email.value,
+            identifier: identifier.value, // Send as identifier to backend
             password: password.value,
         }
         await authStore.login(payload)
@@ -32,7 +32,7 @@
     }
 
     const goToRegister = () => {
-        router.push('/register')
+        router.push('/auth/register')
     }
 </script>
 
@@ -44,38 +44,73 @@
         </div>
 
         <div class="flex items-end h-screen pb-28">
-            <div class="bg-red flex flex-col items-center justify-center mx-auto lg:py-0">
-                <img class="w-2/3" src="@/assets/images/base_station.svg" alt="logo" />
+            <div class="flex flex-col items-center justify-center mx-auto lg:py-0">
+                <img class="w-2/3" src="@/assets/images/base-station-blue.svg" alt="logo" />
                 <div class="w-full md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <!-- Email Input -->
+                    <div class="space-y-4 md:space-y-6 sm:p-8">
+                        <!-- Email or Phone Input -->
                         <div>
-                            <input
-                                v-model="email"
-                                type="email"
-                                name="email"
-                                id="email"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                :placeholder="t('auth.login.email_placeholder')"
-                            />
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        class="w-5 h-5 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                                        />
+                                    </svg>
+                                </div>
+                                <input
+                                    v-model="identifier"
+                                    type="text"
+                                    name="identifier"
+                                    id="identifier"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    :placeholder="t('auth.login.identifier_placeholder')"
+                                />
+                            </div>
                         </div>
 
                         <!-- Password Input -->
                         <div>
-                            <input
-                                v-model="password"
-                                type="password"
-                                name="password"
-                                id="password"
-                                :placeholder="t('auth.login.password_placeholder')"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl focus:ring-yellow-300 focus:border-yellow-300 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        class="w-5 h-5 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                                        />
+                                    </svg>
+                                </div>
+                                <input
+                                    v-model="password"
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    :placeholder="t('auth.login.password_placeholder')"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+                            </div>
                         </div>
 
                         <!-- Sign In Button -->
                         <button
                             @click="onlogin()"
-                            class="w-full flex justify-center text-white bg-yellow-300 hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-yellow-200 font-medium rounded-2xl text-sm px-5 py-3 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                            :disabled="loading"
+                            class="w-full flex justify-center text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-colors"
                         >
                             <svg
                                 v-if="loading"
@@ -113,7 +148,7 @@
                             <button
                                 @click="loginWithGoogle"
                                 type="button"
-                                class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-2xl text-sm px-5 py-3 text-center dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+                                class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-xl text-sm px-5 py-3 text-center dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-700 transition-colors"
                             >
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -142,7 +177,7 @@
                             <button
                                 @click="loginWithFacebook"
                                 type="button"
-                                class="w-full flex items-center justify-center gap-3 bg-[#1877F2] hover:bg-[#166FE5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-3 text-center text-white dark:focus:ring-blue-800"
+                                class="w-full flex items-center justify-center gap-3 bg-[#1877F2] hover:bg-[#166FE5] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-3 text-center text-white dark:focus:ring-blue-800 transition-colors"
                             >
                                 <svg
                                     class="w-5 h-5"
@@ -164,7 +199,7 @@
                             <button
                                 @click="goToRegister"
                                 type="button"
-                                class="font-medium text-yellow-400 hover:text-yellow-500 dark:text-yellow-300 dark:hover:text-yellow-400"
+                                class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 transition-colors"
                             >
                                 {{ t('auth.login.sign_up') }}
                             </button>

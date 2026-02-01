@@ -14,6 +14,15 @@ export const routes = [
     },
     {
         module: MODULE_NAME,
+        name: 'Register',
+        path: `${MODULE_PATH}/register`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/auth/views/register.vue'),
+    },
+    {
+        module: MODULE_NAME,
         name: 'GoogleAuthSuccess',
         path: `${MODULE_PATH}/google/success`,
         meta: {
