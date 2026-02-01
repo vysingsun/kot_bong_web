@@ -1,19 +1,20 @@
-const MODULE_NAME = 'App'
-const MODULE_PATH = '/app'
+import { isAuthenticated } from '@/middlewares/auth'
+const MODULE_NAME = 'Onboarding'
+const MODULE_PATH = '/onboarding'
 
 export const routes = [
     {
         module: MODULE_NAME,
-        name: 'list',
+        name: MODULE_NAME,
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
         },
-        component: () => import('@/modules/app/views/index.vue'),
+        component: () => import('@/modules/OnboardingView/views/index.vue'),
     },
 ]
 
-const APP_ROUTES = [
+const ONBOARDINGVIEW_ROUTES = [
     {
         children: routes,
         initModule: MODULE_NAME.toLowerCase(),
@@ -21,13 +22,10 @@ const APP_ROUTES = [
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
-            // middleware: [prefetchResources],
             moduleName: MODULE_NAME,
         },
-        beforeEnter: async (to: any, from: any, next: any) => {
-            next()
-        },
+        beforeEnter: isAuthenticated,
     },
 ]
 
-export const APP = { APP_ROUTES, MODULE_NAME, MODULE_PATH }
+export const ONBOARDINGVIEW = { ONBOARDINGVIEW_ROUTES, MODULE_NAME, MODULE_PATH }

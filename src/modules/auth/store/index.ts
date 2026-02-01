@@ -2,8 +2,15 @@ import { defineStore } from 'pinia'
 import { authService } from '@/modules/auth/services/api.service'
 import router from '@/router'
 import { removeAll, setCache } from '@/composables/useCache'
+import { ref } from 'vue'
+import type { RegisterPayload, SendOTPPayload, VerifyOTPPayload } from '@/modules/auth/interfaces/index'
 
 export const useAuthStore = defineStore('authStore', () => {
+    const user = ref(null)
+    const isAuthenticated = ref(false)
+    const loading = ref(false)
+    // Get your backend API URL from environment or config
+    const backendUrl = import.meta.env.VITE_API_BASE_URL || ''
     const login = async (payload: object) => {
         await authService
             .login(payload)
@@ -19,6 +26,49 @@ export const useAuthStore = defineStore('authStore', () => {
                 alert(error)
             })
     }
+    const googleOAuth = async () => {
+        try {
+            // Redirect to backend Google OAuth route
+            window.location.href = `${backendUrl}/auth/google`
+        } catch (error) {
+            console.error('Google OAuth error:', error)
+            alert('Failed to initialize Google login')
+        }
+    }
+
+    const facebookOAuth = async () => {
+        try {
+            // Redirect to backend Google OAuth route
+            window.location.href = `${backendUrl}/auth/facebook`
+        } catch (error) {
+            console.error('Google OAuth error:', error)
+            alert('Failed to initialize Google login')
+        }
+    }
+
+    const handleGoogleCallback = async (token: string) => {
+        try {
+            // Store the token
+            setCache('token', token)
+            // Redirect to home page
+            router.push('/')
+        } catch (error) {
+            console.error('Error handling Google callback:', error)
+            throw error
+        }
+    }
+
+    const handleFacebookCallback = async (token: string) => {
+        try {
+            // Store the token
+            setCache('token', token)
+            // Redirect to home page
+            router.push('/')
+        } catch (error) {
+            console.error('Error handling Google callback:', error)
+            throw error
+        }
+    }
     const logout = async () => {
         await authService.logout().then(res => {
             if (res.data.success) {
@@ -27,8 +77,52 @@ export const useAuthStore = defineStore('authStore', () => {
             }
         })
     }
+    const sendOTP = async (payload: SendOTPPayload) => {
+        loading.value = true
+        try {
+            const response = await authService.sendOTP(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const verifyOTP = async (payload: VerifyOTPPayload) => {
+        loading.value = true
+        try {
+            const response = await authService.verifyOTP(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const register = async (payload: RegisterPayload) => {
+        loading.value = true
+        try {
+            const response = await authService.register(payload)
+            user.value = response.data.user
+            isAuthenticated.value = true
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            loading.value = false
+        }
+    }
     return {
         login,
         logout,
+        sendOTP,
+        verifyOTP,
+        register,
+        googleOAuth,
+        facebookOAuth,
+        handleGoogleCallback,
+        handleFacebookCallback,
     }
 })
