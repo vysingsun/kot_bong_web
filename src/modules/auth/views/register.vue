@@ -182,8 +182,9 @@
                                         v-for="i in 4"
                                         :key="i"
                                         class="h-1 flex-1 rounded-full transition-all"
-                                        :style="{ backgroundColor: i <= passwordStrength ? strengthBarColor : '' }"
-                                        :class="i > passwordStrength ? 'bg-gray-200 dark:bg-gray-600' : ''"
+                                        :style="{
+                                            backgroundColor: i <= passwordStrength ? strengthBarColor : '#E5E7EB',
+                                        }"
                                     ></div>
                                 </div>
                                 <p class="text-xs font-medium" :style="{ color: strengthBarColor }">
