@@ -181,13 +181,12 @@
                                     <div
                                         v-for="i in 4"
                                         :key="i"
-                                        :class="[
-                                            'h-1 flex-1 rounded-full transition-all',
-                                            i <= passwordStrength ? getStrengthColor() : 'bg-gray-200 dark:bg-gray-600',
-                                        ]"
+                                        class="h-1 flex-1 rounded-full transition-all"
+                                        :style="{ backgroundColor: i <= passwordStrength ? strengthBarColor : '' }"
+                                        :class="i > passwordStrength ? 'bg-gray-200 dark:bg-gray-600' : ''"
                                     ></div>
                                 </div>
-                                <p class="text-xs" :class="getStrengthTextColor()">
+                                <p class="text-xs font-medium" :style="{ color: strengthBarColor }">
                                     {{ getStrengthText() }}
                                 </p>
 
@@ -810,19 +809,12 @@
         passwordStrength.value = checks
     }
 
-    const getStrengthColor = () => {
-        if (passwordStrength.value <= 1) return 'bg-red-500'
-        if (passwordStrength.value <= 2) return 'bg-orange-500'
-        if (passwordStrength.value <= 3) return 'bg-yellow-500'
-        return 'bg-green-500'
-    }
-
-    const getStrengthTextColor = () => {
-        if (passwordStrength.value <= 1) return 'text-red-500'
-        if (passwordStrength.value <= 2) return 'text-orange-500'
-        if (passwordStrength.value <= 3) return 'text-yellow-500'
-        return 'text-green-500'
-    }
+    const strengthBarColor = computed(() => {
+        if (passwordStrength.value <= 1) return '#EF4444' // red-500
+        if (passwordStrength.value <= 2) return '#F97316' // orange-500
+        if (passwordStrength.value <= 3) return '#EAB308' // yellow-500
+        return '#22C55E' // green-500
+    })
 
     const getStrengthText = () => {
         if (passwordStrength.value <= 1) return t('register.weak')
