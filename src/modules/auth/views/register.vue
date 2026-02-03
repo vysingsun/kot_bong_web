@@ -308,7 +308,7 @@
                                                     : 'text-gray-500'
                                             "
                                         >
-                                            {{ t('register.special') }}
+                                            {{ t('register.special') }} <span>(@$!%*?&)</span>
                                         </span>
                                     </div>
                                 </div>
