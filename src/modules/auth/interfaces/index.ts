@@ -1,6 +1,5 @@
 // Auth Interfaces
 export interface RegisterPayload {
-    username: string
     email?: string
     phone?: string
     password: string
@@ -17,8 +16,13 @@ export interface SendOTPPayload {
     firstName: string
 }
 
+export interface SendOTPtoSMSPayload {
+    phone: string
+    firstName: string
+}
+
 export interface VerifyOTPPayload {
-    email: string
+    identifier: string
     otp: string
 }
 

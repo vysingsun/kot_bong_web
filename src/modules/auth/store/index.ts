@@ -3,7 +3,12 @@ import { authService } from '@/modules/auth/services/api.service'
 import router from '@/router'
 import { removeAll, setCache } from '@/composables/useCache'
 import { ref } from 'vue'
-import type { RegisterPayload, SendOTPPayload, VerifyOTPPayload } from '@/modules/auth/interfaces/index'
+import type {
+    RegisterPayload,
+    SendOTPPayload,
+    SendOTPtoSMSPayload,
+    VerifyOTPPayload,
+} from '@/modules/auth/interfaces/index'
 
 export const useAuthStore = defineStore('authStore', () => {
     const user = ref(null)
@@ -89,6 +94,18 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
+    const sendOTPtoSMS = async (payload: SendOTPtoSMSPayload) => {
+        loading.value = true
+        try {
+            const response = await authService.sendOTPtoSMS(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            loading.value = false
+        }
+    }
+
     const verifyOTP = async (payload: VerifyOTPPayload) => {
         loading.value = true
         try {
@@ -114,12 +131,28 @@ export const useAuthStore = defineStore('authStore', () => {
             loading.value = false
         }
     }
+
+    const registerBySMS = async (payload: RegisterPayload) => {
+        loading.value = true
+        try {
+            const response = await authService.registerBySMS(payload)
+            user.value = response.data.user
+            isAuthenticated.value = true
+            return response.data
+        } catch (error) {
+            throw error
+        } finally {
+            loading.value = false
+        }
+    }
     return {
         login,
         logout,
         sendOTP,
+        sendOTPtoSMS,
         verifyOTP,
         register,
+        registerBySMS,
         googleOAuth,
         facebookOAuth,
         handleGoogleCallback,

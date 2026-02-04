@@ -70,7 +70,12 @@
             "invalidOtp": "Please enter a valid 6-digit code",
             "sendOtpFailed": "Failed to send verification code",
             "resendFailed": "Failed to resend code",
-            "verifyFailed": "Invalid verification code"
+            "verifyFailed": "Invalid verification code",
+            "title": "Registration Failed",
+            "tryAgain": "Try Again",
+            "description": "We couldn't create your account. Please check your information and try again.",
+            "seeMore": "See more...",
+            "seeLess": "See less"
         }
     }
 }

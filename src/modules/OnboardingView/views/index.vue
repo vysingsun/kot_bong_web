@@ -270,7 +270,7 @@
                     station_name: newStationName,
                 })
 
-                if (updateResponse.data.success) {
+                if (updateResponse.data.result.success) {
                     updateLocalStorage(newStationName)
                 } else {
                     throw new Error('Failed to update station name')
