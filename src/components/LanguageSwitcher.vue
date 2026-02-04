@@ -53,7 +53,7 @@
         <button
             @click="isOpen = !isOpen"
             type="button"
-            class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:outline-none focus:ring-yellow-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition-all"
+            class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition-all"
         >
             <img :src="currentLanguage.flag" :alt="currentLanguage.name" class="w-5 h-4 object-cover rounded-sm" />
             <span class="font-semibold">{{ currentLanguage.code }}</span>
@@ -88,7 +88,7 @@
                         @click="changeLanguage(lang)"
                         class="flex items-center gap-2.5 px-3 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
                         :class="{
-                            'bg-yellow-50 dark:bg-gray-700': currentLanguage.code === lang.code,
+                            'bg-blue-50 dark:bg-gray-700': currentLanguage.code === lang.code,
                         }"
                     >
                         <img :src="lang.flag" :alt="lang.name" class="w-5 h-4 object-cover rounded-sm" />
@@ -96,7 +96,7 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 flex-1">{{ lang.name }}</span>
                         <svg
                             v-if="currentLanguage.code === lang.code"
-                            class="w-4 h-4 text-yellow-400"
+                            class="w-4 h-4 text-blue-400"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
