@@ -1053,7 +1053,7 @@
             const owner = `${formData.firstName} ${formData.lastName}`.trim()
 
             const payload = {
-                email: isEmail.value ? formData.emailOrPhone : `vysingsun570@gmail.com`,
+                email: isEmail.value ? formData.emailOrPhone : `kotpreng${formData.emailOrPhone}@gmail.com`,
                 phone: !isEmail.value ? formData.emailOrPhone : '',
                 password: formData.password,
                 repeat_password: formData.confirmPassword,
