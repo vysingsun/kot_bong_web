@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { getFromCache } from '@/composables/useCache'
-import type { RegisterPayload, SendOTPPayload, VerifyOTPPayload } from '@/modules/auth/interfaces/index'
+import type {
+    RegisterPayload,
+    SendOTPPayload,
+    VerifyOTPPayload,
+    SendOTPtoSMSPayload,
+} from '@/modules/auth/interfaces/index'
 
 const getToken = () => {
     const token = getFromCache('token')?.value
@@ -26,11 +31,19 @@ export const authService = {
         return axios.post('auth/send-otp', payload)
     },
 
+    sendOTPtoSMS: async (payload: SendOTPtoSMSPayload) => {
+        return axios.post('auth/send-otp-sms', payload)
+    },
+
     verifyOTP: async (payload: VerifyOTPPayload) => {
         return axios.post('auth/verify-otp', payload)
     },
 
     register: async (payload: RegisterPayload) => {
         return axios.post('auth/register', payload, { withCredentials: true })
+    },
+
+    registerBySMS: async (payload: RegisterPayload) => {
+        return axios.post('auth/register-phone', payload, { withCredentials: true })
     },
 }
