@@ -55,8 +55,6 @@ export const useAuthStore = defineStore('authStore', () => {
         try {
             // Store the token
             setCache('token', token)
-            // Redirect to home page
-            router.push('/')
         } catch (error) {
             console.error('Error handling Google callback:', error)
             throw error

@@ -21,16 +21,19 @@ export const routes = [
         },
         component: () => import('@/modules/auth/views/register.vue'),
     },
+]
+
+const oauthCallbackRoutes = [
     {
         module: MODULE_NAME,
         name: 'GoogleAuthSuccess',
         path: `${MODULE_PATH}/google/success`,
         meta: {
             title: MODULE_NAME,
+            requiresAuth: false,
         },
         component: () => import('@/modules/auth/views/GoogleAuthSuccess.vue'),
     },
-
     {
         module: MODULE_NAME,
         name: 'FacebookAuthSuccess',
@@ -53,6 +56,7 @@ const AUTH_ROUTES = [
             moduleName: MODULE_NAME,
         },
     },
+    ...oauthCallbackRoutes,
 ]
 
 export const AUTH = { AUTH_ROUTES, MODULE_NAME, MODULE_PATH }
