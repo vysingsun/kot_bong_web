@@ -28,7 +28,16 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 const isUnauthorized = ref(false)
 axios.interceptors.request.use(
     function (req) {
-        if (req.url === 'login') isUnauthorized.value = false
+        if (
+            req.url === 'auth/login' ||
+            req.url === 'auth/register' ||
+            req.url === 'auth/send-otp' ||
+            req.url === 'auth/verify-otp' ||
+            req.url === 'auth/google/success' ||
+            req.url === 'auth/facebook/success'
+        ) {
+            isUnauthorized.value = false
+        }
         if (isUnauthorized.value) throw new Error('Unauthorized access detected. Further requests blocked.')
         const token = req.headers.has('Authorization') ? req.headers.Authorization : getToken()
 
