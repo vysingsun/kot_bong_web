@@ -38,6 +38,10 @@
             "confirm_password": "Confirm Password",
             "confirm_password_placeholder": "Re-enter new password",
             "reset_password": "Reset Password",
+            "success": {
+                "title": "Password Changed Successfully!",
+                "message": "Redirecting you to login..."
+            },
             "errors": {
                 "identifier_required": "Email or phone number is required",
                 "send_failed": "Failed to send verification code",

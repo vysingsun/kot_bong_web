@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, computed } from 'vue'
+    import { ref, computed, reactive } from 'vue'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { useAuthStore } from '@/modules/auth/store/index'
@@ -20,6 +20,7 @@
     const showNewPassword = ref(false)
     const showConfirmPassword = ref(false)
     const resendTimer = ref(0)
+    const showSuccessModal = ref(false)
 
     const errors = ref({
         identifier: '',
@@ -34,6 +35,57 @@
     })
 
     const otpCode = computed(() => otpDigits.value.join(''))
+
+    // Check password strength
+    const passwordChecks = reactive({
+        length: false,
+        lowercase: false,
+        uppercase: false,
+        number: false,
+        special: false,
+    })
+
+    const passwordStrength = ref(0)
+
+    const checkPasswordStrength = () => {
+        const pwd = newPassword.value
+
+        passwordChecks.length = pwd.length >= 8
+        passwordChecks.lowercase = /[a-z]/.test(pwd)
+        passwordChecks.uppercase = /[A-Z]/.test(pwd)
+        passwordChecks.number = /\d/.test(pwd)
+        passwordChecks.special = /[@$!%*?&]/.test(pwd)
+
+        const checks = Object.values(passwordChecks).filter(Boolean).length
+        passwordStrength.value = checks
+    }
+
+    const strengthBarColor = computed(() => {
+        if (passwordStrength.value <= 1) return '#EF4444' // red-500
+        if (passwordStrength.value <= 2) return '#F97316' // orange-500
+        if (passwordStrength.value <= 3) return '#EAB308' // yellow-500
+        return '#22C55E' // green-500
+    })
+
+    const getStrengthText = () => {
+        if (passwordStrength.value <= 1) return t('register.weak')
+        if (passwordStrength.value <= 2) return t('register.fair')
+        if (passwordStrength.value <= 3) return t('register.good')
+        return t('register.strong')
+    }
+
+    // Validate password
+    const validateStrongPassword = () => {
+        if (!newPassword.value) {
+            errors.value.newPassword = t('register.errors.passwordRequired')
+            return false
+        } else if (!Object.values(passwordChecks).every(Boolean)) {
+            errors.value.newPassword = t('register.errors.passwordWeak')
+            return false
+        }
+
+        return true
+    }
 
     // Step 1: Send OTP
     const sendOTP = async () => {
@@ -185,6 +237,10 @@
     const resetPassword = async () => {
         errors.value = { identifier: '', otp: '', newPassword: '', confirmPassword: '' }
 
+        if (!validateStrongPassword()) {
+            return
+        }
+
         if (!newPassword.value) {
             errors.value.newPassword = t('auth.forgotPassword.errors.password_required')
             return
@@ -213,8 +269,13 @@
                 confirmPassword: confirmPassword.value,
             })
 
-            // Success - redirect to login
-            router.push('/auth/login?reset=success')
+            showSuccessModal.value = true
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                // Success - redirect to login
+                router.push('/auth/login?reset=success')
+            }, 2000)
         } catch (error: any) {
             const errorMessage = error.response?.data?.error || error.response?.data?.message
 
@@ -444,9 +505,10 @@
                                         ? 'border-red-500'
                                         : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                                 "
-                                @input="errors.newPassword = ''"
+                                @input="checkPasswordStrength"
                                 required
                             />
+                            <!-- @input="errors.newPassword = ''" -->
                             <button
                                 type="button"
                                 @click="showNewPassword = !showNewPassword"
@@ -481,6 +543,135 @@
                                     />
                                 </svg>
                             </button>
+                        </div>
+
+                        <!-- Password Strength Indicator -->
+                        <div v-if="newPassword" class="mt-3 space-y-2">
+                            <div class="flex space-x-1">
+                                <div
+                                    v-for="i in 4"
+                                    :key="i"
+                                    class="h-1 flex-1 rounded-full transition-all"
+                                    :style="{
+                                        backgroundColor: i <= passwordStrength ? strengthBarColor : '#E5E7EB',
+                                    }"
+                                ></div>
+                            </div>
+                            <p class="text-xs font-medium" :style="{ color: strengthBarColor }">
+                                {{ getStrengthText() }}
+                            </p>
+
+                            <!-- Password Requirements -->
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-3 space-y-1 text-xs">
+                                <p class="font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ t('register.passwordRequirements') }}
+                                </p>
+                                <div class="flex items-center space-x-2">
+                                    <svg
+                                        :class="passwordChecks.length ? 'text-green-500' : 'text-gray-400'"
+                                        class="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span
+                                        :class="
+                                            passwordChecks.length ? 'text-gray-900 dark:text-white' : 'text-gray-500'
+                                        "
+                                    >
+                                        {{ t('register.minLength') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg
+                                        :class="passwordChecks.lowercase ? 'text-green-500' : 'text-gray-400'"
+                                        class="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span
+                                        :class="
+                                            passwordChecks.lowercase ? 'text-gray-900 dark:text-white' : 'text-gray-500'
+                                        "
+                                    >
+                                        {{ t('register.lowercase') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg
+                                        :class="passwordChecks.uppercase ? 'text-green-500' : 'text-gray-400'"
+                                        class="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span
+                                        :class="
+                                            passwordChecks.uppercase ? 'text-gray-900 dark:text-white' : 'text-gray-500'
+                                        "
+                                    >
+                                        {{ t('register.uppercase') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg
+                                        :class="passwordChecks.number ? 'text-green-500' : 'text-gray-400'"
+                                        class="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span
+                                        :class="
+                                            passwordChecks.number ? 'text-gray-900 dark:text-white' : 'text-gray-500'
+                                        "
+                                    >
+                                        {{ t('register.number') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg
+                                        :class="passwordChecks.special ? 'text-green-500' : 'text-gray-400'"
+                                        class="w-4 h-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span
+                                        :class="
+                                            passwordChecks.special ? 'text-gray-900 dark:text-white' : 'text-gray-500'
+                                        "
+                                    >
+                                        {{ t('register.special') }} <span>(@$!%*?&)</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <p v-if="errors.newPassword" class="mt-1 text-sm text-red-500">{{ errors.newPassword }}</p>
                     </div>
@@ -554,5 +745,173 @@
                 </div>
             </div>
         </div>
+
+        <!-- Success Modal -->
+        <Transition
+            enter-active-class="transition ease-out duration-300"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition ease-in duration-200"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
+            <div
+                v-if="showSuccessModal"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
+            >
+                <Transition
+                    enter-active-class="transition ease-out duration-300 transform"
+                    enter-from-class="scale-95 opacity-0"
+                    enter-to-class="scale-100 opacity-100"
+                    leave-active-class="transition ease-in duration-200 transform"
+                    leave-from-class="scale-100 opacity-100"
+                    leave-to-class="scale-95 opacity-0"
+                >
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+                        <!-- Animated Success Icon -->
+                        <div class="mb-6 relative">
+                            <div
+                                class="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center animate-scale-in"
+                            >
+                                <svg
+                                    class="w-12 h-12 text-[#19b23e] animate-check"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="3"
+                                        d="M5 13l4 4L19 7"
+                                        class="checkmark"
+                                    />
+                                </svg>
+                            </div>
+                            <!-- Confetti effect -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div
+                                    v-for="i in 8"
+                                    :key="i"
+                                    class="absolute w-2 h-2 rounded-full animate-confetti"
+                                    :style="{
+                                        backgroundColor: ['#19b23e'][i % 1],
+                                        animationDelay: `${i * 0.1}s`,
+                                    }"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                            {{ t('auth.forgotPassword.success.title') }}
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6">
+                            {{ t('auth.forgotPassword.success.message') }}
+                        </p>
+
+                        <!-- Loading indicator -->
+                        <div class="flex items-center justify-center space-x-2 text-blue-600">
+                            <div
+                                class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+                                style="animation-delay: 0s"
+                            ></div>
+                            <div
+                                class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+                                style="animation-delay: 0.1s"
+                            ></div>
+                            <div
+                                class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+                                style="animation-delay: 0.2s"
+                            ></div>
+                        </div>
+                    </div>
+                </Transition>
+            </div>
+        </Transition>
     </section>
 </template>
+
+<style scoped>
+    @keyframes scale-in {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes check {
+        0% {
+            stroke-dashoffset: 50;
+        }
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes confetti {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(var(--x), var(--y)) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    .animate-scale-in {
+        animation: scale-in 0.5s ease-out forwards;
+    }
+
+    .animate-check .checkmark {
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: check 0.5s ease-out 0.3s forwards;
+    }
+
+    .animate-confetti {
+        --x: 0px;
+        --y: 0px;
+        animation: confetti 1s ease-out forwards;
+    }
+
+    .animate-confetti:nth-child(1) {
+        --x: 60px;
+        --y: -80px;
+    }
+    .animate-confetti:nth-child(2) {
+        --x: -60px;
+        --y: -80px;
+    }
+    .animate-confetti:nth-child(3) {
+        --x: 80px;
+        --y: 0px;
+    }
+    .animate-confetti:nth-child(4) {
+        --x: -80px;
+        --y: 0px;
+    }
+    .animate-confetti:nth-child(5) {
+        --x: 70px;
+        --y: 70px;
+    }
+    .animate-confetti:nth-child(6) {
+        --x: -70px;
+        --y: 70px;
+    }
+    .animate-confetti:nth-child(7) {
+        --x: 40px;
+        --y: -70px;
+    }
+    .animate-confetti:nth-child(8) {
+        --x: -40px;
+        --y: -70px;
+    }
+</style>
