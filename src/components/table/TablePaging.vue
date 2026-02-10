@@ -362,7 +362,7 @@
 <style lang="scss" scoped>
     .progress {
         height: 4.5px;
-        background: linear-gradient(#faca15 0 0), linear-gradient(#faca15 0 0), #dbdcef;
+        background: linear-gradient(#1c64f2 0 0), linear-gradient(#1c64f2 0 0), #dbdcef;
         background-size: 60% 100%;
         background-repeat: no-repeat;
         animation: progress-7x9cg2 2.4000000000000004s infinite;

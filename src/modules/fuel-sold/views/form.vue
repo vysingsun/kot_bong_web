@@ -174,10 +174,10 @@
 
     const selectedFuelId = computed({
         get() {
-            return typeof store.formData.fuel_id === 'object' ? store.formData.fuel_id?._id : store.formData.fuel_id
+            return typeof store.formData.fuel === 'object' ? store.formData.fuel?._id : store.formData.fuel
         },
         set(value) {
-            store.formData.fuel_id = value
+            store.formData.fuel = value
         },
     })
 

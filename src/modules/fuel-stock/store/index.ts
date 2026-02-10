@@ -10,7 +10,7 @@ interface Ifuel {
 }
 class FormData {
     _id: any
-    fuel_id?: Ifuel
+    fuel?: Ifuel
     quantity_ton?: number | null
     quantity_liter?: number | null
     amount_ton?: number | null
@@ -21,7 +21,7 @@ class FormData {
     total_amount_us?: number | null
     station_id: any
     createdAt: any
-    fuel_id_old?: string | null
+    fuel_old?: string | null
 }
 
 class ReportFilters {
@@ -37,7 +37,7 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const headers = ref([
         {
             text: 'Fuel Type',
-            value: 'fuel_id.fuel_name',
+            value: 'fuel.fuel_name',
         },
         {
             text: 'Quantity In Liter',
@@ -105,14 +105,14 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     const readDataFromApi = async (id: any) => {
         const { data } = await fuel_stockService.get(id)
         readFuedStock(data.data)
-        fuels.value = [data.data.fuel_id]
-        formData.value.fuel_id = data.data.fuel_id._id
-        formData.value.fuel_id_old = data.data.fuel_id._id
+        fuels.value = [data.data.fuel]
+        formData.value.fuel = data.data.fuel._id
+        formData.value.fuel_old = data.data.fuel._id
     }
 
     const readFuedStock = ({
         _id = undefined,
-        fuel_id = undefined,
+        fuel = undefined,
         quantity_ton = undefined,
         quantity_liter = undefined,
         amount_ton = undefined,
@@ -126,7 +126,7 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
     }: Partial<FormData> = {}) => {
         formData.value = {
             _id,
-            fuel_id,
+            fuel,
             quantity_ton,
             quantity_liter,
             amount_ton,
