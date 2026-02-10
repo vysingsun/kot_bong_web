@@ -9,7 +9,46 @@
             "continue_with_google": "Continue with Google",
             "continue_with_facebook": "Continue with Facebook",
             "no_account": "Don't have an account?",
-            "sign_up": "Sign up"
+            "sign_up": "Sign up",
+            "errors": {
+                "identifier_required": "Email or phone number is required",
+                "password_required": "Password is required",
+                "login_failed": "Login failed. Please check your credentials."
+            }
+        },
+        "forgotPassword": {
+            "title": "Forgot Password",
+            "subtitle": "We'll send you a code to reset your password",
+            "identifier": "Email or Phone Number",
+            "identifier_placeholder": "Enter your email or phone number",
+            "send_otp": "Send Code",
+            "back_to_login": "Back to Login",
+            "verify_otp": "Verify Code",
+            "otp_sent": "We've sent a verification code to",
+            "otp_code": "Verification Code",
+            "didnt_receive": "Didn't receive the code?",
+            "resend": "Resend",
+            "back": "Back",
+            "verify": "Verify",
+            "new_password_title": "Create New Password",
+            "new_password_subtitle": "Enter your new password below",
+            "new_password": "New Password",
+            "new_password_placeholder": "Enter new password",
+            "confirm_password": "Confirm Password",
+            "confirm_password_placeholder": "Re-enter new password",
+            "reset_password": "Reset Password",
+            "errors": {
+                "identifier_required": "Email or phone number is required",
+                "send_failed": "Failed to send verification code",
+                "invalid_otp": "Please enter a valid 6-digit code",
+                "verify_failed": "Invalid or expired verification code",
+                "resend_failed": "Failed to resend code",
+                "password_required": "New password is required",
+                "password_weak": "Password must be at least 8 characters",
+                "confirm_required": "Please confirm your password",
+                "password_mismatch": "Passwords do not match",
+                "reset_failed": "Failed to reset password. Please try again."
+            }
         }
     },
 

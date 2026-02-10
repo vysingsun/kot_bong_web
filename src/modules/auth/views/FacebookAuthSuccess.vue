@@ -14,11 +14,6 @@
             // Get token from URL
             const token = route.query.token as string
 
-            console.log('=== FACEBOOK FRONTEND TOKEN DEBUG ===')
-            console.log('Token from URL:', token)
-            console.log('Token type:', typeof token)
-            console.log('Token length:', token?.length)
-
             if (!token) {
                 throw new Error('No token received')
             }
@@ -31,8 +26,13 @@
             await authStore.handleFacebookCallback(token)
 
             const isNewUser = route.query.isNewUser === 'true'
+            // Redirect based on user status
             if (isNewUser) {
-                console.log('Welcome new user!')
+                // New user - go to onboarding
+                router.push('/onboarding')
+            } else {
+                // Existing user - go to home
+                router.push('/')
             }
         } catch (err: any) {
             console.error('Facebook auth callback error:', err)
