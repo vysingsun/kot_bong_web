@@ -46,4 +46,24 @@ export const authService = {
     registerBySMS: async (payload: RegisterPayload) => {
         return axios.post('auth/register-phone', payload, { withCredentials: true })
     },
+
+    // Forgot Password - Send OTP (Email)
+    sendForgotPasswordOTP: async (payload: { email: string }) => {
+        return axios.post('/auth/forgot-password', payload)
+    },
+
+    // Forgot Password - Send OTP (SMS)
+    sendForgotPasswordOTPSMS: async (payload: { phone: string }) => {
+        return axios.post('/auth/forgot-password-sms', payload)
+    },
+
+    // Verify OTP
+    verifyForgotPasswordOTP: async (payload: { identifier: string; otp: string }) => {
+        return axios.post('/auth/verify-otp', payload)
+    },
+
+    // Reset Password
+    resetPassword: async (payload: { identifier: string; newPassword: string; confirmPassword: string }) => {
+        return axios.post('/auth/reset-password', payload)
+    },
 }

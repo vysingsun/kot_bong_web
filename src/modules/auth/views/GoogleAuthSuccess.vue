@@ -8,11 +8,9 @@
     const authStore = useAuthStore()
     const loading = ref(true)
     const error = ref('')
-    console.log('GoogleAuthSuccess component created')
+
     onMounted(async () => {
-        console.log('GoogleAuthSuccess component created 2s')
         try {
-            console.log('isNewUser')
             // Get token directly from URL query parameter
             const token = route.query.token as string
             const isNewUser = route.query.isNewUser === 'true'

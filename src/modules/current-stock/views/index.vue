@@ -39,7 +39,7 @@
         </RouterLink>
         <RouterLink
             to="/fuel-stock/create"
-            class="w-100 px-9 py-2.5 text-sm font-medium text-white inline-flex items-center bg-[#faca15] hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-yellow-200 rounded-lg text-center dark:bg-yellow-400 dark:hover:bg-yellow-400 dark:focus:ring-yellow-400"
+            class="w-100 px-9 py-2.5 text-sm font-medium text-white inline-flex items-center bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-200 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-400 dark:focus:ring-blue-400"
         >
             <svg
                 class="w-6 h-6 me-1"
@@ -90,11 +90,11 @@
         loading.value = false
         fuelStocks.value.forEach((item: any, index: number) => {
             const chartElementId = `#radial-chart-do-${index}`
-            const current_stock_as_percent = (100 * item?.current_stock_liter) / 5000
+            const current_stock_as_percent = (100 * item?.current_stock_liter) / item?.fuel_tank_size
             if (document.querySelector(chartElementId)) {
                 const chart = new ApexCharts(
                     document.querySelector(chartElementId),
-                    store.getChartOptions(current_stock_as_percent, item?.fuel_id?.fuel_name, item?.fuel_id?.color),
+                    store.getChartOptions(current_stock_as_percent, item?.fuel?.fuel_name, item?.fuel?.color),
                 )
                 chart.render()
             }

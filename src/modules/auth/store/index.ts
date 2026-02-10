@@ -65,8 +65,6 @@ export const useAuthStore = defineStore('authStore', () => {
         try {
             // Store the token
             setCache('token', token)
-            // Redirect to home page
-            router.push('/')
         } catch (error) {
             console.error('Error handling Google callback:', error)
             throw error
@@ -143,6 +141,46 @@ export const useAuthStore = defineStore('authStore', () => {
             loading.value = false
         }
     }
+
+    // Forgot Password - Send OTP (Email)
+    const sendForgotPasswordOTP = async (payload: { email: string }) => {
+        try {
+            const response = await authService.sendForgotPasswordOTP(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Forgot Password - Send OTP (SMS)
+    const sendForgotPasswordOTPSMS = async (payload: { phone: string }) => {
+        try {
+            const response = await authService.sendForgotPasswordOTPSMS(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Verify OTP
+    const verifyForgotPasswordOTP = async (payload: { identifier: string; otp: string }) => {
+        try {
+            const response = await authService.verifyForgotPasswordOTP(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Reset Password
+    const resetPassword = async (payload: { identifier: string; newPassword: string; confirmPassword: string }) => {
+        try {
+            const response = await authService.resetPassword(payload)
+            return response.data
+        } catch (error) {
+            throw error
+        }
+    }
     return {
         login,
         logout,
@@ -155,5 +193,9 @@ export const useAuthStore = defineStore('authStore', () => {
         facebookOAuth,
         handleGoogleCallback,
         handleFacebookCallback,
+        sendForgotPasswordOTP,
+        sendForgotPasswordOTPSMS,
+        verifyForgotPasswordOTP,
+        resetPassword,
     }
 })

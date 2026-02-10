@@ -403,7 +403,10 @@
                         </svg>
                         <div class="text-sm text-gray-900 dark:text-white">Profile</div>
                     </a>
-                    <a href="#" class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group">
+                    <RouterLink
+                        to="/onboarding"
+                        class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group"
+                    >
                         <svg
                             aria-hidden="true"
                             class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400"
@@ -418,7 +421,7 @@
                             ></path>
                         </svg>
                         <div class="text-sm text-gray-900 dark:text-white">Settings</div>
-                    </a>
+                    </RouterLink>
                     <RouterLink
                         to="/product"
                         class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group"
@@ -664,7 +667,7 @@
     import { useModal } from '@/composables/useModal'
     import { getFromCache } from '@/composables/useCache'
     import type { IUser } from '@/data/constants'
-import { first } from 'lodash'
+    import { first } from 'lodash'
 
     const { isVisible, showModal, closeModal } = useModal()
     const loading = ref(false)
