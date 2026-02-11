@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Default theme colors (PPT) */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-dark: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-text-on-primary: #ffffff;
+}
+
+/* Theme utility classes */
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.bg-primary-hover:hover {
+  background-color: var(--color-primary-hover) !important;
+}
+
+.bg-primary-dark {
+  background-color: var(--color-primary-dark) !important;
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light) !important;
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.text-on-primary {
+  color: var(--color-text-on-primary) !important;
+}
+
+.border-primary {
+  border-color: var(--color-primary) !important;
+}
+
+.ring-primary {
+  --tw-ring-color: var(--color-primary) !important;
+}
+
+/* Button variants */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-primary-light);
+  opacity: 0.6;
+}

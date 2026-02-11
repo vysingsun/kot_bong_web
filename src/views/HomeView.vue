@@ -326,7 +326,7 @@
                 <div class="rounded-lg dark:border-gray-600 h-28 md:h-64">
                     <!-- <img class="rounded-lg" :src="banner_img" alt="banner" /> -->
                     <!-- Card Banner -->
-                    <div class="relative bg-yellow-300 w-full h-24 rounded-lg">
+                    <div class="relative bg-primary w-full h-24 rounded-lg">
                         <div class="font-semibold text-white text-sm absolute top-2 left-3">
                             <div class="text-lg">Welcome {{ user?.firstName }} {{ user?.lastName }}</div>
                             <div class="pt-1">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
@@ -404,7 +404,7 @@
                         <div class="text-sm text-gray-900 dark:text-white">Profile</div>
                     </a>
                     <RouterLink
-                        to="/onboarding"
+                        to="/"
                         class="block p-4 text-center rounded-lg bg-gray-100 dark:hover:bg-gray-600 group"
                     >
                         <svg
@@ -600,7 +600,8 @@
                 Create new item99
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div> -->
-            <button
+            <RouterLink
+                to="/onboarding"
                 data-tooltip-target="tooltip-settings"
                 type="button"
                 class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
@@ -621,7 +622,7 @@
                     />
                 </svg>
                 <span class="sr-only">Settings</span>
-            </button>
+            </RouterLink>
             <div
                 id="tooltip-settings"
                 role="tooltip"

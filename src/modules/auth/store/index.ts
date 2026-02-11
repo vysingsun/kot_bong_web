@@ -9,6 +9,7 @@ import type {
     SendOTPtoSMSPayload,
     VerifyOTPPayload,
 } from '@/modules/auth/interfaces/index'
+import { useThemeStore } from '@/stores/theme'
 
 export const useAuthStore = defineStore('authStore', () => {
     const user = ref(null)
@@ -22,6 +23,9 @@ export const useAuthStore = defineStore('authStore', () => {
             .then(res => {
                 if (res.data.success) {
                     setCache('token', res.data.data.token)
+                    // Initialize theme after login
+                    const themeStore = useThemeStore()
+                    themeStore.initializeTheme()
                     router.push('/')
                 } else {
                     alert(res.data.error)

@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-full">
-        <header class="bg-blue-600">
+        <header class="bg-primary">
             <div class="relative mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
                 <button
                     class="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center justify-center"

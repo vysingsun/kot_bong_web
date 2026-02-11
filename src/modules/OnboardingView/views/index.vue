@@ -6,6 +6,9 @@
     import { stationService } from '@/modules/OnboardingView/services/api.service'
     import { getFromCache, setCache } from '@/composables/useCache'
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+    import { useThemeStore } from '@/stores/theme'
+
+    const themeStore = useThemeStore()
 
     const router = useRouter()
     const { t } = useI18n()
@@ -272,11 +275,14 @@
 
                 if (updateResponse.data.result.success) {
                     updateLocalStorage(newStationName)
+
+                    themeStore.setTheme(selectedCompany.value._id)
                 } else {
                     throw new Error('Failed to update station name')
                 }
             } else {
                 updateLocalStorage(newStationName)
+                themeStore.setTheme(selectedCompany.value._id)
             }
 
             // Step 2: Update fuel tank sizes
