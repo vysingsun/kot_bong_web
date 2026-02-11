@@ -11,6 +11,7 @@
     const appStore = useAppStore()
     const { t } = useI18n()
 
+    const showPassword = ref(false)
     const identifier = ref('')
     const password = ref('')
     const errors = ref({
@@ -137,7 +138,7 @@
                         <!-- Password Input -->
                         <div>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <div class="absolute z-50 inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg
                                         class="w-5 h-5 text-gray-400"
                                         fill="none"
@@ -152,22 +153,64 @@
                                         />
                                     </svg>
                                 </div>
-                                <input
-                                    v-model="password"
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    class="bg-gray-50 border text-gray-900 rounded-xl block w-full pl-10 p-3 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-colors"
-                                    :class="
-                                        errors.password
-                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600'
-                                    "
-                                    :placeholder="t('auth.login.password_placeholder')"
-                                    @input="errors.password = ''"
-                                    @keyup.enter="onlogin"
-                                    required
-                                />
+                                <div class="relative">
+                                    <input
+                                        v-model="password"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        name="password"
+                                        id="password"
+                                        class="bg-gray-50 border text-gray-900 rounded-xl block w-full pl-10 p-3 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-colors"
+                                        :class="
+                                            errors.password
+                                                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                                                : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600'
+                                        "
+                                        :placeholder="t('auth.login.password_placeholder')"
+                                        @input="errors.password = ''"
+                                        @keyup.enter="onlogin"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        @click="showPassword = !showPassword"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                    >
+                                        <svg
+                                            v-if="!showPassword"
+                                            class="w-5 h-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                            />
+                                        </svg>
+                                        <svg
+                                            v-else
+                                            class="w-5 h-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <p v-if="errors.password" class="mt-1 text-sm text-red-500">{{ errors.password }}</p>
                         </div>
@@ -186,7 +229,6 @@
                         <!-- Sign In Button -->
                         <button
                             @click="onlogin"
-                            :disabled="!isFormValid || appStore.loading"
                             class="w-full flex justify-center text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed font-medium rounded-xl text-sm px-5 py-3 text-center transition-colors"
                         >
                             {{ t('auth.login.sign_in_button') }}

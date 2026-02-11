@@ -326,7 +326,7 @@
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4">
                 <!-- Step Indicator -->
                 <div class="flex items-center justify-center mb-8">
                     <div class="flex items-center space-x-2">
@@ -373,7 +373,7 @@
                             v-model="identifier"
                             type="text"
                             :placeholder="t('auth.forgotPassword.identifier_placeholder')"
-                            class="w-full px-4 py-3 rounded-lg border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
+                            class="w-full px-4 py-3 rounded-xl border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
                             :class="
                                 errors.identifier
                                     ? 'border-red-500'
@@ -385,11 +385,10 @@
                         />
                         <p v-if="errors.identifier" class="mt-1 text-sm text-red-500">{{ errors.identifier }}</p>
                     </div>
-
+                    <!-- :disabled="!identifier.trim() || appStore.loading" -->
                     <button
                         @click="sendOTP"
-                        :disabled="!identifier.trim() || appStore.loading"
-                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
                     >
                         {{ t('auth.forgotPassword.send_otp') }}
                     </button>
@@ -397,7 +396,7 @@
                     <button
                         @click="goBackToLogin"
                         type="button"
-                        class="w-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium py-2 transition-colors"
+                        class="w-full text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-white font-medium py-2 transition-colors"
                     >
                         {{ t('auth.forgotPassword.back_to_login') }}
                     </button>
@@ -434,7 +433,7 @@
                                 @input="handleOtpInput(index, $event)"
                                 @keydown="handleOtpKeydown(index, $event)"
                                 @paste="handleOtpPaste"
-                                class="w-12 h-14 text-center text-2xl font-bold rounded-lg border-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
+                                class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
                                 :class="
                                     errors.otp
                                         ? 'border-red-500'
@@ -465,14 +464,14 @@
                     <div class="flex space-x-3">
                         <button
                             @click="currentStep = 1"
-                            class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                            class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition-all"
                         >
                             {{ t('auth.forgotPassword.back') }}
                         </button>
                         <button
                             @click="verifyOTP"
                             :disabled="otpCode.length !== 6 || appStore.loading"
-                            class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
                         >
                             {{ t('auth.forgotPassword.verify') }}
                         </button>
@@ -499,7 +498,7 @@
                                 v-model="newPassword"
                                 :type="showNewPassword ? 'text' : 'password'"
                                 :placeholder="t('auth.forgotPassword.new_password_placeholder')"
-                                class="w-full px-4 py-3 pr-12 rounded-lg border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
+                                class="w-full px-4 py-3 pr-12 rounded-xl border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
                                 :class="
                                     errors.newPassword
                                         ? 'border-red-500'
@@ -685,7 +684,7 @@
                                 v-model="confirmPassword"
                                 :type="showConfirmPassword ? 'text' : 'password'"
                                 :placeholder="t('auth.forgotPassword.confirm_password_placeholder')"
-                                class="w-full px-4 py-3 pr-12 rounded-lg border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
+                                class="w-full px-4 py-3 pr-12 rounded-xl border text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition-all"
                                 :class="
                                     errors.confirmPassword
                                         ? 'border-red-500'
@@ -738,7 +737,7 @@
                     <button
                         @click="resetPassword"
                         :disabled="!newPassword || !confirmPassword || appStore.loading"
-                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
                     >
                         {{ t('auth.forgotPassword.reset_password') }}
                     </button>
