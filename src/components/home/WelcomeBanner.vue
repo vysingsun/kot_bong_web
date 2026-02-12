@@ -6,7 +6,6 @@
     interface Props {
         firstName?: string
         lastName?: string
-        stationName?: string
         customBannerImage?: string // Optional custom banner image
     }
 
