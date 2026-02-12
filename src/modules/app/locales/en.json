@@ -1,5 +1,20 @@
-
 {
-    "app": "App"
+    "app": "App",
+    "home": {
+        "welcome": "Welcome",
+        "fuel_station": "Fuel Station & Gas Services",
+        "sales": "Sales",
+        "users": "Users",
+        "stocks": "Stocks",
+        "profile": "Profile",
+        "settings": "Settings",
+        "products": "Products",
+        "pricing": "Pricing",
+        "coefficients": "Coefficients",
+        "logout": "Logout",
+        "open_user_menu": "Open user menu",
+        "my_profile": "My profile",
+        "account_settings": "Account settings",
+        "sign_out": "Sign out"
+    }
 }
-        
