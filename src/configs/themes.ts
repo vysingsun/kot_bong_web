@@ -13,10 +13,10 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
     tela: {
         id: 'tela',
         name: 'Tela',
-        primaryColor: '#f6c301',
-        primaryHover: '#d9ad01',
-        primaryDark: '#c29a01',
-        primaryLight: '#f8d033',
+        primaryColor: '#149c49',
+        primaryHover: '#11853e',
+        primaryDark: '#0e6e33',
+        primaryLight: '#43af6d',
         textOnPrimary: '#ffffff',
         logo: new URL('../assets/images/tela_logo_landscape.png', import.meta.url).href,
     },
@@ -69,6 +69,26 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryLight: '#3b82f6', // blue-500
         textOnPrimary: '#ffffff',
         logo: new URL('../assets/images/lim_long_logo.jpg', import.meta.url).href,
+    },
+    sokimex: {
+        id: 'sokimex',
+        name: 'Sokimex',
+        primaryColor: '#f00317',
+        primaryHover: '#d60315',
+        primaryDark: '#bc0213',
+        primaryLight: '#f33548',
+        textOnPrimary: '#ffffff',
+        logo: new URL('../assets/images/sokimex_logo.png', import.meta.url).href,
+    },
+    tela_khmer: {
+        id: 'tela_khmer',
+        name: 'Tela_Khmer',
+        primaryColor: '#f6c301',
+        primaryHover: '#d9ad01',
+        primaryDark: '#c29a01',
+        primaryLight: '#f8d033',
+        textOnPrimary: '#ffffff',
+        logo: new URL('../assets/images/tela_khmer_logo.png', import.meta.url).href,
     },
 }
 
