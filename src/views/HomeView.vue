@@ -64,7 +64,6 @@
                     <WelcomeBanner
                         :firstName="user?.firstName"
                         :lastName="user?.lastName"
-                        :stationName="user?.stations?.[0]?.station_name"
                         :customBannerImage="customBannerImage"
                     />
                 </div>
