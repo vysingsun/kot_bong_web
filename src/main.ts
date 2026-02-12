@@ -8,6 +8,7 @@ import axios from 'axios'
 import i18n from '@/plugins/i18n'
 // register Flowbite
 import { initFlowbite } from 'flowbite'
+import { useThemeStore } from './stores/theme'
 
 import BaseLoading from './components/app/BaseLoading.vue'
 import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
@@ -88,4 +89,7 @@ app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
 app.component('BaseForm', BaseForm)
+// Initialize theme before mounting
+const themeStore = useThemeStore()
+themeStore.initializeTheme()
 app.mount('#app')

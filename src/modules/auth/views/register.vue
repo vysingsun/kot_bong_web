@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <form @submit.prevent="handleSubmit">
+                <form @submit.prevent="handleFormSubmit">
                     <!-- Step 1: Basic Info -->
                     <div v-show="currentStep === 1" class="space-y-4">
                         <!-- First Name & Last Name (Inline on desktop) -->
@@ -953,6 +953,16 @@
         return isValid
     }
 
+    const handleFormSubmit = () => {
+        if (currentStep.value === 1) {
+            proceedToStep2()
+        } else if (currentStep.value === 2) {
+            verifyOTP()
+        } else if (currentStep.value === 3) {
+            handleSubmit()
+        }
+    }
+
     // Proceed to step 2
     const proceedToStep2 = async () => {
         if (!validateStep1()) return
@@ -1054,7 +1064,7 @@
 
             const payload = {
                 email: isEmail.value ? formData.emailOrPhone : `kotpreng${formData.emailOrPhone}@gmail.com`,
-                phone: !isEmail.value ? formData.emailOrPhone : '',
+                phone: !isEmail.value ? formData.emailOrPhone : undefined,
                 password: formData.password,
                 repeat_password: formData.confirmPassword,
                 firstName: formData.firstName,
