@@ -15,6 +15,7 @@ import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
 import BaseModal from '@/components/app/BaseModal.vue'
 import TablePaging from '@/components/table/TablePaging.vue'
 import BaseForm from '@/components/form/BaseForm.vue'
+import ErrorModal from '@/components/app/ErrorModal.vue'
 
 import { getFromCache, removeCaches } from '@/composables/useCache'
 
@@ -89,6 +90,7 @@ app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
 app.component('BaseForm', BaseForm)
+app.component('ErrorModal', ErrorModal)
 // Initialize theme before mounting
 const themeStore = useThemeStore()
 themeStore.initializeTheme()

@@ -15,6 +15,7 @@
     const selectedCompany = ref<Company | null>(null)
     const fuelStocks = ref<any[]>([])
     const loading = ref(false)
+    const isLoading = ref(false)
     const saving = ref(false)
     const stationId = ref('')
     const error = ref('')
@@ -40,6 +41,11 @@
 
     // Deleting state
     const deletingFuelIds = ref<Set<string>>(new Set())
+
+    const errorModal = ref({
+        show: false,
+        message: '',
+    })
 
     onMounted(async () => {
         try {
@@ -120,6 +126,8 @@
     const selectCompany = (company: Company) => {
         selectedCompany.value = company
         isDropdownOpen.value = false
+
+        updateCompany()
     }
 
     const toggleDropdown = () => {
@@ -256,36 +264,39 @@
         }
     }
 
-    const handleSubmit = async () => {
+    const updateCompany = async () => {
         if (!selectedCompany.value) {
             alert(t('onboarding.select_company_error'))
             return
         }
 
         try {
-            saving.value = true
-
+            isLoading.value = true
             const newStationName = selectedCompany.value.name.replace(/\s+/g, '_')
 
-            // Step 1: Update station name if needed
-            if (selectedCompany.value.needsUpdate) {
-                const updateResponse = await stationService.updateStation(stationId.value, {
-                    station_name: newStationName,
-                })
+            const response = await stationService.updateStation(stationId.value, {
+                station_name: newStationName,
+            })
 
-                if (updateResponse.data.result.success) {
-                    updateLocalStorage(newStationName)
-
-                    themeStore.setTheme(selectedCompany.value._id)
-                } else {
-                    throw new Error('Failed to update station name')
-                }
-            } else {
+            if (response.data.result.success) {
                 updateLocalStorage(newStationName)
-                themeStore.setTheme(selectedCompany.value._id)
-            }
 
-            // Step 2: Update fuel tank sizes
+                themeStore.setTheme(selectedCompany.value._id)
+            } else {
+                throw new Error('Failed to update station name')
+            }
+        } catch (err: any) {
+            console.error('Error updating company:', err)
+            alert(t('onboarding.company_update_error'))
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const handleSubmit = async () => {
+        try {
+            saving.value = true
+            //  Update fuel tank sizes
             const tankSizeData = fuelStocks.value.map(stock => ({
                 id: stock.id,
                 fuel_tank_size: stock.fuel_tank_size,
@@ -301,10 +312,15 @@
             router.push('/')
         } catch (err: any) {
             console.error('Error saving onboarding data:', err)
-            alert(t('onboarding.save_error'))
+            errorModal.value.show = true
+            errorModal.value.message = err.response?.data?.details[0]?.error || 'Failed to save data. Please try again.'
         } finally {
             saving.value = false
         }
+    }
+
+    const handleErrorModalConfirm = () => {
+        errorModal.value.show = false
     }
 </script>
 
@@ -357,6 +373,8 @@
                     <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
                         {{ t('onboarding.select_company') }}
                     </label>
+
+                    <div v-if="isLoading" class="progress w-full mb-1"></div>
 
                     <!-- Custom Dropdown -->
                     <div class="relative" ref="dropdownRef">
@@ -774,5 +792,6 @@
             </div>
         </transition>
     </section>
+    <ErrorModal :show="errorModal.show" :error-message="errorModal.message" @confirm="handleErrorModalConfirm" />
 </template>
 <style scoped></style>

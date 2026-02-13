@@ -359,32 +359,4 @@
     })
 </script>
 
-<style lang="scss" scoped>
-    .progress {
-        height: 4.5px;
-        background: linear-gradient(#1c64f2 0 0), linear-gradient(#1c64f2 0 0), #dbdcef;
-        background-size: 60% 100%;
-        background-repeat: no-repeat;
-        animation: progress-7x9cg2 2.4000000000000004s infinite;
-    }
-
-    @keyframes progress-7x9cg2 {
-        0% {
-            background-position:
-                -150% 0,
-                -150% 0;
-        }
-
-        66% {
-            background-position:
-                250% 0,
-                -150% 0;
-        }
-
-        100% {
-            background-position:
-                250% 0,
-                250% 0;
-        }
-    }
-</style>
+<style lang="scss" scoped></style>

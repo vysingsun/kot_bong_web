@@ -35,6 +35,8 @@
         "delete_fuel": "Delete fuel",
         "cannot_delete_default": "Cannot delete default fuels",
         "confirm_delete": "Are you sure you want to delete this fuel?",
-        "fuel_deletion_error": "Failed to delete fuel. Please try again."
+        "fuel_deletion_error": "Failed to delete fuel. Please try again.",
+        "updating_company": "Updating company...",
+        "company_update_error": "Failed to update company. Please try again."
     }
 }
