@@ -16,5 +16,14 @@
         "my_profile": "My profile",
         "account_settings": "Account settings",
         "sign_out": "Sign out"
+    },
+    "common": {
+        "error": {
+            "title": "Error",
+            "description": "Data is invalid. Please try again.",
+            "seeMore": "See more...",
+            "seeLess": "See less",
+            "tryAgain": "Try Again"
+        }
     }
 }
