@@ -46,7 +46,7 @@
         <!-- Header -->
         <AppHeader :userName="`${user?.firstName} ${user?.lastName}`" :userEmail="user?.email" :onLogout="showModal" />
 
-        <!-- Sidebar (keep your existing sidebar code) -->
+        <!-- Sidebar -->
         <aside
             id="drawer-navigation"
             class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
@@ -57,16 +57,14 @@
         <ShapeBgAnimate />
 
         <!-- Main Content -->
-        <main class="absolute w-full z-10 p-4 md:ml-64 h-auto pt-20">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <main class="p-4 md:ml-64 pt-20 relative z-10">
+            <div class="space-y-4 mb-4">
                 <!-- Welcome Banner -->
-                <div class="rounded-lg h-24">
-                    <WelcomeBanner
-                        :firstName="user?.firstName"
-                        :lastName="user?.lastName"
-                        :customBannerImage="customBannerImage"
-                    />
-                </div>
+                <WelcomeBanner
+                    :firstName="user?.firstName"
+                    :lastName="user?.lastName"
+                    :customBannerImage="customBannerImage"
+                />
 
                 <!-- Quick Actions -->
                 <QuickActions :onLogout="showModal" />

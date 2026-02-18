@@ -1,7 +1,7 @@
 <template>
     <div v-if="isLoading" class="progress w-full mb-1"></div>
     <div class="relative sm:rounded-lg">
-        <div v-if="isGlobalSearch" class="pb-4">
+        <div v-if="isGlobalSearch" class="pb-4 max-w-[400px]">
             <label for="table-search" class="sr-only">Search</label>
             <div class="relative">
                 <div
