@@ -94,7 +94,7 @@
         </div>
 
         <div class="flex items-end h-screen pb-28">
-            <div class="flex flex-col items-center justify-center mx-auto lg:py-0">
+            <div class="flex flex-col items-center justify-center mx-auto lg:py-4">
                 <img class="w-2/3" src="@/assets/images/base-station-blue.svg" alt="logo" />
                 <div class="w-full md:mt-0 sm:max-w-md xl:p-0">
                     <div class="space-y-4 md:space-y-6 sm:p-8">

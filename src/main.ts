@@ -17,7 +17,8 @@ import TablePaging from '@/components/table/TablePaging.vue'
 import BaseForm from '@/components/form/BaseForm.vue'
 import ErrorModal from '@/components/app/ErrorModal.vue'
 
-import { getFromCache, removeCaches } from '@/composables/useCache'
+import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
+import { COMPANY_THEMES } from './configs/themes'
 
 const getToken = () => {
     const token = getFromCache('token')?.value
@@ -59,6 +60,9 @@ axios.interceptors.response.use(
         if (error.response.status === 401) {
             removeCaches(['token', 'app_data'])
             sessionStorage.removeItem('has-show-fireworks')
+            removeAll()
+            const themeStore = useThemeStore()
+            themeStore.applyTheme(COMPANY_THEMES.lim_long)
             router.push({ name: 'Login' })
             if (error?.response?.data?.error?.errors?.detail) {
                 const message = error?.response?.data?.error?.errors?.detail

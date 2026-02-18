@@ -15,7 +15,8 @@
         "open_user_menu": "Open user menu",
         "my_profile": "My profile",
         "account_settings": "Account settings",
-        "sign_out": "Sign out"
+        "sign_out": "Sign out",
+        "coming_soon": "Coming soon..."
     },
     "common": {
         "error": {
