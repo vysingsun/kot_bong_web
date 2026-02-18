@@ -27,6 +27,7 @@ export default {
       textColor: {
         primary: 'var(--color-primary)',
         'on-primary': 'var(--color-text-on-primary)',
+        secondary: 'var(--color-secondary)',
       },
       backgroundColor: {
         primary: {
@@ -38,9 +39,11 @@ export default {
       },
       borderColor: {
         primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
       },
       ringColor: {
         primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
       }
     },
     fontFamily: {

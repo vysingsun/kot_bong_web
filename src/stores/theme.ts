@@ -15,6 +15,7 @@ export const useThemeStore = defineStore('theme', () => {
         root.style.setProperty('--color-primary-dark', theme.primaryDark)
         root.style.setProperty('--color-primary-light', theme.primaryLight)
         root.style.setProperty('--color-text-on-primary', theme.textOnPrimary)
+        root.style.setProperty('--color-secondary', theme.secondaryColor)
 
         // Save to cache
         setCache('theme', theme.id)

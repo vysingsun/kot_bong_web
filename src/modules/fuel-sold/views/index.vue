@@ -14,7 +14,7 @@
         <div class="relative mb-4">
             <select
                 v-model="fuel_type"
-                class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="onChangeFuelType"
             >
                 <option value="" class="text-gray-100" disabled selected hidden>Fuel Type</option>
