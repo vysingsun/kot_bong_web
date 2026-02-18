@@ -14,32 +14,10 @@
             </div>
         </div>
     </div>
-    <div class="w-100 flex justify-between">
-        <RouterLink
-            to="/fuel-stock"
-            type="button"
-            class="w-100 px-9 py-2.5 text-sm font-medium text-white inline-flex items-center bg-[#169c48] hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg text-center dark:bg-green-600 dark:hover:bg-green-600 dark:focus:ring-green-600"
-        >
-            <svg
-                class="w-6 h-6 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.6"
-                    d="M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
-                />
-            </svg>
-            All Records
-        </RouterLink>
+    <div class="w-100">
         <RouterLink
             to="/fuel-stock/create"
-            class="w-100 px-9 py-2.5 text-sm font-medium text-white inline-flex items-center bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-200 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-400 dark:focus:ring-blue-400"
+            class="w-full max-w-sm mb-4 px-9 py-2.5 text-xs font-medium text-white inline-flex items-center justify-center bg-blue-600 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-200 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-400 dark:focus:ring-blue-400"
         >
             <svg
                 class="w-6 h-6 me-1"
@@ -59,6 +37,29 @@
                 />
             </svg>
             Add Stock
+        </RouterLink>
+        <br />
+        <RouterLink
+            to="/fuel-stock"
+            type="button"
+            class="w-full max-w-sm px-9 py-2.5 text-xs font-medium text-white inline-flex items-center justify-center bg-[#169c48] hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg text-center dark:bg-green-600 dark:hover:bg-green-600 dark:focus:ring-green-600"
+        >
+            <svg
+                class="w-6 h-6 me-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.6"
+                    d="M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"
+                />
+            </svg>
+            All Records
         </RouterLink>
     </div>
 </template>

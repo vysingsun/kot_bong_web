@@ -6,6 +6,7 @@ export interface CompanyTheme {
     primaryDark: string
     primaryLight: string
     textOnPrimary: string
+    secondaryColor: string
     logo: string
 }
 
@@ -18,6 +19,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#0e6e33',
         primaryLight: '#43af6d',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#149c49',
         logo: new URL('../assets/images/tela_logo_landscape.png', import.meta.url).href,
     },
     total_energies: {
@@ -28,16 +30,18 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#c00102',
         primaryLight: '#fd3335',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#1A1A1A',
         logo: new URL('../assets/images/total_energies_logo.png', import.meta.url).href,
     },
     bvm_petroleum: {
         id: 'bvm_petroleum',
         name: 'BVM_Petroleum',
-        primaryColor: '#e9b643',
-        primaryHover: '#d4a33c',
-        primaryDark: '#c29235',
-        primaryLight: '#edc566',
-        textOnPrimary: '#ffffff',
+        primaryColor: '#4f4f4f', // Main gray
+        primaryHover: '#55565a', // Darker gray for hover (15% darker)
+        primaryDark: '#45464a', // Even darker gray for dark variant
+        primaryLight: '#87888c', // Lighter gray for light variant
+        textOnPrimary: '#ffffff', // White text on gray background
+        secondaryColor: '#4f4f4f', // Gold/yellow accent color
         logo: new URL('../assets/images/bvm_logo_landscape.png', import.meta.url).href,
     },
     caltex: {
@@ -48,6 +52,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#bc0213',
         primaryLight: '#f33548',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#000000',
         logo: new URL('../assets/images/caltex_logo_landscape.png', import.meta.url).href,
     },
     peace_petroleum: {
@@ -58,6 +63,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#06225a',
         primaryLight: '#0a3a8e',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#082e72',
         logo: new URL('../assets/images/ppc_logo.png', import.meta.url).href,
     },
     lim_long: {
@@ -68,6 +74,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#1e40af', // blue-800
         primaryLight: '#3b82f6', // blue-500
         textOnPrimary: '#ffffff',
+        secondaryColor: '#2563eb',
         logo: new URL('../assets/images/lim_long_logo.jpg', import.meta.url).href,
     },
     sokimex: {
@@ -78,6 +85,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#bc0213',
         primaryLight: '#f33548',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#000000',
         logo: new URL('../assets/images/sokimex_logo.png', import.meta.url).href,
     },
     tela_khmer: {
@@ -88,6 +96,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         primaryDark: '#c29a01',
         primaryLight: '#f8d033',
         textOnPrimary: '#ffffff',
+        secondaryColor: '#f6c301',
         logo: new URL('../assets/images/tela_khmer_logo.png', import.meta.url).href,
     },
 }

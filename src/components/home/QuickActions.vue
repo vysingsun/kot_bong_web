@@ -85,13 +85,17 @@
                 class="block p-4 text-center rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 group transition-colors"
             >
                 <svg
-                    class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-primary dark:text-gray-400 dark:group-hover:text-primary transition-colors"
+                    class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-secondary transition-colors"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                 >
                     <path :d="action.icon" fill-rule="evenodd" clip-rule="evenodd"></path>
                 </svg>
-                <div class="text-sm text-gray-900 dark:text-white">{{ t(action.label) }}</div>
+                <div
+                    class="text-sm text-gray-900 dark:text-white group-hover:text-secondary dark:group-hover:text-secondary transition-colors"
+                >
+                    {{ t(action.label) }}
+                </div>
             </RouterLink>
 
             <button
@@ -100,13 +104,17 @@
                 class="block p-4 text-center rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 group transition-colors"
             >
                 <svg
-                    class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-primary dark:text-gray-400 dark:group-hover:text-primary transition-colors"
+                    class="mx-auto mb-1 w-7 h-7 text-gray-400 group-hover:text-secondary dark:text-gray-400 dark:group-hover:text-secondary transition-colors"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                 >
                     <path :d="action.icon" fill-rule="evenodd" clip-rule="evenodd"></path>
                 </svg>
-                <div class="text-sm text-gray-900 dark:text-white">{{ t(action.label) }}</div>
+                <div
+                    class="text-sm text-gray-900 dark:text-white group-hover:text-secondary dark:group-hover:text-secondary transition-colors"
+                >
+                    {{ t(action.label) }}
+                </div>
             </button>
         </template>
 

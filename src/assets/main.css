@@ -9,6 +9,8 @@
   --color-primary-dark: #1e40af;
   --color-primary-light: #3b82f6;
   --color-text-on-primary: #ffffff;
+  --color-secondary: #2563eb;
+
 }
 
 /* Theme utility classes */
@@ -28,6 +30,10 @@
   background-color: var(--color-primary-light) !important;
 }
 
+.bg-secondary {
+  background-color: var(--color-secondary) !important;
+}
+
 .text-primary {
   color: var(--color-primary) !important;
 }
@@ -36,12 +42,20 @@
   color: var(--color-text-on-primary) !important;
 }
 
+.text-secondary {
+  color: var(--color-secondary) !important;
+}
+
 .border-primary {
   border-color: var(--color-primary) !important;
 }
 
 .ring-primary {
   --tw-ring-color: var(--color-primary) !important;
+}
+
+.ring-secondary {
+  --tw-ring-color: var(--color-secondary) !important;
 }
 
 /* Button variants */
@@ -61,7 +75,7 @@
 
 .progress {
     height: 4.5px;
-    background: linear-gradient(#1c64f2 0 0), linear-gradient(#1c64f2 0 0), #dbdcef;
+    background: linear-gradient(var(--color-secondary) 0 0), linear-gradient(var(--color-secondary) 0 0), #dbdcef;
     background-size: 60% 100%;
     background-repeat: no-repeat;
     animation: progress-7x9cg2 2.4000000000000004s infinite;

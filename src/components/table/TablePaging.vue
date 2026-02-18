@@ -1,7 +1,7 @@
 <template>
     <div v-if="isLoading" class="progress w-full mb-1"></div>
     <div class="relative sm:rounded-lg">
-        <div v-if="isGlobalSearch" class="pb-4">
+        <div v-if="isGlobalSearch" class="pb-4 max-w-[400px]">
             <label for="table-search" class="sr-only">Search</label>
             <div class="relative">
                 <div
@@ -25,7 +25,7 @@
                     id="table-search"
                     v-model="search"
                     type="text"
-                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                     placeholder="Search for items"
                     @input="updateSearch"
                 />
@@ -97,7 +97,7 @@
             <select
                 id="small"
                 v-model="tableParams.page_size"
-                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="updatePageSize(tableParams.page_size)"
             >
                 <option value="7">7</option>

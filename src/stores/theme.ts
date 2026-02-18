@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { getThemeByStationName, type CompanyTheme, COMPANY_THEMES } from '@/configs/themes'
 import { getFromCache, setCache } from '@/composables/useCache'
 
@@ -15,6 +15,7 @@ export const useThemeStore = defineStore('theme', () => {
         root.style.setProperty('--color-primary-dark', theme.primaryDark)
         root.style.setProperty('--color-primary-light', theme.primaryLight)
         root.style.setProperty('--color-text-on-primary', theme.textOnPrimary)
+        root.style.setProperty('--color-secondary', theme.secondaryColor)
 
         // Save to cache
         setCache('theme', theme.id)
@@ -26,10 +27,12 @@ export const useThemeStore = defineStore('theme', () => {
     const initializeTheme = () => {
         const appData = getFromCache('app_data')
 
+        console.log('theme true')
         if (appData && appData.value?.stations?.[0]?.station_name) {
             const stationName = appData.value.stations[0].station_name
             const theme = getThemeByStationName(stationName)
             applyTheme(theme)
+            return
         } else {
             // Try to get from cache
             const cachedThemeId = getFromCache('theme')
@@ -49,10 +52,17 @@ export const useThemeStore = defineStore('theme', () => {
         applyTheme(theme)
     }
 
+    // Set theme by station name
+    const setThemeByStationName = (stationName: string) => {
+        const theme = getThemeByStationName(stationName)
+        applyTheme(theme)
+    }
+
     return {
         currentTheme,
         applyTheme,
         initializeTheme,
         setTheme,
+        setThemeByStationName,
     }
 })
