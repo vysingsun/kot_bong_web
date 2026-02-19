@@ -25,6 +25,11 @@ const router = createRouter({
             children: [...MODULE_APP_ROUTES],
         },
         ...ONBOARDINGVIEW.ONBOARDINGVIEW_ROUTES,
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('@/components/app/404.vue'),
+        },
     ],
 })
 
