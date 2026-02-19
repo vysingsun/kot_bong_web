@@ -7,83 +7,95 @@
         :api-service="fuel_soldService"
         @on-save="handleSaveLoading"
     >
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
-            <select
-                v-model="selectedFuelId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-                required
-                :disabled="mode === 'view'"
-                @click="getFuelService"
-            >
-                <option v-if="loading">Loading...</option>
-                <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
-                    {{ item.fuel_name }}
-                </option>
-            </select>
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Quantity Sold as Liter </label>
-            <div class="relative">
+        <div class="form-grid">
+            <!-- Fuel Type -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fuel Type</label>
+                <select
+                    v-model="selectedFuelId"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                    required
+                    :disabled="mode === 'view'"
+                    @click="getFuelService"
+                >
+                    <option v-if="loading">Loading...</option>
+                    <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
+                        {{ item.fuel_name }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Quantity Sold -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Quantity Sold as Liter</label
+                >
+                <div class="relative">
+                    <input
+                        v-model="store.formData.quantity_sold_liter"
+                        type="number"
+                        step="0.01"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 pr-12 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        required
+                        :disabled="mode === 'view'"
+                    />
+                    <button
+                        v-if="mode !== 'view'"
+                        type="button"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500"
+                        @click="openScanner"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M5 8a1 1 0 0 1-2 0V5.923c0-.76.082-1.185.319-1.627.223-.419.558-.754.977-.977C4.738 3.082 5.162 3 5.923 3H8a1 1 0 0 1 0 2H5.923c-.459 0-.57.022-.684.082a.364.364 0 0 0-.157.157c-.06.113-.082.225-.082.684V8zm3 11a1 1 0 1 1 0 2H5.923c-.76 0-1.185-.082-1.627-.319a2.363 2.363 0 0 1-.977-.977C3.082 19.262 3 18.838 3 18.077V16a1 1 0 1 1 2 0v2.077c0 .459.022.57.082.684.038.07.087.12.157.157.113.06.225.082.684.082H8zm7-15a1 1 0 0 0 1 1h2.077c.459 0 .57.022.684.082.07.038.12.087.157.157.06.113.082.225.082.684V8a1 1 0 1 0 2 0V5.923c0-.76-.082-1.185-.319-1.627a2.363 2.363 0 0 0-.977-.977C19.262 3.082 18.838 3 18.077 3H16a1 1 0 0 0-1 1zm4 12a1 1 0 1 1 2 0v2.077c0 .76-.082 1.185-.319 1.627a2.364 2.364 0 0 1-.977.977c-.442.237-.866.319-1.627.319H16a1 1 0 1 1 0-2h2.077c.459 0 .57-.022.684-.082a.363.363 0 0 0 .157-.157c.06-.113.082-.225.082-.684V16zM3 11a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <span class="sr-only">Scan number</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Amount per Liter -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Amount per Liter (KHR)</label
+                >
                 <input
-                    v-model="store.formData.quantity_sold_liter"
+                    v-model="store.formData.amount_per_liter_khr"
                     type="number"
-                    step="0.01"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 pr-12 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required
                     :disabled="mode === 'view'"
                 />
-                <button
-                    v-if="mode !== 'view'"
-                    type="button"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500"
-                    @click="openScanner"
-                >
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
-                        <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M5 8a1 1 0 0 1-2 0V5.923c0-.76.082-1.185.319-1.627.223-.419.558-.754.977-.977C4.738 3.082 5.162 3 5.923 3H8a1 1 0 0 1 0 2H5.923c-.459 0-.57.022-.684.082a.364.364 0 0 0-.157.157c-.06.113-.082.225-.082.684V8zm3 11a1 1 0 1 1 0 2H5.923c-.76 0-1.185-.082-1.627-.319a2.363 2.363 0 0 1-.977-.977C3.082 19.262 3 18.838 3 18.077V16a1 1 0 1 1 2 0v2.077c0 .459.022.57.082.684.038.07.087.12.157.157.113.06.225.082.684.082H8zm7-15a1 1 0 0 0 1 1h2.077c.459 0 .57.022.684.082.07.038.12.087.157.157.06.113.082.225.082.684V8a1 1 0 1 0 2 0V5.923c0-.76-.082-1.185-.319-1.627a2.363 2.363 0 0 0-.977-.977C19.262 3.082 18.838 3 18.077 3H16a1 1 0 0 0-1 1zm4 12a1 1 0 1 1 2 0v2.077c0 .76-.082 1.185-.319 1.627a2.364 2.364 0 0 1-.977.977c-.442.237-.866.319-1.627.319H16a1 1 0 1 1 0-2h2.077c.459 0 .57-.022.684-.082a.363.363 0 0 0 .157-.157c.06-.113.082-.225.082-.684V16zM3 11a1 1 0 1 0 0 2h18a1 1 0 1 0 0-2H3z"
-                            fill="currentColor"
-                        ></path>
-                    </svg>
-                    <span class="sr-only">Scan number</span>
-                </button>
             </div>
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Amount per Liter (KHR) </label>
-            <input
-                id="error"
-                v-model="store.formData.amount_per_liter_khr"
-                type="number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Exchange Rate </label>
-            <input
-                v-model="store.formData.exchange_rate"
-                type="number"
-                step="0.01"
-                :disabled="mode === 'view'"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-            />
-        </div>
 
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
-
-            <div class="relative max-w-sm">
-                <VueDatePicker
-                    v-model="store.formData.createdAt"
-                    class="DatePicker"
-                    auto-apply
-                    :partial-range="false"
-                    :enable-time-picker="false"
+            <!-- Exchange Rate -->
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
+                <input
+                    v-model="store.formData.exchange_rate"
+                    type="number"
+                    step="0.01"
+                    :disabled="mode === 'view'"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 />
+            </div>
+
+            <!-- Date — full width -->
+            <div class="col-span-full">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+                <div class="w-full md:w-64">
+                    <VueDatePicker
+                        v-model="store.formData.createdAt"
+                        class="DatePicker"
+                        auto-apply
+                        :partial-range="false"
+                        :enable-time-picker="false"
+                    />
+                </div>
             </div>
         </div>
     </BaseForm>
@@ -425,6 +437,28 @@
         border-top-color: white;
         border-radius: 50%;
         animation: spin 1s linear infinite;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* mobile: 1 column */
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr; /* tablet+: 2 columns */
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* large screen: 4 columns */
+        }
+
+        .form-grid .col-span-full {
+            grid-column: 1 / -1;
+        }
     }
 
     @keyframes spin {

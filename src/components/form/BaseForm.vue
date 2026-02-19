@@ -1,5 +1,7 @@
 <template>
     <BaseLoading v-if="isLoading" />
+
+    <!-- Header -->
     <div class="flex justify-between shadow-b-md pb-6">
         <div class="text-lg font-medium flex items-center">
             {{ mode === 'create' ? `Create ${title}` : mode === 'view' ? `View ${title}` : `Edit ${title}` }}
@@ -30,31 +32,23 @@
             </button>
         </div>
     </div>
+
+    <!-- Form -->
     <div>
         <form @submit.prevent="onSave">
             <slot></slot>
-            <div
-                v-if="mode !== 'view'"
-                class="bottom-0 left-0 flex justify-center w-full py-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0"
-            >
-                <button
-                    type="submit"
-                    class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                    <span v-if="mode === 'create'">Submit</span>
-                    <span v-else>Update</span>
-                </button>
+
+            <!-- Action buttons — edit/create mode -->
+            <div v-if="mode !== 'view'" class="flex justify-end gap-3 mt-6">
                 <button
                     type="button"
-                    class="w-full justify-center text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                    class="inline-flex items-center justify-center text-red-600 border border-red-600 hover:text-white hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
                     @click="onCancel"
                 >
                     <svg
-                        class="w-5 h-5 mr-1.5 -ml-1"
+                        class="w-4 h-4 mr-1.5"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
                         fill="none"
                         viewBox="0 0 24 24"
                     >
@@ -67,20 +61,27 @@
                     </svg>
                     Cancel
                 </button>
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                    <span v-if="mode === 'create'">Submit</span>
+                    <span v-else>Update</span>
+                </button>
             </div>
         </form>
-        <div
-            v-if="mode === 'view'"
-            class="bottom-0 left-0 flex justify-center w-full py-4 mt-4 space-x-4 sm:absolute sm:px-4 sm:mt-0"
-        >
+
+        <!-- Action buttons — view mode -->
+        <div v-if="mode === 'view'" class="flex justify-end gap-3 mt-6">
             <button
+                class="inline-flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 @click="enableEdit"
-                class="w-full justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             >
                 Edit
             </button>
         </div>
     </div>
+
     <BaseModal
         :is-visible="isVisible"
         type="success"
