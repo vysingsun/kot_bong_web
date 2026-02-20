@@ -108,7 +108,7 @@
                                 <span class="flex items-center">
                                     <svg
                                         aria-hidden="true"
-                                        class="mr-2 w-5 h-5 text-primary-600 dark:text-primary-500"
+                                        class="mr-2 w-5 h-5 text-blue-600 dark:text-blue-500"
                                         fill="currentColor"
                                         viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg"

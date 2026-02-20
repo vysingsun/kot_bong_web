@@ -7,75 +7,77 @@
         :api-service="fuel_stockService"
         @on-save="handleSaveLoading"
     >
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
-            <select
-                v-model="selectedFuelId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-                required
-                :disabled="mode === 'view'"
-                @click="getFuelService"
-            >
-                <option v-if="loading">Loading...</option>
-                <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
-                    {{ item.fuel_name }}
-                </option>
-            </select>
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity as Liter</label>
-            <input
-                v-model="store.formData.quantity_liter"
-                type="number"
-                step="0.01"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount as Ton</label>
-            <input
-                v-model="store.formData.amount_ton"
-                type="number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier Name</label>
-            <input
-                v-model="store.formData.supplier_name"
-                type="text"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
-            <input
-                v-model="store.formData.exchange_rate"
-                type="number"
-                step="0.01"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
-
-            <div class="relative max-w-sm">
-                <VueDatePicker
-                    v-model="store.formData.createdAt"
-                    class="DatePicker"
-                    auto-apply
-                    :partial-range="false"
-                    :enable-time-picker="false"
+        <div class="form-grid">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
+                <select
+                    v-model="selectedFuelId"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                    required
+                    :disabled="mode === 'view'"
+                    @click="getFuelService"
+                >
+                    <option v-if="loading">Loading...</option>
+                    <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
+                        {{ item.fuel_name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity as Liter</label>
+                <input
+                    v-model="store.formData.quantity_liter"
+                    type="number"
+                    step="0.01"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
                 />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount as Ton</label>
+                <input
+                    v-model="store.formData.amount_ton"
+                    type="number"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier Name</label>
+                <input
+                    v-model="store.formData.supplier_name"
+                    type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
+                <input
+                    v-model="store.formData.exchange_rate"
+                    type="number"
+                    step="0.01"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
+
+                <div class="relative w-full">
+                    <VueDatePicker
+                        v-model="store.formData.createdAt"
+                        class="DatePicker"
+                        auto-apply
+                        :partial-range="false"
+                        :enable-time-picker="false"
+                    />
+                </div>
             </div>
         </div>
     </BaseForm>

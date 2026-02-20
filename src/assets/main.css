@@ -81,6 +81,28 @@
     animation: progress-7x9cg2 2.4000000000000004s infinite;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* mobile: 1 column */
+    gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr 1fr; /* tablet+: 2 columns */
+    }
+}
+
+@media (min-width: 1280px) {
+    .form-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr; /* large screen: 4 columns */
+    }
+
+    .form-grid .col-span-full {
+        grid-column: 1 / -1;
+    }
+}
+
 @keyframes progress-7x9cg2 {
     0% {
         background-position:

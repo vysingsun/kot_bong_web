@@ -16,6 +16,7 @@ import BaseModal from '@/components/app/BaseModal.vue'
 import TablePaging from '@/components/table/TablePaging.vue'
 import BaseForm from '@/components/form/BaseForm.vue'
 import ErrorModal from '@/components/app/ErrorModal.vue'
+import AppIcon from '@/components/app/AppIcon.vue'
 
 import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
 import { COMPANY_THEMES } from './configs/themes'
@@ -89,12 +90,23 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 
+// Inject SVG sprite inline into DOM
+fetch('/icon-set.svg')
+    .then(res => res.text())
+    .then(svg => {
+        const div = document.createElement('div')
+        div.style.display = 'none'
+        div.innerHTML = svg
+        document.body.insertBefore(div, document.body.firstChild)
+    })
+
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
 app.component('BaseForm', BaseForm)
 app.component('ErrorModal', ErrorModal)
+app.component('AppIcon', AppIcon)
 // Initialize theme before mounting
 const themeStore = useThemeStore()
 themeStore.initializeTheme()
