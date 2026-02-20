@@ -4,7 +4,7 @@
     </svg>
 </template>
 
-<script setup>
+<script setup lang="ts">
     defineProps({
         name: { type: String, required: true },
         size: { type: [String, Number], default: 24 },
