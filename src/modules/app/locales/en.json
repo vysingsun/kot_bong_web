@@ -19,13 +19,24 @@
         "coming_soon": "Coming soon..."
     },
     "common": {
+        "success": {
+            "title": "Success",
+            "description": "The operation was completed successfully.",
+            "action": "OK"
+        },
         "error": {
             "title": "Error",
             "description": "Data is invalid. Please try again.",
             "seeMore": "See more...",
             "seeLess": "See less",
             "tryAgain": "Try Again"
-        }
+        },
+        "delete": {
+            "title": "Delete this Data?",
+            "description": "This action cannot be undone. The Data will be permanently removed.",
+            "action": "Delete"
+        },
+        "cancel": "Cancel"
     },
     "notFound": {
         "typing": "Page NOT FOUND",
