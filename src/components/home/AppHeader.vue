@@ -101,8 +101,8 @@
                             <LanguageSwitcher />
                         </li>
                         <li>
-                            <a
-                                href="#"
+                            <RouterLink
+                                to="/comingsoon"
                                 class="flex justify-between items-center py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <span class="flex items-center">
@@ -134,7 +134,7 @@
                                         clip-rule="evenodd"
                                     ></path>
                                 </svg>
-                            </a>
+                            </RouterLink>
                         </li>
                     </ul>
                     <ul class="py-1 text-gray-700 dark:text-gray-300">

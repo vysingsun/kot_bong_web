@@ -2,13 +2,15 @@
     <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
         <ul class="space-y-2">
             <li>
-                <a
-                    href="#"
+                <RouterLink
+                    data-drawer-target="drawer-navigation"
+                    data-drawer-toggle="drawer-navigation"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    to="/comingsoon"
                 >
                     <AppIcon name="icon-overview" size="24" />
                     <span class="ml-3">{{ $t('menu.overview') }}</span>
-                </a>
+                </RouterLink>
             </li>
             <!-- <li>
                 <button
@@ -45,43 +47,43 @@
                 </ul>
             </li> -->
             <li>
-                <a
-                    href="#"
+                <RouterLink
+                    to="/comingsoon"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                 >
                     <AppIcon name="icon-document" size="24" />
                     <span class="ml-3">{{ $t('menu.stocksReport') }}</span>
-                </a>
+                </RouterLink>
             </li>
 
             <li>
-                <a
-                    href="#"
+                <RouterLink
+                    to="/comingsoon"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                 >
                     <AppIcon name="icon-graph-stock" size="24" />
                     <span class="ml-3">{{ $t('menu.stockGraph') }}</span>
-                </a>
+                </RouterLink>
             </li>
 
             <li>
-                <a
-                    href="#"
+                <RouterLink
+                    to="/comingsoon"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                 >
                     <AppIcon name="icon-sales" size="24" />
                     <span class="ml-3">{{ $t('menu.salesReport') }}</span>
-                </a>
+                </RouterLink>
             </li>
 
             <li>
-                <a
-                    href="#"
+                <RouterLink
+                    to="/comingsoon"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                 >
                     <AppIcon name="icon-graph-sales" size="24" />
                     <span class="ml-3">{{ $t('menu.salesGraph') }}</span>
-                </a>
+                </RouterLink>
             </li>
             <!-- <li>
                 <a

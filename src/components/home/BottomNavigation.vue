@@ -125,7 +125,8 @@
                 Settings
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
-            <button
+            <RouterLink
+                to="/comingsoon"
                 data-tooltip-target="tooltip-profile"
                 type="button"
                 class="inline-flex flex-col items-center justify-center px-5 rounded-e-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
@@ -142,7 +143,7 @@
                     />
                 </svg>
                 <span class="sr-only">Profile</span>
-            </button>
+            </RouterLink>
             <div
                 id="tooltip-profile"
                 role="tooltip"
@@ -156,7 +157,6 @@
 </template>
 
 <script setup lang="ts">
-    import { computed } from 'vue'
     import { useRoute } from 'vue-router'
     import { useI18n } from 'vue-i18n'
 

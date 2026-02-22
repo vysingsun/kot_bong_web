@@ -7,6 +7,7 @@
     import { getFromCache, setCache } from '@/composables/useCache'
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
     import { useThemeStore } from '@/stores/theme'
+    import DeleteModal from '@/components/app/DeleteModal.vue'
 
     const themeStore = useThemeStore()
 
@@ -44,9 +45,39 @@
 
     const errorModal = ref({
         show: false,
+        description: '',
         message: '',
     })
 
+    const showErrorModal = (description: string, message: string) => {
+        errorModal.value = {
+            show: true,
+            description,
+            message,
+        }
+    }
+
+    const successModal = ref({
+        show: false,
+        type: 'success' as const,
+        title: '',
+        description: '',
+    })
+
+    const showSuccessModal = (title: string, description: string) => {
+        successModal.value = {
+            show: true,
+            type: 'success',
+            title,
+            description,
+        }
+    }
+
+    const deleteModal = ref({
+        show: false,
+        targetIndex: -1,
+        targetId: '',
+    })
     onMounted(async () => {
         try {
             loading.value = true
@@ -148,30 +179,30 @@
 
     const deleteFuel = async (index: number, fuelId: string) => {
         if (!canDeleteFuel(index)) {
-            alert(t('onboarding.cannot_delete_default'))
+            showErrorModal(t('onboarding.cannot_delete_default'), '')
             return
         }
+        deleteModal.value = { show: true, targetIndex: index, targetId: fuelId }
+    }
 
-        if (!confirm(t('onboarding.confirm_delete'))) {
-            return
-        }
-
+    const handleDeleteConfirm = async () => {
+        const { targetIndex, targetId } = deleteModal.value
         try {
-            deletingFuelIds.value.add(fuelId)
-
-            const response = await stationService.deleteFuel(fuelId)
-
-            if (response.data.result.success) {
-                // Remove from array
-                fuelStocks.value.splice(index, 1)
+            deletingFuelIds.value.add(targetId)
+            const response = await stationService.deleteFuel(targetId)
+            if (response.data.success) {
+                fuelStocks.value.splice(targetIndex, 1)
             } else {
                 throw new Error(response.data.error || 'Failed to delete fuel')
             }
         } catch (err: any) {
             console.error('Error deleting fuel:', err)
-            alert(t('onboarding.fuel_deletion_error'))
+            showErrorModal(
+                t('onboarding.fuel_deletion_error'),
+                err.response?.data?.error?.message || t('onboarding.fuel_deletion_error'),
+            )
         } finally {
-            deletingFuelIds.value.delete(fuelId)
+            deletingFuelIds.value.delete(targetId)
         }
     }
 
@@ -239,13 +270,15 @@
                 closeModal()
 
                 // Show success message
-                alert(t('onboarding.fuel_created_success'))
+                showSuccessModal(t('common.success.title'), t('onboarding.fuel_created_success'))
             } else {
                 throw new Error(response.data.error || 'Failed to create fuel')
             }
         } catch (err: any) {
-            console.error('Error creating fuel:', err)
-            alert(t('onboarding.fuel_creation_error'))
+            showErrorModal(
+                t('onboarding.fuel_creation_error'),
+                err.response?.data?.error || t('onboarding.fuel_creation_error'),
+            )
         } finally {
             isCreatingFuel.value = false
         }
@@ -286,7 +319,8 @@
                 throw new Error('Failed to update station name')
             }
         } catch (err: any) {
-            console.error('Error updating company:', err)
+            errorModal.value.show = true
+            errorModal.value.message = err.response?.data?.details[0]?.error || 'Failed to save data. Please try again.'
             alert(t('onboarding.company_update_error'))
         } finally {
             isLoading.value = false
@@ -534,15 +568,20 @@
                             <!-- Header with fuel name and coefficient -->
                             <div class="flex items-center gap-3 mb-3">
                                 <!-- Oil Drop Icon -->
-                                <svg
-                                    class="w-6 h-6 flex-shrink-0"
-                                    :style="{ color: stock.color }"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                <div
+                                    class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                                    :style="{ backgroundColor: stock.color + '20' }"
                                 >
-                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-                                </svg>
+                                    <svg
+                                        class="w-6 h-6 flex-shrink-0"
+                                        :style="{ color: stock.color }"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                                    </svg>
+                                </div>
 
                                 <div class="flex-1">
                                     <p class="text-base font-semibold text-gray-900 dark:text-white">
@@ -792,6 +831,27 @@
             </div>
         </transition>
     </section>
-    <ErrorModal :show="errorModal.show" :error-message="errorModal.message" @confirm="handleErrorModalConfirm" />
+    <ErrorModal
+        :show="errorModal.show"
+        :description="errorModal.description"
+        :error-message="errorModal.message"
+        @confirm="handleErrorModalConfirm"
+    />
+    <SuccessModal
+        :show="successModal.show"
+        :type="successModal.type"
+        :title="successModal.title"
+        :description="successModal.description"
+        @close="successModal.show = false"
+        @confirm="successModal.show = false"
+    />
+
+    <DeleteModal
+        :show="deleteModal.show"
+        :title="t('onboarding.confirm_delete')"
+        :description="''"
+        @close="deleteModal.show = false"
+        @confirm="handleDeleteConfirm"
+    />
 </template>
 <style scoped></style>
