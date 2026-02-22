@@ -568,15 +568,20 @@
                             <!-- Header with fuel name and coefficient -->
                             <div class="flex items-center gap-3 mb-3">
                                 <!-- Oil Drop Icon -->
-                                <svg
-                                    class="w-6 h-6 flex-shrink-0"
-                                    :style="{ color: stock.color }"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                <div
+                                    class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                                    :style="{ backgroundColor: stock.color + '20' }"
                                 >
-                                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-                                </svg>
+                                    <svg
+                                        class="w-6 h-6 flex-shrink-0"
+                                        :style="{ color: stock.color }"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                                    </svg>
+                                </div>
 
                                 <div class="flex-1">
                                     <p class="text-base font-semibold text-gray-900 dark:text-white">
@@ -832,7 +837,7 @@
         :error-message="errorModal.message"
         @confirm="handleErrorModalConfirm"
     />
-    <SucessModal
+    <SuccessModal
         :show="successModal.show"
         :type="successModal.type"
         :title="successModal.title"

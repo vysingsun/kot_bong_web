@@ -6,12 +6,15 @@ import kh_onboarding from '@/modules/OnboardingView/locales/kh.json'
 import en_onboarding from '@/modules/OnboardingView/locales/en.json'
 import kh_app from '@/modules/app/locales/kh.json'
 import en_app from '@/modules/app/locales/en.json'
+import kh_fuel from '@/modules/fuel/locales/kh.json'
+import en_fuel from '@/modules/fuel/locales/en.json'
 
 const kh = {
     ...kh_auth,
     ...kh_current_stock,
     ...kh_onboarding,
     ...kh_app,
+    ...kh_fuel,
 }
 
 const en = {
@@ -19,6 +22,7 @@ const en = {
     ...en_current_stock,
     ...en_onboarding,
     ...en_app,
+    ...en_fuel,
 }
 
 export { kh, en }

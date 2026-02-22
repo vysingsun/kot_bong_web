@@ -16,7 +16,7 @@ import BaseModal from '@/components/app/BaseModal.vue'
 import TablePaging from '@/components/table/TablePaging.vue'
 import BaseForm from '@/components/form/BaseForm.vue'
 import ErrorModal from '@/components/app/ErrorModal.vue'
-import SucessModal from '@/components/app/SucessModal.vue'
+import SuccessModal from '@/components/app/SuccessModal.vue'
 import AppIcon from '@/components/app/AppIcon.vue'
 
 import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
@@ -107,7 +107,7 @@ app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
 app.component('BaseForm', BaseForm)
 app.component('ErrorModal', ErrorModal)
-app.component('SucessModal', SucessModal)
+app.component('SuccessModal', SuccessModal)
 app.component('AppIcon', AppIcon)
 // Initialize theme before mounting
 const themeStore = useThemeStore()

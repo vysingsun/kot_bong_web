@@ -27,7 +27,6 @@ export const useThemeStore = defineStore('theme', () => {
     const initializeTheme = () => {
         const appData = getFromCache('app_data')
 
-        console.log('theme true')
         if (appData && appData.value?.stations?.[0]?.station_name) {
             const stationName = appData.value.stations[0].station_name
             const theme = getThemeByStationName(stationName)
