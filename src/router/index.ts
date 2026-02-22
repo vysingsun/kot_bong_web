@@ -30,6 +30,11 @@ const router = createRouter({
             name: 'not-found',
             component: () => import('@/components/app/404.vue'),
         },
+        {
+            path: '/comingsoon',
+            name: 'ComingSoon',
+            component: () => import('@/components/app/ComingSoon.vue'),
+        },
     ],
 })
 

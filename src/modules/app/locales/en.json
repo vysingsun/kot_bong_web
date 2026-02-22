@@ -49,5 +49,10 @@
         "stockGraph": "Stock Graph",
         "salesReport": "Sales Report",
         "salesGraph": "Sales Graph"
+    },
+    "coming_soon": {
+        "title": "Coming Soon!",
+        "subtitle": "We're working hard to bring you something amazing.",
+        "back_home": "Back to Home"
     }
 }
