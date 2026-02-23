@@ -179,6 +179,8 @@
     import { initFlowbite } from 'flowbite'
     import { useRoute, useRouter } from 'vue-router'
     import { useModal } from '@/composables/useModal'
+    import { useAppStore } from '@/modules/app/store/index'
+    const appStore = useAppStore()
 
     const { isVisible, showModal, closeModal } = useModal()
     const router = useRouter()
@@ -299,13 +301,40 @@
     }
 
     const handleConfirmToDelete = async () => {
-        const res = await props.apiService['delete'](record_id.value)
-        if (res.data.result.success) {
-            alert(`Delete ${props.name} Successfully`)
-        } else {
-            alert(`Delete ${props.name} Unsuccessfully`)
+        try {
+            appStore.loading = true
+            const res = await props.apiService['delete'](record_id.value)
+
+            // ✅ Check if response exists and has data
+            if (res && res.data) {
+                if (res.data.success) {
+                    alert(`Delete ${props.name} Successfully`)
+                    window.location.reload()
+                } else {
+                    // ✅ Show the actual error message from backend
+                    const errorMsg = res.data.error || `Delete ${props.name} Unsuccessfully`
+                    alert(errorMsg)
+                }
+            } else {
+                alert(`Delete ${props.name} Unsuccessfully - No response`)
+            }
+            appStore.loading = false
+        } catch (err) {
+            // ✅ Handle error response from backend
+            const error = err as any
+            if (error.response && error.response.data) {
+                // Backend returned an error response (400, 404, 500, etc.)
+                const errorMsg = error.response.data.error || error.response.data.message
+                alert(`Error: ${errorMsg}`)
+            } else if (error.request) {
+                // Request was made but no response received
+                alert(`Network error: Unable to reach server`)
+            } else {
+                // Something else happened
+                alert(`An error occurred: ${error.message}`)
+            }
+            appStore.loading = false
         }
-        window.location.reload()
     }
 
     const onEdit = (item: any) => {

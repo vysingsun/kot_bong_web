@@ -148,38 +148,43 @@
 
     const onSave = async () => {
         emits('on-save', true)
-        if (mode.value == 'create') {
-            const res = await props.apiService[props.getServiceKey](props.formData)
-            if (res.data.success) {
-                id.value = res.data.data._id
-                const newPath = route.fullPath.replace('create', `view/${id.value}`)
-                router.push(newPath).catch(err => {
-                    if (err.name !== 'NavigationDuplicated') {
-                        throw err
-                    }
-                })
-                showModal()
+        try {
+            if (mode.value == 'create') {
+                const res = await props.apiService[props.getServiceKey](props.formData)
+                if (res.data.success) {
+                    id.value = res.data.data._id
+                    const newPath = route.fullPath.replace('create', `view/${id.value}`)
+                    router.push(newPath).catch(err => {
+                        if (err.name !== 'NavigationDuplicated') {
+                            throw err
+                        }
+                    })
+                    showModal()
+                } else {
+                    alert('Unsuccessfully!')
+                    handleConfirm()
+                }
             } else {
-                alert('Unsuccessfully!')
-                handleConfirm()
+                const res = await props.apiService['edit'](props.editingId, props.formData)
+                if (res.data.success) {
+                    id.value = res.data.data._id
+                    const newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
+                    router.push(newPath).catch(err => {
+                        if (err.name !== 'NavigationDuplicated') {
+                            throw err
+                        }
+                    })
+                    showModal()
+                } else {
+                    alert('Unsuccessfully!')
+                    handleConfirm()
+                }
             }
-        } else {
-            const res = await props.apiService['edit'](props.editingId, props.formData)
-            if (res.data.result.success) {
-                id.value = res.data.result.data._id
-                const newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
-                router.push(newPath).catch(err => {
-                    if (err.name !== 'NavigationDuplicated') {
-                        throw err
-                    }
-                })
-                showModal()
-            } else {
-                alert('Unsuccessfully!')
-                handleConfirm()
-            }
+            emits('on-save', false)
+        } catch (error) {
+            alert('An error occurred while saving. Please try again.')
+            emits('on-save', false)
         }
-        emits('on-save', false)
     }
 
     const enableEdit = () => {
