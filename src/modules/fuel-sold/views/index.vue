@@ -1,6 +1,6 @@
 <template>
     <BaseLoading v-if="loading" />
-    <div class="pb-4 max-w-[400px]">
+    <div class="pb-4 max-w-[400px] p-4">
         <VueDatePicker
             v-model="date_range"
             class="DatePicker pb-4"

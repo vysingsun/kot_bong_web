@@ -1,5 +1,23 @@
-
 {
-    "fuel-stock": "Fuel-stock"
+    "fuel_stock": {
+        "title": "Fuel Stock",
+        "subtitle": "Track and manage your fuel inventory",
+        "records": "records",
+        "add_stock": "Add",
+        "filters": "Filters",
+        "search_supplier": "Search Supplier",
+        "supplier_placeholder": "Enter supplier name...",
+        "fuel_type": "Fuel Type",
+        "all_fuels": "All Fuels",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "reset_filters": "Reset",
+        "tdollar_ton": "Dollar/Ton",
+        "no_records": "No Stock Records",
+        "no_records_desc": "Start adding fuel stock records",
+        "load_more": "Load More",
+        "loading": "Loading...",
+        "total_quantity_liter": "Total Quantity (Liters)",
+        "total_amount_us": "Total Amount (USD)"
+    }
 }
-        

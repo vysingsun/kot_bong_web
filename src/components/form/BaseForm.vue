@@ -2,7 +2,7 @@
     <BaseLoading v-if="isLoading" />
 
     <!-- Header -->
-    <div class="flex justify-between shadow-b-md pb-6">
+    <div class="flex justify-between shadow-b-md pb-6 p-4">
         <div class="text-lg font-medium flex items-center">
             {{ mode === 'create' ? `Create ${title}` : mode === 'view' ? `View ${title}` : `Edit ${title}` }}
         </div>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Form -->
-    <div>
+    <div class="p-4">
         <form @submit.prevent="onSave">
             <slot></slot>
 

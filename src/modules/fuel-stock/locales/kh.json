@@ -1,5 +1,23 @@
-
 {
-    "fuel-stock": "Fuel-stock"
+    "fuel_stock": {
+        "title": "ស្តុកឥន្ធនៈ",
+        "subtitle": "តាមដាន និងគ្រប់គ្រងស្តុកឥន្ធនៈរបស់អ្នក",
+        "records": "កំណត់ត្រា",
+        "add_stock": "បន្ថែម",
+        "filters": "តម្រង",
+        "search_supplier": "ស្វែងរកអ្នកផ្គត់ផ្គង់",
+        "supplier_placeholder": "បញ្ចូលឈ្មោះអ្នកផ្គត់ផ្គង់...",
+        "fuel_type": "ប្រភេទឥន្ធនៈ",
+        "all_fuels": "ឥន្ធនៈទាំងអស់",
+        "start_date": "កាលបរិច្ឆេទចាប់ផ្តើម",
+        "end_date": "កាលបរិច្ឆេទបញ្ចប់",
+        "reset_filters": "កំណត់ឡើងវិញ",
+        "dollar_ton": "ដុល្លារ/តោន",
+        "no_records": "គ្មានកំណត់ត្រាស្តុក",
+        "no_records_desc": "ចាប់ផ្តើមបន្ថែមកំណត់ត្រាស្តុកឥន្ធនៈ",
+        "load_more": "ផ្ទុកបន្ថែម",
+        "loading": "កំពុងផ្ទុក...",
+        "total_quantity_liter": "បរិមាណសរុប (លីត្រ)",
+        "total_amount_us": "ចំនួនទឹកប្រាក់សរុប (USD)"
+    }
 }
-        

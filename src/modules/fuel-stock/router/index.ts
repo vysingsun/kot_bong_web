@@ -11,15 +11,15 @@ export const routes = [
         },
         component: () => import('@/modules/fuel-stock/views/index.vue'),
     },
-    {
-        module: MODULE_NAME,
-        name: `${MODULE_NAME}-Detail`,
-        path: `${MODULE_PATH}/:mode/:id?`,
-        meta: {
-            title: MODULE_NAME,
-        },
-        component: () => import('@/modules/fuel-stock/views/form.vue'),
-    },
+    // {
+    //     module: MODULE_NAME,
+    //     name: `${MODULE_NAME}-Detail`,
+    //     path: `${MODULE_PATH}/:mode/:id?`,
+    //     meta: {
+    //         title: MODULE_NAME,
+    //     },
+    //     component: () => import('@/modules/fuel-stock/views/form.vue'),
+    // },
 ]
 
 const FUEL_STOCK_ROUTES = [
