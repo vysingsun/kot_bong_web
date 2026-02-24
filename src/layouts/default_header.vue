@@ -29,7 +29,7 @@
                 </h3>
             </div>
         </header>
-        <main class="p-6">
+        <main>
             <router-view></router-view>
         </main>
     </div>

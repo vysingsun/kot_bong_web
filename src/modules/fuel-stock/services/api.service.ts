@@ -7,7 +7,7 @@ export const fuel_stockService = {
     get: async (id: any) => {
         return axios.get(`fuel_stock/${id}`)
     },
-    getFuelStockByStationId: async (params: object) => {
+    getFuelStocksByStation: async (params: object) => {
         return axios.get(`/fuel_stock/station/${stationId}`, { params })
     },
     create: async (payload: object) => {

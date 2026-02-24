@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-4">
+    <div class="pb-4 p-4">
         <VueDatePicker
             v-model="date_range"
             class="DatePicker pb-4"
@@ -38,7 +38,7 @@
         :headers="store.headers"
         column-no
         :api-service="fuel_stockService"
-        get-service-key="getFuelStockByStationId"
+        get-service-key="getFuelStocksByStation"
         is-global-search
         clickable-row
         @row-click="getRow"

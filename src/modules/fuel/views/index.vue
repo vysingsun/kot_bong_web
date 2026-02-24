@@ -86,7 +86,7 @@
 </script>
 
 <template>
-    <div class="md:mx-auto md:pt-20">
+    <div class="md:mx-auto md:pt-20 p-4">
         <BaseLoading v-if="store.loading" />
 
         <!-- Header -->
