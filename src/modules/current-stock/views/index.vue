@@ -28,33 +28,36 @@
                 </button>
             </div>
         </div>
-        <div
-            v-for="(item, index) in fuelStocks"
-            :key="item?._id"
-            class="w-full md:mx-auto flex px-2.5 mb-5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700"
-        >
-            <div :id="'radial-chart-do-' + index" class="w-[120px] bg-inherit pb-4"></div>
-            <div class="flex items-center mr-3">
-                <div
-                    class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg"
-                >
-                    {{ $t('total_stock') }} : {{ item?.current_stock_liter.toFixed(2) }} L
+        <div class="flex flex-col gap-4">
+            <div
+                v-for="(item, index) in fuelStocks"
+                :key="item?._id"
+                class="w-full md:mx-auto flex px-2.5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700"
+            >
+                <div :id="'radial-chart-do-' + index" class="w-[120px] bg-inherit pb-4"></div>
+                <div class="flex items-center mr-3">
+                    <div
+                        class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg"
+                    >
+                        {{ $t('total_stock') }} : {{ item?.current_stock_liter.toFixed(2) }} L
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="md:mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+    <div class="md:mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 pb-4 px-4">
+        <div class="flex-1 border-t border-gray-300 dark:border-gray-600 mb-3"></div>
         <!-- <BaseLoading v-if="store.loading && store.filters.page_number === 1" /> -->
 
         <div class="max-w-4xl mx-auto">
             <!-- Filters -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
-                <div class="flex items-center justify-between mb-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-3 border-t border-default">
+                <button class="w-full flex items-center justify-between mb-4" @click="showFilters = !showFilters">
                     <h3 class="text-base font-semibold text-gray-900 dark:text-white">
                         {{ t('fuel_stock.filters') }}
                     </h3>
-                    <button @click="showFilters = !showFilters" class="text-primary hover:text-primary-dark">
+                    <button class="text-primary hover:text-primary-dark">
                         <svg
                             class="w-5 h-5 transition-transform"
                             :class="{ 'rotate-180': showFilters }"
@@ -65,7 +68,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
-                </div>
+                </button>
 
                 <transition
                     enter-active-class="transition ease-out duration-200"
@@ -264,8 +267,7 @@
                                 {{ t('fuel_stock.total_quantity_liter') }}
                             </p>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ store.totals.quantity_liter.toLocaleString() }}
-                                <span class="text-sm font-normal text-gray-500">L</span>
+                                {{ store.totals.quantity_liter.toLocaleString() }} L
                             </p>
                         </div>
                         <div
@@ -289,7 +291,7 @@
                                 {{ t('fuel_stock.total_amount_us') }}
                             </p>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ formatCurrency(store.totals.total_amount_us) }}
+                                $ {{ formatCurrency(store.totals.total_amount_us) }}
                             </p>
                         </div>
                         <div

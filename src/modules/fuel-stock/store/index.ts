@@ -178,6 +178,10 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
             value: 'fuel.fuel_name',
         },
         {
+            text: 'Created By',
+            value: 'createdBy',
+        },
+        {
             text: 'Quantity In Liter',
             value: 'quantity_liter',
         },

@@ -4,7 +4,13 @@
     <!-- Header -->
     <div class="flex justify-between shadow-b-md pb-6 p-4">
         <div class="text-lg font-medium flex items-center">
-            {{ mode === 'create' ? `Create ${title}` : mode === 'view' ? `View ${title}` : `Edit ${title}` }}
+            {{
+                mode === 'create'
+                    ? `${t('form.create')} ${title}`
+                    : mode === 'view'
+                      ? `${t('form.view')} ${title}`
+                      : `${t('form.edit')} ${title}`
+            }}
         </div>
         <div>
             <button
@@ -59,53 +65,115 @@
                             d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                         />
                     </svg>
-                    Cancel
+                    {{ t('form.cancel') }}
                 </button>
                 <button
                     type="submit"
+                    :disabled="isSaving"
                     class="inline-flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
-                    <span v-if="mode === 'create'">Submit</span>
-                    <span v-else>Update</span>
+                    <svg v-if="isSaving" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                    </svg>
+                    <span v-if="mode === 'create'">{{ t('form.submit') }}</span>
+                    <span v-else>{{ t('form.update') }}</span>
                 </button>
             </div>
         </form>
 
         <!-- Action buttons — view mode -->
         <div v-if="mode === 'view'" class="flex justify-end gap-3 mt-6">
+            <!-- Delete Button (if enabled) -->
+            <button
+                v-if="showDelete"
+                class="inline-flex items-center justify-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"
+                @click="handleDeleteClick"
+            >
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                </svg>
+                {{ t('form.delete') }}
+            </button>
+
+            <!-- Edit Button -->
             <button
                 class="inline-flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 @click="enableEdit"
             >
-                Edit
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                </svg>
+                {{ t('form.edit') }}
             </button>
         </div>
     </div>
 
+    <!-- Success Modal -->
     <BaseModal
-        :is-visible="isVisible"
+        :is-visible="successModal.show"
         type="success"
-        :title="`Add ${title} Successfully`"
+        :title="successModal.title"
         confirm-label="Done"
-        @confirm="handleConfirm"
+        @confirm="handleSuccessConfirm"
+    />
+
+    <!-- Delete Confirmation Modal -->
+    <DeleteModal
+        :show="deleteModal.show"
+        :title="deleteTitle"
+        :description="deleteDescription"
+        @close="deleteModal.show = false"
+        @confirm="handleDeleteConfirm"
     />
 </template>
 
 <script setup lang="ts">
     import { ref } from 'vue'
     import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
-    import { useModal } from '@/composables/useModal'
+    import DeleteModal from '@/components/app/DeleteModal.vue'
+    import { useI18n } from 'vue-i18n'
+    import { useAppStore } from '@/modules/app/store/index'
 
-    const { isVisible, showModal } = useModal()
+    const appStore = useAppStore()
+    const { t } = useI18n()
     const router = useRouter()
     const route = useRoute()
     const mode = ref(route.params.mode)
     const id = ref('')
+    const isSaving = ref(false)
+
+    const successModal = ref({
+        show: false,
+        title: '',
+    })
+
+    const deleteModal = ref({
+        show: false,
+    })
+
     const props = defineProps({
-        title: String,
+        title: {
+            type: String,
+            required: true,
+        },
         formData: {
             type: Object,
-            default: {},
+            default: () => ({}),
         },
         apiService: {
             type: Object,
@@ -123,10 +191,26 @@
             type: Boolean,
             default: false,
         },
+        showDelete: {
+            type: Boolean,
+            default: false,
+        },
+        deleteTitle: {
+            type: String,
+            default: '',
+        },
+        deleteDescription: {
+            type: String,
+            default: '',
+        },
+        recordName: {
+            type: String,
+            default: '',
+        },
     })
 
     /* emits */
-    const emits = defineEmits(['on-save'])
+    const emits = defineEmits(['on-save', 'on-delete'])
 
     const onBack = () => {
         const pathSegments = route.path.split('/')
@@ -142,53 +226,81 @@
         }
     }
 
-    const handleConfirm = () => {
-        window.location.reload()
+    const handleSuccessConfirm = () => {
+        successModal.value.show = false
+        const pathSegments = route.path.split('/')
+        router.push(`/${pathSegments[1]}`)
     }
 
     const onSave = async () => {
+        isSaving.value = true
         emits('on-save', true)
+
         try {
-            if (mode.value == 'create') {
+            if (mode.value === 'create') {
                 const res = await props.apiService[props.getServiceKey](props.formData)
                 if (res.data.success) {
                     id.value = res.data.data._id
-                    const newPath = route.fullPath.replace('create', `view/${id.value}`)
-                    router.push(newPath).catch(err => {
-                        if (err.name !== 'NavigationDuplicated') {
-                            throw err
-                        }
-                    })
-                    showModal()
+                    successModal.value = {
+                        show: true,
+                        title: t('form.create_success', { name: props.title }),
+                    }
                 } else {
-                    alert('Unsuccessfully!')
-                    handleConfirm()
+                    alert(t('form.create_error'))
                 }
             } else {
                 const res = await props.apiService['edit'](props.editingId, props.formData)
                 if (res.data.success) {
                     id.value = res.data.data._id
-                    const newPath = route.fullPath.replace(/\/edit\/[^/]+$/, `/view/${id.value}`)
-                    router.push(newPath).catch(err => {
-                        if (err.name !== 'NavigationDuplicated') {
-                            throw err
-                        }
-                    })
-                    showModal()
+                    successModal.value = {
+                        show: true,
+                        title: t('form.update_success', { name: props.title }),
+                    }
                 } else {
-                    alert('Unsuccessfully!')
-                    handleConfirm()
+                    alert(t('form.update_error'))
                 }
             }
-            emits('on-save', false)
         } catch (error) {
-            alert('An error occurred while saving. Please try again.')
+            console.error('Save error:', error)
+            alert(t('form.save_error'))
+        } finally {
+            isSaving.value = false
             emits('on-save', false)
         }
     }
 
     const enableEdit = () => {
         router.push(route.fullPath.replace('view', 'edit'))
+    }
+
+    const handleDeleteClick = () => {
+        deleteModal.value.show = true
+    }
+
+    const handleDeleteConfirm = async () => {
+        try {
+            appStore.loading = true
+            const res = await props.apiService.delete(props.editingId)
+
+            deleteModal.value.show = false
+
+            if (res.data.success) {
+                successModal.value = {
+                    show: true,
+                    title: t('form.delete_success', { name: props.title }),
+                }
+                emits('on-delete', props.editingId)
+                appStore.loading = false
+            } else {
+                alert(t('form.delete_error'))
+                appStore.loading = false
+            }
+        } catch (error) {
+            console.error('Delete error:', error)
+            deleteModal.value.show = false
+            alert(t('form.delete_error'))
+            appStore.loading = false
+        }
     }
 
     onBeforeRouteUpdate((to, from, next) => {
