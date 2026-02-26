@@ -43,7 +43,7 @@
                                 {{ item.text }}
                             </th>
                         </template>
-                        <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
+                        <th v-if="isAction" scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,7 +73,7 @@
                                 </slot>
                             </td>
                         </template>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                        <td v-if="isAction" class="px-6 py-4 text-center whitespace-nowrap">
                             <a
                                 class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
                                 @click.stop="onRemove(item)"
@@ -226,6 +226,10 @@
         isGlobalSearch: {
             type: Boolean,
             default: false,
+        },
+        isAction: {
+            type: Boolean,
+            default: true,
         },
     })
     const disable_btn_decrease_page = ref(true)

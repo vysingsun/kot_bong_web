@@ -5,7 +5,12 @@
         :editing-id="fuel_stock_id"
         :form-data="store.formData"
         :api-service="fuel_stockService"
+        :show-delete="true"
+        :delete-title="t('fuel_stock.confirm_delete')"
+        :delete-description="t('fuel_stock.confirm_delete_desc')"
+        :record-name="recordName"
         @on-save="handleSaveLoading"
+        @on-delete="handleDelete"
     >
         <div class="form-grid">
             <div>
@@ -92,7 +97,9 @@
     import { getFromCache } from '@/composables/useCache'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
+    import { useI18n } from 'vue-i18n'
 
+    const { t } = useI18n()
     const store = useFuelStockStore()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -100,6 +107,11 @@
     const loadingFrom = ref(true)
     const stationId = ref('')
     const fuel_stock_id = route.path.split('/').pop()
+
+    // Compute record name for delete confirmation
+    const recordName = computed(() => {
+        return store.formData.fuel?.fuel_name || 'this record'
+    })
 
     const getFuelService = async () => {
         if (store.fuels.length <= 1) {
@@ -145,6 +157,7 @@
         mode.value = to.params.mode
         next()
     })
+    const handleDelete = () => {}
 </script>
 
 <style lang="scss" scoped>

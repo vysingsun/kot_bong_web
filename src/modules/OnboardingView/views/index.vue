@@ -584,8 +584,8 @@
                                 </div>
 
                                 <div class="flex-1">
-                                    <p class="text-base font-semibold text-gray-900 dark:text-white">
-                                        {{ stock.fuel_name }}
+                                    <p class="text-lg font-bold text-gray-900 dark:text-white truncate">
+                                        {{ t('fuel.name') }}: {{ stock.fuel_name }}
                                     </p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">
                                         {{ t('onboarding.coefficient') }}:

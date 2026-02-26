@@ -54,5 +54,21 @@
         "title": "Coming Soon!",
         "subtitle": "We're working hard to bring you something amazing.",
         "back_home": "Back to Home"
+    },
+    "form": {
+        "create": "Create",
+        "view": "View",
+        "edit": "Edit",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "update": "Update",
+        "delete": "Delete",
+        "create_success": "{name} created successfully!",
+        "update_success": "{name} updated successfully!",
+        "delete_success": "{name} deleted successfully!",
+        "create_error": "Failed to create. Please try again.",
+        "update_error": "Failed to update. Please try again.",
+        "delete_error": "Failed to delete. Please try again.",
+        "save_error": "An error occurred while saving. Please try again."
     }
 }

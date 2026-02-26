@@ -40,9 +40,19 @@
         :api-service="fuel_stockService"
         get-service-key="getFuelStocksByStation"
         is-global-search
-        clickable-row
+        :clickable-row="false"
+        :is-action="false"
         @row-click="getRow"
-    />
+    >
+        <!-- Custom slot for createdBy -->
+        <template #createdBy="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.createdBy?.firstName }} {{ item.createdBy?.lastName }}
+                </span>
+            </div>
+        </template>
+    </TablePaging>
 </template>
 
 <script setup lang="ts">
