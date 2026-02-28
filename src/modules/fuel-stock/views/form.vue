@@ -1,6 +1,6 @@
 <template>
     <BaseForm
-        title="Fuel Stock"
+        :title="t('fuel_stock.title')"
         :is-loading="loadingFrom"
         :editing-id="fuel_stock_id"
         :form-data="store.formData"
@@ -20,7 +20,6 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                     required
                     :disabled="mode === 'view'"
-                    @click="getFuelService"
                 >
                     <option v-if="loading">Loading...</option>
                     <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
@@ -137,16 +136,21 @@
     }
 
     onMounted(async () => {
-        let appData = getFromCache('app_data')
-        stationId.value = appData.value.stations[0]._id
-        store.formData.station_id = stationId.value
-        if (mode.value !== 'create') {
-            await store.readDataFromApi(fuel_stock_id)
+        try {
+            let appData = getFromCache('app_data')
+            stationId.value = appData.value.stations[0]._id
+            await getFuelService()
+            store.formData.station_id = stationId.value
+
+            if (mode.value !== 'create') {
+                await store.readDataFromApi(fuel_stock_id)
+            } else {
+                store.formData.createdAt = new Date()
+            }
+        } catch (error) {
+        } finally {
             loadingFrom.value = false
-        } else {
-            store.formData.createdAt = new Date()
         }
-        loadingFrom.value = false
     })
 
     onBeforeUnmount(() => {

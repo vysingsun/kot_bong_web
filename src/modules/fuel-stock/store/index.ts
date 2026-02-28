@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { fuel_stockService } from '../services/api.service'
-interface Ifuel {
+export interface Ifuel {
     _id: any
     fuel_name: string
     station_id: any

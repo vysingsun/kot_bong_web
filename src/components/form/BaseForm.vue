@@ -124,12 +124,29 @@
     </div>
 
     <!-- Success Modal -->
-    <BaseModal
+    <!-- <BaseModal
         :is-visible="successModal.show"
         type="success"
         :title="successModal.title"
         confirm-label="Done"
         @confirm="handleSuccessConfirm"
+    /> -->
+
+    <SuccessModal
+        :show="successModal.show"
+        type="success"
+        :title="successModal.title"
+        :description="successModal.description"
+        @close="successModal.show = false"
+        @confirm="handleSuccessConfirm"
+    />
+
+    <!-- Error Modal -->
+    <ErrorModal
+        :show="errorModal.show"
+        :description="errorModal.description"
+        :error-message="errorModal.message"
+        @confirm="handleErrorModalConfirm"
     />
 
     <!-- Delete Confirmation Modal -->
@@ -156,15 +173,6 @@
     const mode = ref(route.params.mode)
     const id = ref('')
     const isSaving = ref(false)
-
-    const successModal = ref({
-        show: false,
-        title: '',
-    })
-
-    const deleteModal = ref({
-        show: false,
-    })
 
     const props = defineProps({
         title: {
@@ -212,6 +220,24 @@
     /* emits */
     const emits = defineEmits(['on-save', 'on-delete'])
 
+    const successModal = ref({
+        show: false,
+        type: 'success',
+        title: '',
+        description: '',
+    })
+
+    const errorModal = ref({
+        show: false,
+        title: '',
+        description: '',
+        message: '',
+    })
+
+    const deleteModal = ref({
+        show: false,
+    })
+
     const onBack = () => {
         const pathSegments = route.path.split('/')
         router.push(`/${pathSegments[1]}`)
@@ -232,6 +258,10 @@
         router.push(`/${pathSegments[1]}`)
     }
 
+    const handleErrorModalConfirm = () => {
+        errorModal.value.show = false
+    }
+
     const onSave = async () => {
         isSaving.value = true
         emits('on-save', true)
@@ -243,10 +273,17 @@
                     id.value = res.data.data._id
                     successModal.value = {
                         show: true,
-                        title: t('form.create_success', { name: props.title }),
+                        type: 'success',
+                        title: t('form.create') + props.title,
+                        description: '',
                     }
                 } else {
-                    alert(t('form.create_error'))
+                    errorModal.value = {
+                        show: true,
+                        title: '',
+                        description: t('form.create_error'),
+                        message: res.error instanceof Error ? res.error.message : String(res.error),
+                    }
                 }
             } else {
                 const res = await props.apiService['edit'](props.editingId, props.formData)
@@ -254,15 +291,26 @@
                     id.value = res.data.data._id
                     successModal.value = {
                         show: true,
-                        title: t('form.update_success', { name: props.title }),
+                        type: 'success',
+                        title: t('form.edit') + props.title,
+                        description: '',
                     }
                 } else {
-                    alert(t('form.update_error'))
+                    errorModal.value = {
+                        show: true,
+                        title: '',
+                        description: t('form.update_error'),
+                        message: res.error instanceof Error ? res.error.message : String(res.error),
+                    }
                 }
             }
         } catch (error) {
-            console.error('Save error:', error)
-            alert(t('form.save_error'))
+            errorModal.value = {
+                show: true,
+                title: '',
+                description: isSaving.value ? t('form.create_error') : t('form.update_error'),
+                message: error instanceof Error ? error.message : String(error),
+            }
         } finally {
             isSaving.value = false
             emits('on-save', false)
@@ -287,18 +335,30 @@
             if (res.data.success) {
                 successModal.value = {
                     show: true,
-                    title: t('form.delete_success', { name: props.title }),
+                    type: 'success',
+                    title: t('form.delete') + props.title + t('common.suceess.delete'),
+                    description: t('form.delete_success'),
                 }
                 emits('on-delete', props.editingId)
                 appStore.loading = false
             } else {
-                alert(t('form.delete_error'))
+                errorModal.value = {
+                    show: true,
+                    title: '',
+                    description: t('form.delete_error'),
+                    message: res.error instanceof Error ? res.error.message : String(res.error),
+                }
                 appStore.loading = false
             }
         } catch (error) {
             console.error('Delete error:', error)
             deleteModal.value.show = false
-            alert(t('form.delete_error'))
+            errorModal.value = {
+                show: true,
+                title: '',
+                description: t('form.delete_error'),
+                message: error instanceof Error ? error.message : String(error),
+            }
             appStore.loading = false
         }
     }

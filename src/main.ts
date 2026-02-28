@@ -20,7 +20,10 @@ import SuccessModal from '@/components/app/SuccessModal.vue'
 import AppIcon from '@/components/app/AppIcon.vue'
 
 import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
+import { showErrorModal } from '@/composables/useErrorModal'
 import { COMPANY_THEMES } from './configs/themes'
+
+const t = i18n.global.t
 
 const getToken = () => {
     const token = getFromCache('token')?.value
@@ -72,6 +75,13 @@ axios.interceptors.response.use(
             }
 
             isUnauthorized.value = true
+        } else if (error.response.status === 403) {
+            // 👇 Show modal for 403
+            showErrorModal(
+                error?.response?.data?.error || t('common.error.access_denied_desc'),
+                t('common.error.access_denied'), // i18n translation
+                403,
+            )
         } else {
             const errorResponse = error?.response?.data
             const message = errorResponse?.error?.form_errors?.[0] ?? errorResponse?.file?.[0]
