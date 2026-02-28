@@ -1,5 +1,31 @@
-
 {
-    "fuel-sold": "Fuel-sold"
+    "fuel_sold": {
+        "title": "ការលក់ឥន្ធនៈ",
+        "records": "កំណត់ត្រា",
+        "add_sale": "បង្កើតការលក់",
+        "filters": "តម្រង",
+        "search": "ស្វែងរក",
+        "search_placeholder": "ស្វែងរកតាមបរិមាណ...",
+        "fuel_type": "ប្រភេទឥន្ធនៈ",
+        "all_fuels": "ឥន្ធនៈទាំងអស់",
+        "date_range": "ចន្លោះកាលបរិច្ឆេទ",
+        "reset_filters": "កំណត់ឡើងវិញ",
+        "sold_by": "លក់ដោយ",
+        "riel_per_liter": "៛/L",
+        "total_usd": "សរុប (USD)",
+        "total_khr": "សរុប (KHR)",
+        "edit": "កែសម្រួល",
+        "delete": "លុប",
+        "unknown": "មិនស្គាល់",
+        "total_quantity_liter": "បរិមាណសរុប (លីត្រ)",
+        "total_amount_us": "ចំនួនទឹកប្រាក់សរុប (USD)",
+        "no_records": "គ្មានកំណត់ត្រាការលក់",
+        "no_records_desc": "ចាប់ផ្តើមកត់ត្រាការលក់ឥន្ធនៈរបស់អ្នក",
+        "total_records": "កំណត់ត្រាសរុប",
+        "confirm_delete": "លុបកំណត់ត្រាការលក់?",
+        "confirm_delete_desc": "តើអ្នកប្រាកដថាចង់លុបកំណត់ត្រាការលក់នេះ? សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។",
+        "delete_success_title": "លុបបានជោគជ័យ!",
+        "delete_success_desc": "កំណត់ត្រាការលក់ត្រូវបានលុបដោយជោគជ័យ។",
+        "delete_error": "បរាជ័យក្នុងការលុបកំណត់ត្រាការលក់។ សូមព្យាយាមម្តងទៀត។"
+    }
 }
-        

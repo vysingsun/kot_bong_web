@@ -10,6 +10,8 @@ import kh_fuel from '@/modules/fuel/locales/kh.json'
 import en_fuel from '@/modules/fuel/locales/en.json'
 import kh_fuel_stock from '@/modules/fuel-stock/locales/kh.json'
 import en_fuel_stock from '@/modules/fuel-stock/locales/en.json'
+import kh_fuel_sold from '@/modules/fuel-sold/locales/kh.json'
+import en_fuel_sold from '@/modules/fuel-sold/locales/en.json'
 
 const kh = {
     ...kh_auth,
@@ -18,6 +20,7 @@ const kh = {
     ...kh_app,
     ...kh_fuel,
     ...kh_fuel_stock,
+    ...kh_fuel_sold,
 }
 
 const en = {
@@ -27,6 +30,7 @@ const en = {
     ...en_app,
     ...en_fuel,
     ...en_fuel_stock,
+    ...en_fuel_sold,
 }
 
 export { kh, en }

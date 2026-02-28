@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
 
 interface Ifuel {
@@ -25,11 +25,66 @@ class ReportFilters {
     fuel_type?: any
 }
 
+export interface IFuelSold {
+    _id: string
+    fuel: {
+        _id: string
+        fuel_name: string
+        color: string
+        coefficient_value: number
+    }
+    quantity_sold_liter: number
+    exchange_rate: number
+    amount_per_liter_khr: number
+    total_amount_us: number
+    total_amount_khr: number
+    station_id: string
+    createdAt: string
+    updatedAt: string
+    createdBy?: {
+        _id: string
+        firstName: string
+        lastName: string
+    }
+    updatedBy?: any
+}
+
+interface IFuelSoldFilters {
+    search: string
+    fuel_type: string
+    createdBy: string
+    date_from: string
+    date_to: string
+    page_number: number
+    page_size: number
+}
+
 export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
     const filterForm = ref<any>(new ReportFilters())
     const fuels = ref<any[]>([])
+
+    const loading = ref(false)
+    const fuelSales = ref<IFuelSold[]>([])
+
+    const totalCount = ref(0)
+    const totals = ref({
+        quantity_liter: 0,
+        total_amount_us: 0,
+        total_amount_khr: 0,
+    })
+
+    const filters = ref<IFuelSoldFilters>({
+        search: '',
+        fuel_type: '',
+        createdBy: '',
+        date_from: '',
+        date_to: '',
+        page_number: 1,
+        page_size: 10,
+    })
+
     const headers = ref([
         {
             text: 'Fuel Type',
@@ -86,6 +141,100 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         return params
     }
 
+    const getFuelSales = async () => {
+        try {
+            loading.value = true
+
+            const params: any = {
+                page_number: filters.value.page_number,
+                page_size: filters.value.page_size,
+            }
+
+            if (filters.value.search) {
+                params.search = filters.value.search
+            }
+
+            if (filters.value.fuel_type) {
+                params.fuelId = filters.value.fuel_type
+            }
+
+            if (filters.value.createdBy) {
+                params.createdBy = filters.value.createdBy
+            }
+
+            if (filters.value.date_from) {
+                params.start_date = filters.value.date_from
+            }
+
+            if (filters.value.date_to) {
+                params.end_date = filters.value.date_to
+            }
+
+            const res = await fuel_soldService.getFuelSoldByStationId(params)
+
+            if (res.data.success) {
+                if (filters.value.page_number > 1) {
+                    fuelSales.value = [...fuelSales.value, ...res.data.data]
+                } else {
+                    fuelSales.value = res.data.data
+                }
+
+                totalCount.value = res.data.count || 0
+                totals.value = res.data.totals || {
+                    quantity_sold_liter: 0,
+                    total_amount_us: 0,
+                    total_amount_khr: 0,
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching fuel sales:', error)
+        } finally {
+            loading.value = false
+        }
+    }
+
+    // Group by date
+    const groupedByDate = computed(() => {
+        const groups: Record<string, IFuelSold[]> = {}
+
+        fuelSales.value.forEach(sale => {
+            const date = new Date(sale.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            })
+
+            if (!groups[date]) {
+                groups[date] = []
+            }
+            groups[date].push(sale)
+        })
+
+        return groups
+    })
+
+    const deleteFuelSale = async (id: string) => {
+        try {
+            const res = await fuel_soldService.delete(id)
+            return res.data.success
+        } catch (error) {
+            console.error('Error deleting fuel sale:', error)
+            return false
+        }
+    }
+
+    const resetFilters = () => {
+        filters.value = {
+            search: '',
+            fuel_type: '',
+            createdBy: '',
+            date_from: '',
+            date_to: '',
+            page_number: 1,
+            page_size: 10,
+        }
+    }
+
     const saveFuelSold = async () => {
         const res = await fuel_soldService.create(formData.value)
         if (!res.data.success) {
@@ -134,5 +283,15 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         readDataFromApi,
         isCreatedSuccess,
         prepareFuelSoldParams,
+
+        totals,
+        loading,
+        filters,
+        fuelSales,
+        totalCount,
+        getFuelSales,
+        resetFilters,
+        groupedByDate,
+        deleteFuelSale,
     }
 })
