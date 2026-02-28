@@ -57,6 +57,12 @@
         "subtitle": "We're working hard to bring you something amazing.",
         "back_home": "Back to Home"
     },
+    "filter": {
+        "date_range": "Date Range",
+        "date_range_placeholder": "From Date - To Date",
+        "search": "Search For Items...",
+        "created_by": "Sales By"
+    },
     "form": {
         "create": "Create",
         "view": "View",

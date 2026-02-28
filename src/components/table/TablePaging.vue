@@ -4,7 +4,9 @@
     </div>
     <div class="relative sm:rounded-lg p-4">
         <div v-if="isGlobalSearch" class="pb-4 max-w-[400px]">
-            <label for="table-search" class="sr-only">Search</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ t('fuel_sold.search') }}
+            </label>
             <div class="relative">
                 <div
                     class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none"
@@ -28,7 +30,7 @@
                     v-model="search"
                     type="text"
                     class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-                    placeholder="Search for items"
+                    :placeholder="t('filter.search')"
                     @input="updateSearch"
                 />
             </div>
@@ -78,13 +80,13 @@
                                 class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
                                 @click.stop="onRemove(item)"
                             >
-                                Remove
+                                {{ t('form.delet') }}
                             </a>
                             <a
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline inline-block"
                                 @click.stop="onEdit(item)"
                             >
-                                Edit
+                                {{ t('form.edit') }}
                             </a>
                         </td>
                     </tr>
@@ -93,7 +95,7 @@
         </div>
         <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                Total Records:
+                {{ t('fuel_sold.total_records') }}
                 <span class="font-semibold text-gray-900 dark:text-white">{{ totalRecords }}</span></span
             >
             <select
@@ -182,8 +184,10 @@
     import { useRoute, useRouter } from 'vue-router'
     import { useModal } from '@/composables/useModal'
     import { useAppStore } from '@/modules/app/store/index'
-    const appStore = useAppStore()
+    import { useI18n } from 'vue-i18n'
 
+    const appStore = useAppStore()
+    const { t } = useI18n()
     const { isVisible, showModal, closeModal } = useModal()
     const router = useRouter()
     const route = useRoute()

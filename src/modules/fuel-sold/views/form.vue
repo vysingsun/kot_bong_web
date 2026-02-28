@@ -1,6 +1,6 @@
 <template>
     <BaseForm
-        title="Fuel Sold"
+        :title="t('fuel_sold.title')"
         :is-loading="loadingFrom"
         :editing-id="fuel_sold_id"
         :form-data="store.formData"
@@ -10,15 +10,15 @@
         <div class="form-grid">
             <!-- Fuel Type -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fuel Type</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_sold.fuel_type')
+                }}</label>
                 <select
                     v-model="selectedFuelId"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                     required
                     :disabled="mode === 'view'"
-                    @click="getFuelService"
                 >
-                    <option v-if="loading">Loading...</option>
                     <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
                         {{ item.fuel_name }}
                     </option>
@@ -27,9 +27,9 @@
 
             <!-- Quantity Sold -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Quantity Sold as Liter</label
-                >
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_sold.quantity_as_liter')
+                }}</label>
                 <div class="relative">
                     <input
                         v-model="store.formData.quantity_sold_liter"
@@ -60,9 +60,9 @@
 
             <!-- Amount per Liter -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Amount per Liter (KHR)</label
-                >
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_sold.amount_per_lite')
+                }}</label>
                 <input
                     v-model="store.formData.amount_per_liter_khr"
                     type="number"
@@ -74,7 +74,9 @@
 
             <!-- Exchange Rate -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_sold.exchange_ate')
+                }}</label>
                 <input
                     v-model="store.formData.exchange_rate"
                     type="number"
@@ -141,8 +143,9 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, computed, onBeforeUnmount, onUnmounted } from 'vue'
+    import { ref, onMounted, computed, onBeforeUnmount, onUnmounted, watch } from 'vue'
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
+    import { useI18n } from 'vue-i18n'
     import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
     import { lookupService } from '@/atoms/lookup/lookup.services'
@@ -152,6 +155,7 @@
     import { initFlowbite } from 'flowbite'
     import { createWorker, type Worker } from 'tesseract.js'
 
+    const { t } = useI18n()
     const videoRef = ref<HTMLVideoElement | null>(null)
     const canvasRef = ref<HTMLCanvasElement | null>(null)
     const showScanner = ref(false)
@@ -175,11 +179,10 @@
     }
 
     const getFuelService = async () => {
-        if (store.fuels.length <= 1) {
+        if (store.fuels.length === 0) {
             loading.value = true
             const response = await lookupService.getFuelByStationId(stationId.value)
-            const result = response?.data
-            store.fuels = result?.data
+            store.fuels = response?.data?.data ?? []
             loading.value = false
         }
     }
@@ -277,12 +280,25 @@
         let appData = getFromCache('app_data')
         stationId.value = appData.value.stations[0]._id
         store.formData.station_id = stationId.value
-        if (mode.value !== 'create') {
-            await store.readDataFromApi(fuel_sold_id)
-        } else {
+        if (mode.value === 'create') {
             store.formData.createdAt = new Date()
+            store.fuels = [] // ✅ reset before calling
+            await getFuelService()
+        } else if (mode.value === 'edit') {
+            await store.readDataFromApi(fuel_sold_id) // ✅ then sets selected fuel
+            store.fuels = []
+            await getFuelService() // ✅ loads ALL fuels first
+        } else if (mode.value === 'view') {
+            await store.readDataFromApi(fuel_sold_id)
         }
         loadingFrom.value = false
+    })
+
+    watch(mode, async newMode => {
+        if (newMode === 'edit' || newMode === 'create') {
+            store.fuels = [] // ✅ force refetch
+            await getFuelService()
+        }
     })
 
     onBeforeUnmount(() => {
