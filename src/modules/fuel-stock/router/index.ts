@@ -1,4 +1,5 @@
-const MODULE_NAME = 'Fuel-stock'
+import i18n from '@/plugins/i18n'
+const MODULE_NAME = i18n.global.t('menu.stocksReport')
 const MODULE_PATH = '/fuel-stock'
 
 export const routes = [

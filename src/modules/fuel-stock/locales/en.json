@@ -1,6 +1,7 @@
 {
     "fuel_stock": {
         "title": "Fuel Stock",
+        "fuel_stock_management": "Fuel Stock Management",
         "subtitle": "Track and manage your fuel inventory",
         "records": "records",
         "add_stock": "Add",
@@ -8,6 +9,11 @@
         "search": "Search",
         "search_placeholder": "Enter...",
         "fuel_type": "Fuel Type",
+        "quantity_as_liter": "Quantity as Liter",
+        "amount_as_ton": "Amount as Ton",
+        "supplier_name": "Supplier Name",
+        "exchange_ate": "Exchange Rate",
+        "create_date": "Date of Income",
         "all_fuels": "All Fuels",
         "start_date": "Start Date",
         "end_date": "End Date",

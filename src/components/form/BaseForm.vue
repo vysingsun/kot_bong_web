@@ -8,7 +8,7 @@
                 mode === 'create'
                     ? `${t('form.create')} ${title}`
                     : mode === 'view'
-                      ? `${t('form.view')} ${title}`
+                      ? `${t('form.view_detail')} ${title}`
                       : `${t('form.edit')} ${title}`
             }}
         </div>

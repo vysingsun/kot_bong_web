@@ -60,6 +60,7 @@
     "form": {
         "create": "Create",
         "view": "View",
+        "view_detail": "View Detail",
         "edit": "Edit",
         "cancel": "Cancel",
         "submit": "Submit",
