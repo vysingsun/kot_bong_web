@@ -29,7 +29,9 @@
             "description": "Data is invalid. Please try again.",
             "seeMore": "See more...",
             "seeLess": "See less",
-            "tryAgain": "Try Again"
+            "tryAgain": "Try Again",
+            "access_denied": "Access Denied",
+            "access_denied_desc": "You do not have permission to perform this action."
         },
         "delete": {
             "title": "Delete this Data?",
@@ -58,6 +60,7 @@
     "form": {
         "create": "Create",
         "view": "View",
+        "view_detail": "View Detail",
         "edit": "Edit",
         "cancel": "Cancel",
         "submit": "Submit",

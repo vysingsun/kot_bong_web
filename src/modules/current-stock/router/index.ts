@@ -15,7 +15,7 @@ export const routes = [
     },
     {
         module: MODULE_NAME,
-        name: `${MODULE_NAME}-Detail`,
+        name: i18n.global.t('fuel_stock.fuel_stock_management'),
         path: `${MODULE_PATH}/:mode/:id?`,
         meta: {
             title: MODULE_NAME,

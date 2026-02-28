@@ -82,14 +82,14 @@
                         <!-- Search by Supplier -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ t('fuel_stock.search_supplier') }}
+                                {{ t('fuel_stock.search') }}
                             </label>
                             <input
                                 v-model="store.filters.search"
                                 type="text"
                                 @input="handleSearch"
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
-                                :placeholder="t('fuel_stock.supplier_placeholder')"
+                                :placeholder="t('fuel_stock.search_placeholder')"
                             />
                         </div>
 
@@ -104,7 +104,7 @@
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
                             >
                                 <option value="">{{ t('fuel_stock.all_fuels') }}</option>
-                                <option v-for="fuel in fuelStore.fuels" :key="fuel._id" :value="fuel._id">
+                                <option v-for="fuel in fuels" :key="fuel._id" :value="fuel._id">
                                     {{ fuel.fuel_name }}
                                 </option>
                             </select>
@@ -328,9 +328,8 @@
     import { getFromCache } from '@/composables/useCache'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
-    import { useFuelStore } from '@/modules/fuel/store'
     import { useFuelStockStore } from '@/modules/fuel-stock/store'
-    import type { IFuelStock } from '@/modules/fuel-stock/store'
+    import type { IFuelStock, Ifuel } from '@/modules/fuel-stock/store'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -341,7 +340,7 @@
     const router = useRouter()
     const { t } = useI18n()
     const store = useFuelStockStore()
-    const fuelStore = useFuelStore()
+    const fuels = ref<Ifuel[]>([])
     const showFilters = ref(false)
     const date_range = ref([])
 
@@ -353,16 +352,17 @@
         if (appData && appData.value?.stations?.[0]?._id) {
             stationId.value = appData.value.stations[0]._id
 
-            // Load fuels for filter
-            await fuelStore.getFuelsByStation(stationId.value)
+            // Call both at the same time
+            const [_, response] = await Promise.all([
+                store.getFuelStocks(),
+                current_stockService.getCurrentStock(stationId.value),
+            ])
+            const result = response?.data
 
-            // Load fuel stocks
-            await store.getFuelStocks()
+            fuelStocks.value = result?.data
+
+            fuels.value = result?.data?.map((item: IFuelStock) => item.fuel)
         }
-        const response = await current_stockService.getCurrentStock(stationId.value)
-        const result = response?.data
-
-        fuelStocks.value = result?.data
 
         await nextTick()
         loading.value = false

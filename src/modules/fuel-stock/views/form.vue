@@ -1,6 +1,6 @@
 <template>
     <BaseForm
-        title="Fuel Stock"
+        :title="t('fuel_stock.title')"
         :is-loading="loadingFrom"
         :editing-id="fuel_stock_id"
         :form-data="store.formData"
@@ -14,22 +14,24 @@
     >
         <div class="form-grid">
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.fuel_type') }}
+                </label>
                 <select
                     v-model="selectedFuelId"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                     required
                     :disabled="mode === 'view'"
-                    @click="getFuelService"
                 >
-                    <option v-if="loading">Loading...</option>
                     <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
                         {{ item.fuel_name }}
                     </option>
                 </select>
             </div>
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity as Liter</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.quantity_as_liter') }}
+                </label>
                 <input
                     v-model="store.formData.quantity_liter"
                     type="number"
@@ -40,7 +42,9 @@
                 />
             </div>
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount as Ton</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.amount_as_ton')
+                }}</label>
                 <input
                     v-model="store.formData.amount_ton"
                     type="number"
@@ -50,7 +54,9 @@
                 />
             </div>
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier Name</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.supplier_name')
+                }}</label>
                 <input
                     v-model="store.formData.supplier_name"
                     type="text"
@@ -60,7 +66,9 @@
                 />
             </div>
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.exchange_rate')
+                }}</label>
                 <input
                     v-model="store.formData.exchange_rate"
                     type="number"
@@ -72,8 +80,9 @@
             </div>
 
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
-
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.create_date') }}
+                </label>
                 <div class="relative w-full">
                     <VueDatePicker
                         v-model="store.formData.createdAt"
@@ -137,16 +146,21 @@
     }
 
     onMounted(async () => {
-        let appData = getFromCache('app_data')
-        stationId.value = appData.value.stations[0]._id
-        store.formData.station_id = stationId.value
-        if (mode.value !== 'create') {
-            await store.readDataFromApi(fuel_stock_id)
+        try {
+            let appData = getFromCache('app_data')
+            stationId.value = appData.value.stations[0]._id
+            await getFuelService()
+            store.formData.station_id = stationId.value
+
+            if (mode.value !== 'create') {
+                await store.readDataFromApi(fuel_stock_id)
+            } else {
+                store.formData.createdAt = new Date()
+            }
+        } catch (error) {
+        } finally {
             loadingFrom.value = false
-        } else {
-            store.formData.createdAt = new Date()
         }
-        loadingFrom.value = false
     })
 
     onBeforeUnmount(() => {
