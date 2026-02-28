@@ -33,11 +33,15 @@
         const appData = getFromCache('app_data')
         if (appData && appData.value?.stations?.[0]?._id) {
             stationId.value = appData.value.stations[0]._id
-            // Load fuel sales
-            await store.getFuelSales()
 
-            // Load fuels for filter
-            await fuelStore.getFuelsByStation(stationId.value)
+            // Call at the same time
+            await Promise.all([
+                // Load fuel sales
+                store.getFuelSales(),
+
+                // Load fuels for filter
+                fuelStore.getFuelsByStation(stationId.value),
+            ])
 
             // TODO: Load users for createdBy filter if needed
             // await loadUsers()
@@ -230,7 +234,7 @@
                                 v-model="store.filters.search"
                                 type="text"
                                 @input="handleSearch"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                                 :placeholder="t('fuel_sold.search_placeholder')"
                             />
                         </div>
@@ -243,7 +247,7 @@
                             <select
                                 v-model="store.filters.fuel_type"
                                 @change="handleSearch"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                             >
                                 <option value="">{{ t('fuel_sold.all_fuels') }}</option>
                                 <option v-for="fuel in fuelStore.fuels" :key="fuel._id" :value="fuel._id">
@@ -261,7 +265,7 @@
                                 v-model="date_range"
                                 range
                                 auto-apply
-                                placeholder="From Date - To Date"
+                                :placeholder="t('filter.date_range_placeholder')"
                                 :partial-range="false"
                                 :enable-time-picker="false"
                                 @update:model-value="onChangeDateRange"
@@ -516,7 +520,7 @@
 
                 <select
                     v-model="store.filters.page_size"
-                    class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     @change="updatePageSize(Number(($event.target as any).value))"
                 >
                     <option value="7">7</option>
@@ -595,3 +599,9 @@
         />
     </div>
 </template>
+
+<style scoped>
+    :deep(.dp__input::placeholder) {
+        font-family: 'Kantumruy Pro', sans-serif;
+    }
+</style>

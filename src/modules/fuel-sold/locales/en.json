@@ -1,12 +1,16 @@
 {
     "fuel_sold": {
         "title": "Fuel Sales",
+        "fuel_sold_management": "Fuel Sales Management",
         "records": "records",
         "add_sale": "Create Sale",
         "filters": "Filters",
         "search": "Search",
-        "search_placeholder": "Search by quantity...",
+        "search_placeholder": "Search For Items...",
         "fuel_type": "Fuel Type",
+        "quantity_as_liter": "Quantity as Liter ( L )",
+        "amount_per_lite": "Amount per Liter ( $ )",
+        "exchange_ate": "Exchange Rate",
         "all_fuels": "All Fuels",
         "date_range": "Date Range",
         "reset_filters": "Reset",

@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, computed, onBeforeUnmount, watch } from 'vue'
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
     import { fuel_stockService } from '@/modules/fuel-stock/services/api.service'
     import { useFuelStockStore } from '@/modules/fuel-stock/store/index'
@@ -149,17 +149,29 @@
         try {
             let appData = getFromCache('app_data')
             stationId.value = appData.value.stations[0]._id
-            await getFuelService()
             store.formData.station_id = stationId.value
 
-            if (mode.value !== 'create') {
-                await store.readDataFromApi(fuel_stock_id)
-            } else {
+            if (mode.value === 'create') {
                 store.formData.createdAt = new Date()
+                store.fuels = [] // ✅ reset before calling
+                await getFuelService()
+            } else if (mode.value === 'edit') {
+                await store.readDataFromApi(fuel_stock_id) // ✅ then sets selected fuel
+                store.fuels = []
+                await getFuelService() // ✅ loads ALL fuels first
+            } else if (mode.value === 'view') {
+                await store.readDataFromApi(fuel_stock_id)
             }
         } catch (error) {
         } finally {
             loadingFrom.value = false
+        }
+    })
+
+    watch(mode, async newMode => {
+        if (newMode === 'edit' || newMode === 'create') {
+            store.fuels = [] // ✅ force refetch
+            await getFuelService()
         }
     })
 

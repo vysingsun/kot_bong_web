@@ -88,7 +88,7 @@
                                 v-model="store.filters.search"
                                 type="text"
                                 @input="handleSearch"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                                 :placeholder="t('fuel_stock.search_placeholder')"
                             />
                         </div>
@@ -101,7 +101,7 @@
                             <select
                                 v-model="store.filters.fuel_type"
                                 @change="handleSearch"
-                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                             >
                                 <option value="">{{ t('fuel_stock.all_fuels') }}</option>
                                 <option v-for="fuel in fuels" :key="fuel._id" :value="fuel._id">
@@ -113,14 +113,14 @@
                         <!-- Date Range -->
                         <div class="sm:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ t('fuel_stock.date_range') }}
+                                {{ t('filter.date_range') }}
                             </label>
                             <VueDatePicker
                                 v-model="date_range"
                                 class="DatePicker pb-4"
                                 range
                                 auto-apply
-                                placeholder="From Date - To Date"
+                                :placeholder="t('filter.date_range_placeholder')"
                                 :partial-range="false"
                                 :enable-time-picker="false"
                                 @update:model-value="onChangeDateRange"
@@ -441,5 +441,9 @@
         .dp__pointer {
             border-radius: 8px;
         }
+    }
+
+    :deep(.dp__input::placeholder) {
+        font-family: 'Kantumruy Pro', sans-serif;
     }
 </style>

@@ -1,5 +1,6 @@
 <template>
-    <div class="pt-4 px-4">
+    <BaseLoading v-if="loading" />
+    <div class="max-w-[400px] px-4 pt-4">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('filter.date_range') }}
         </label>
@@ -14,7 +15,7 @@
             @update:model-value="onChangeDateRange"
         />
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {{ t('fuel_stock.fuel_type') }}
+            {{ t('fuel_sold.fuel_type') }}
         </label>
         <div class="relative">
             <select
@@ -23,9 +24,7 @@
                 @change="onChangeFuelType"
             >
                 <option value="" class="text-gray-100" disabled selected hidden>{{ t('fuel_stock.fuel_type') }}</option>
-                <option v-for="item in fuels" :key="item?._id" :value="item._id">
-                    {{ item.fuel_name }}
-                </option>
+                <option v-for="item in fuels" :key="item?._id" :value="item._id">{{ item.fuel_name }}</option>
             </select>
             <button
                 v-if="fuel_type"
@@ -39,16 +38,15 @@
     </div>
     <TablePaging
         :key="table_key"
-        name="Fuel Income"
+        name="Fuel Sold"
         :params="filterParams"
         :headers="store.headers"
         column-no
-        :api-service="fuel_stockService"
-        get-service-key="getFuelStocksByStation"
+        :api-service="fuel_soldService"
+        get-service-key="getFuelSoldByStationId"
         is-global-search
         :clickable-row="false"
         :is-action="false"
-        @row-click="getRow"
     >
         <!-- Custom slot for createdBy -->
         <template #createdBy="{ item }">
@@ -60,30 +58,31 @@
         </template>
     </TablePaging>
 </template>
-
 <script setup lang="ts">
     import { onMounted, ref, computed } from 'vue'
     import { initFlowbite } from 'flowbite'
     import { useI18n } from 'vue-i18n'
-    import { fuel_stockService } from '@/modules/fuel-stock/services/api.service'
-    import { useFuelStockStore } from '@/modules/fuel-stock/store/index'
+    import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
+    import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
     import { lookupService } from '@/atoms/lookup/lookup.services'
     import { getFromCache } from '@/composables/useCache'
+    import { useRouter } from 'vue-router'
+
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
-    import { useRouter } from 'vue-router'
 
     const { t } = useI18n()
     const router = useRouter()
     const table_key = ref(0)
-    const store = useFuelStockStore()
+    const store = useFuelSoldStore()
     const date_range = ref([])
     const fuels = ref<any[]>([])
     const fuel_type = ref('')
     const stationId = ref('')
     const params = ref<any>({})
     const filterParams = computed(() => params.value)
+    const loading = ref(false)
 
     const onSelect = async () => {
         let appData = getFromCache('app_data')
@@ -93,8 +92,12 @@
         fuels.value = result?.data
     }
 
+    const getRow = (item: any) => {
+        router.push(`/fuel-sold/view/${item._id}`)
+    }
+
     function prepareFilterParams() {
-        params.value = store.prepareFuelStockParams()
+        params.value = store.prepareFuelSoldParams()
         // for refresh data
         table_key.value += 1
     }
@@ -103,10 +106,6 @@
         initFlowbite()
         onSelect()
     })
-
-    const getRow = (item: any) => {
-        router.push(`/fuel-stock/view/${item._id}`)
-    }
 
     const onChangeDateRange = () => {
         if (date_range.value?.length) {
@@ -131,7 +130,6 @@
         prepareFilterParams()
     }
 </script>
-
 <style lang="scss" scoped>
     :deep(.DatePicker) {
         .dp__pointer {
