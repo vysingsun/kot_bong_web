@@ -10,7 +10,7 @@
         "fuel_type": "Fuel Type",
         "quantity_as_liter": "Quantity as Liter ( L )",
         "amount_per_lite": "Amount per Liter ( $ )",
-        "exchange_ate": "Exchange Rate",
+        "exchange_rate": "Exchange Rate ( KHR )",
         "all_fuels": "All Fuels",
         "date_range": "Date Range",
         "reset_filters": "Reset",
@@ -30,6 +30,11 @@
         "confirm_delete_desc": "Are you sure you want to delete this sale record? This action cannot be undone.",
         "delete_success_title": "Deleted!",
         "delete_success_desc": "Sale record has been deleted successfully.",
-        "delete_error": "Failed to delete sale record. Please try again."
+        "delete_error": "Failed to delete sale record. Please try again.",
+        "quantity_as_ton": "Quantity as Ton ( Ton )",
+        "amount_per_liter_us": "Amount per Liter (USD)",
+        "amount_per_liter_khr": "Amount per Liter (KHR)",
+        "total_amount_khr": "Total Amount (KHR)",
+        "date": "Date"
     }
 }

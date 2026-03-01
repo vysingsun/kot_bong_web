@@ -24,7 +24,7 @@ export const routes = [
     {
         module: MODULE_NAME,
         name: i18n.global.t('menu.salesReport'),
-        path: `${MODULE_PATH}/report`,
+        path: `${MODULE_PATH}-report`,
         meta: {
             title: MODULE_NAME,
         },

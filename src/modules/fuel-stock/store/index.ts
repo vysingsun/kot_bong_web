@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { fuel_stockService } from '../services/api.service'
 export interface Ifuel {
     _id: any
@@ -61,6 +62,7 @@ export interface IFuelStockFilters {
 }
 
 export const useFuelStockStore = defineStore('useFuelStockStore', () => {
+    const { t } = useI18n()
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
     const filterForm = ref<any>(new ReportFilters())
@@ -174,47 +176,47 @@ export const useFuelStockStore = defineStore('useFuelStockStore', () => {
 
     const headers = ref([
         {
-            text: 'Fuel Type',
-            value: 'fuel.fuel_name',
+            text: t('fuel_stock.fuel_type'),
+            value: 'fuel',
         },
         {
-            text: 'Created By',
+            text: t('fuel_stock.created_by'),
             value: 'createdBy',
         },
         {
-            text: 'Quantity In Liter',
+            text: t('fuel_stock.quantity_as_liter'),
             value: 'quantity_liter',
         },
         {
-            text: 'Quantity In Ton',
+            text: t('fuel_stock.quantity_as_ton'),
             value: 'quantity_ton',
         },
         {
-            text: 'Amount In Ton',
+            text: t('fuel_stock.amount_as_ton'),
             value: 'amount_ton',
         },
         {
-            text: 'Amount Per liter USD',
+            text: t('fuel_stock.amount_per_liter_us'),
             value: 'amount_liter_us',
         },
         {
-            text: 'Amount Per liter KHR',
+            text: t('fuel_stock.amount_per_liter_khr'),
             value: 'amount_liter_khr',
         },
         {
-            text: 'Exchange Rate',
+            text: t('fuel_stock.exchange_rate'),
             value: 'exchange_rate',
         },
         {
-            text: 'Total Amount USD',
+            text: t('fuel_stock.total_amount_us'),
             value: 'total_amount_us',
         },
         {
-            text: 'From',
+            text: t('fuel_stock.supplier_name'),
             value: 'supplier_name',
         },
         {
-            text: 'Date',
+            text: t('fuel_stock.date'),
             value: 'createdAt',
         },
     ])

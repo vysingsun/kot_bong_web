@@ -18,10 +18,13 @@ import BaseForm from '@/components/form/BaseForm.vue'
 import ErrorModal from '@/components/app/ErrorModal.vue'
 import SuccessModal from '@/components/app/SuccessModal.vue'
 import AppIcon from '@/components/app/AppIcon.vue'
+import AppAvatar from '@/components/app/AppAvatar.vue'
+import AppFuel from '@/components/app/AppFuel.vue'
 
 import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
 import { showErrorModal } from '@/composables/useErrorModal'
 import { COMPANY_THEMES } from './configs/themes'
+import { useFormatDate } from './composables/useFormatDate'
 
 const t = i18n.global.t
 
@@ -111,6 +114,16 @@ fetch('/icon-set.svg')
         document.body.insertBefore(div, document.body.firstChild)
     })
 
+app.config.globalProperties.$formatDate = null // placeholder
+
+// Register as global plugin
+app.mixin({
+    setup() {
+        const { formatDate, formatDateShort } = useFormatDate()
+        return { formatDate, formatDateShort }
+    },
+})
+
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
@@ -119,6 +132,8 @@ app.component('BaseForm', BaseForm)
 app.component('ErrorModal', ErrorModal)
 app.component('SuccessModal', SuccessModal)
 app.component('AppIcon', AppIcon)
+app.component('AppAvatar', AppAvatar)
+app.component('AppFuel', AppFuel)
 // Initialize theme before mounting
 const themeStore = useThemeStore()
 themeStore.initializeTheme()
