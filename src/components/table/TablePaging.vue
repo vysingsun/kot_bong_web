@@ -93,6 +93,8 @@
                 </tbody>
             </table>
         </div>
+        <!-- Summary Bar -->
+        <slot name="summary-bar" :totals="props.totals" />
         <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                 {{ t('fuel_sold.total_records') }}
@@ -234,6 +236,10 @@
         isAction: {
             type: Boolean,
             default: true,
+        },
+        totals: {
+            type: Object as () => Record<string, any> | null,
+            default: null,
         },
     })
     const disable_btn_decrease_page = ref(true)
