@@ -23,17 +23,9 @@
                 class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="onChangeFuelType"
             >
-                <option value="" class="text-gray-100" disabled selected hidden>{{ t('fuel_stock.fuel_type') }}</option>
+                <option value="">{{ t('fuel_sold.all_fuels') }}</option>
                 <option v-for="item in fuels" :key="item?._id" :value="item._id">{{ item.fuel_name }}</option>
             </select>
-            <button
-                v-if="fuel_type"
-                class="absolute right-8 top-1.5 text-gray-500 hover:text-gray-700"
-                type="button"
-                @click="clearSelection"
-            >
-                &times;
-            </button>
         </div>
     </div>
     <TablePaging
@@ -47,6 +39,8 @@
         is-global-search
         :clickable-row="false"
         :is-action="false"
+        :totals="totals"
+        @retrieve-result="onRetrieveResult"
     >
         <!-- Custom slot for fuel.fuel_name -->
         <template #fuel="{ item }">
@@ -60,11 +54,12 @@
         <!-- Custom slot for createdBy -->
         <template #createdBy="{ item }">
             <div class="flex items-center gap-2">
-                <span
-                    ><AppAvatar :user="item.createdBy" size="md">
+                <span>
+                    <AppAvatar :user="item.createdBy" size="md">
                         <template #title />
-                        <template #subtitle /> </AppAvatar
-                ></span>
+                        <template #subtitle />
+                    </AppAvatar>
+                </span>
             </div>
         </template>
 
@@ -139,6 +134,34 @@
                 </span>
             </div>
         </template>
+
+        <template #summary-bar="{ totals }">
+            <div
+                v-if="totals"
+                class="flex flex-wrap items-center gap-4 px-1 py-3 mt-2 border-t border-gray-100 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400"
+            >
+                <div class="flex items-center gap-1">
+                    <span>{{ t('fuel_sold.total_quantity_liter') }}:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">
+                        {{ totals.quantity_liter.toLocaleString() }} L</span
+                    >
+                </div>
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <div class="flex items-center gap-1">
+                    <span>{{ t('fuel_sold.total_amount_khr') }}:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">
+                        {{ totals.amount_khr.toLocaleString() }} ៛
+                    </span>
+                </div>
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <div class="flex items-center gap-1">
+                    <span>{{ t('fuel_sold.total_amount_us') }}:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">
+                        $ {{ totals.total_amount_us.toLocaleString() }}
+                    </span>
+                </div>
+            </div>
+        </template>
     </TablePaging>
 </template>
 <script setup lang="ts">
@@ -168,6 +191,11 @@
     const params = ref<any>({})
     const filterParams = computed(() => params.value)
     const loading = ref(false)
+    const totals = ref(null)
+
+    const onRetrieveResult = (result: any) => {
+        totals.value = result.allData?.totals ?? null
+    }
 
     const onSelect = async () => {
         let appData = getFromCache('app_data')
@@ -205,12 +233,6 @@
     }
 
     const onChangeFuelType = () => {
-        store.filterForm.fuel_type = fuel_type.value
-        prepareFilterParams()
-    }
-
-    const clearSelection = () => {
-        fuel_type.value = ''
         store.filterForm.fuel_type = fuel_type.value
         prepareFilterParams()
     }
