@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
 
 interface Ifuel {
@@ -60,6 +61,7 @@ interface IFuelSoldFilters {
 }
 
 export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
+    const { t } = useI18n()
     const formData = ref(new FormData())
     const isCreatedSuccess = ref(true)
     const filterForm = ref<any>(new ReportFilters())
@@ -87,43 +89,43 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
 
     const headers = ref([
         {
-            text: 'Fuel Type',
-            value: 'fuel.fuel_name',
+            text: t('fuel_sold.fuel_type'),
+            value: 'fuel',
         },
         {
-            text: 'Created By',
+            text: t('fuel_sold.sold_by'),
             value: 'createdBy',
         },
         {
-            text: 'Quantity Sold Liter',
+            text: t('fuel_sold.quantity_as_liter'),
             value: 'quantity_sold_liter',
         },
         {
-            text: 'Quantity Sold Ton',
+            text: t('fuel_sold.quantity_as_ton'),
             value: 'quantity_sold_ton',
         },
         {
-            text: 'Amount per Liter (KHR)',
+            text: t('fuel_sold.amount_per_liter_khr'),
             value: 'amount_per_liter_khr',
         },
         {
-            text: 'Amount per Liter (USD)',
+            text: t('fuel_sold.amount_per_liter_us'),
             value: 'amount_per_liter_us',
         },
         {
-            text: 'Exchange Rate',
+            text: t('fuel_sold.exchange_rate'),
             value: 'exchange_rate',
         },
         {
-            text: 'Total Amount (KHR)',
+            text: t('fuel_sold.total_amount_khr'),
             value: 'total_amount_khr',
         },
         {
-            text: 'Total Amount (USD)',
+            text: t('fuel_sold.total_amount_us'),
             value: 'total_amount_us',
         },
         {
-            text: 'Date',
+            text: t('fuel_sold.date'),
             value: 'createdAt',
         },
     ])

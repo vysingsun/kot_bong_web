@@ -44,7 +44,12 @@
     <BaseLoading v-if="loading" />
     <div class="antialiased h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
-        <AppHeader :userName="`${user?.firstName} ${user?.lastName}`" :userEmail="user?.email" :onLogout="showModal" />
+        <AppHeader
+            :user="user"
+            :userName="`${user?.firstName} ${user?.lastName}`"
+            :userEmail="user?.email"
+            :onLogout="showModal"
+        />
 
         <!-- Sidebar -->
         <aside

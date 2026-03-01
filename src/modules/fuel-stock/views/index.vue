@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-4 px-4">
+    <div class="max-w-[400px] pt-4 px-4">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('filter.date_range') }}
         </label>
@@ -50,11 +50,95 @@
         :is-action="false"
         @row-click="getRow"
     >
+        <!-- Custom slot for fuel.fuel_name -->
+        <template #fuel="{ item }">
+            <div class="flex items-center gap-2">
+                <!-- <span class="text-gray-900 dark:text-white">
+                        {{ item.fuel?.fuel_name || '-' }}
+                    </span> -->
+                <AppFuel :fuel="item.fuel" size="sm" />
+            </div>
+        </template>
+
         <!-- Custom slot for createdBy -->
         <template #createdBy="{ item }">
             <div class="flex items-center gap-2">
+                <span
+                    ><AppAvatar :user="item.createdBy" size="md">
+                        <template #title />
+                        <template #subtitle /> </AppAvatar
+                ></span>
+            </div>
+        </template>
+
+        <!-- Custom slot for quantity_liter -->
+        <template #quantity_liter="{ item }">
+            <div class="flex items-center gap-2">
                 <span class="text-gray-900 dark:text-white">
-                    {{ item.createdBy?.firstName }} {{ item.createdBy?.lastName }}
+                    {{ item.quantity_liter ? item.quantity_liter.toLocaleString() : '-' }} L
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for quantity_ton -->
+        <template #quantity_ton="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.quantity_ton ? item.quantity_ton.toLocaleString() : '-' }} T
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for amount_ton -->
+        <template #amount_ton="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.amount_ton ? item.amount_ton.toLocaleString() : '-' }} $ / Ton
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for amount_liter_us -->
+        <template #amount_liter_us="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.amount_liter_us ? item.amount_liter_us.toLocaleString() : '-' }} $ / L
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for amount_liter_khr -->
+        <template #amount_liter_khr="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.amount_liter_khr ? item.amount_liter_khr.toLocaleString() : '-' }} ៛ / L
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for exchange_rate -->
+        <template #exchange_rate="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.exchange_rate ? item.exchange_rate.toLocaleString() : '-' }} ៛
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for total_amount_us -->
+        <template #total_amount_us="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.total_amount_us ? item.total_amount_us.toLocaleString() : '-' }} $
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for createdAt -->
+        <template #createdAt="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.createdAt ? formatDate(item.createdAt) : '-' }}
                 </span>
             </div>
         </template>
@@ -73,7 +157,9 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
     import { useRouter } from 'vue-router'
+    import { useFormatDate } from '@/composables/useFormatDate'
 
+    const { formatDate } = useFormatDate()
     const { t } = useI18n()
     const router = useRouter()
     const table_key = ref(0)

@@ -4,7 +4,18 @@
     import { useI18n } from 'vue-i18n'
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
+    interface User {
+        _id: string
+        firstName: string
+        lastName: string
+        phone?: string
+        email?: string
+        role?: { role_name: string }
+        language?: string
+    }
+
     interface Props {
+        user?: User
         userName?: string
         userEmail?: string
         onLogout?: () => void
@@ -55,18 +66,8 @@
 
             <div class="flex items-center lg:order-2 gap-2">
                 <!-- User Menu -->
-                <button
-                    id="user-menu-button"
-                    type="button"
-                    class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                    data-dropdown-toggle="dropdown"
-                >
-                    <span class="sr-only">{{ t('home.open_user_menu') }}</span>
-                    <div
-                        class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600"
-                    >
-                        <span class="font-medium text-gray-600 dark:text-gray-300">{{ userInitials }}</span>
-                    </div>
+                <button id="user-menu-button" type="button" data-dropdown-toggle="dropdown">
+                    <AppAvatar :user="props.user" size="md" />
                 </button>
 
                 <!-- Dropdown menu -->

@@ -75,7 +75,7 @@
             <!-- Exchange Rate -->
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                    t('fuel_sold.exchange_ate')
+                    t('fuel_sold.exchange_rate')
                 }}</label>
                 <input
                     v-model="store.formData.exchange_rate"

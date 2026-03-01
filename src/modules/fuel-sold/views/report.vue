@@ -48,11 +48,94 @@
         :clickable-row="false"
         :is-action="false"
     >
+        <!-- Custom slot for fuel.fuel_name -->
+        <template #fuel="{ item }">
+            <div class="flex items-center gap-2">
+                <!-- <span class="text-gray-900 dark:text-white">
+                        {{ item.fuel?.fuel_name || '-' }}
+                    </span> -->
+                <AppFuel :fuel="item.fuel" size="sm" />
+            </div>
+        </template>
         <!-- Custom slot for createdBy -->
         <template #createdBy="{ item }">
             <div class="flex items-center gap-2">
+                <span
+                    ><AppAvatar :user="item.createdBy" size="md">
+                        <template #title />
+                        <template #subtitle /> </AppAvatar
+                ></span>
+            </div>
+        </template>
+
+        <!-- Custom slot for quantity_sold_liter -->
+        <template #quantity_sold_liter="{ item }">
+            <div class="flex items-center gap-2">
                 <span class="text-gray-900 dark:text-white">
-                    {{ item.createdBy?.firstName }} {{ item.createdBy?.lastName }}
+                    {{ item.quantity_sold_liter ? item.quantity_sold_liter.toLocaleString() : '0' }} L
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for quantity_sold_ton -->
+        <template #quantity_sold_ton="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.quantity_sold_ton ? item.quantity_sold_ton.toLocaleString() : '0' }} T
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for amount_per_liter_khr -->
+        <template #amount_per_liter_khr="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.amount_per_liter_khr ? item.amount_per_liter_khr.toLocaleString() : '0' }} ៛
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for amount_per_liter_us -->
+        <template #amount_per_liter_us="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.amount_per_liter_us ? item.amount_per_liter_us.toLocaleString() : '0' }} $
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for exchange_rate -->
+        <template #exchange_rate="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.exchange_rate ? item.exchange_rate.toLocaleString() : '0' }} ៛
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for total_amount_khr -->
+        <template #total_amount_khr="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.total_amount_khr ? item.total_amount_khr.toLocaleString() : '0' }} ៛
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for total_amount_us -->
+        <template #total_amount_us="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.total_amount_us ? item.total_amount_us.toLocaleString() : '0' }} $
+                </span>
+            </div>
+        </template>
+
+        <!-- Custom slot for createdAt -->
+        <template #createdAt="{ item }">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-900 dark:text-white">
+                    {{ item.createdAt ? formatDate(item.createdAt) : '-' }}
                 </span>
             </div>
         </template>
@@ -71,7 +154,9 @@
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
+    import { useFormatDate } from '@/composables/useFormatDate'
 
+    const { formatDate } = useFormatDate()
     const { t } = useI18n()
     const router = useRouter()
     const table_key = ref(0)

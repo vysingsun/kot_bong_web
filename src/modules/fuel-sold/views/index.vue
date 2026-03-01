@@ -10,6 +10,9 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import DeleteModal from '@/components/app/DeleteModal.vue'
     import { useAppStore } from '@/modules/app/store/index'
+    import { useFormatDate } from '@/composables/useFormatDate'
+
+    const { formatDate } = useFormatDate()
 
     const appStore = useAppStore()
 
