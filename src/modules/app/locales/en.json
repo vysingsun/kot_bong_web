@@ -1,5 +1,83 @@
-
 {
-    "app": "App"
+    "app": "App",
+    "home": {
+        "welcome": "Welcome",
+        "fuel_station": "Fuel Station & Gas Services",
+        "sales": "Sales",
+        "users": "Users",
+        "stocks": "Stocks",
+        "profile": "Profile",
+        "settings": "Settings",
+        "products": "Products",
+        "pricing": "Pricing",
+        "coefficients": "Coefficients",
+        "logout": "Logout",
+        "open_user_menu": "Open user menu",
+        "my_profile": "My profile",
+        "account_settings": "Account settings",
+        "sign_out": "Sign out",
+        "coming_soon": "Coming soon..."
+    },
+    "common": {
+        "success": {
+            "title": "Success",
+            "description": "The operation was completed successfully.",
+            "action": "OK"
+        },
+        "error": {
+            "title": "Error",
+            "description": "Data is invalid. Please try again.",
+            "seeMore": "See more...",
+            "seeLess": "See less",
+            "tryAgain": "Try Again",
+            "access_denied": "Access Denied",
+            "access_denied_desc": "You do not have permission to perform this action."
+        },
+        "delete": {
+            "title": "Delete this Data?",
+            "description": "This action cannot be undone. The Data will be permanently removed.",
+            "action": "Delete"
+        },
+        "cancel": "Cancel"
+    },
+    "notFound": {
+        "typing": "Page NOT FOUND",
+        "subtitle": "This page doesn't exist or was removed! We suggest you back to home.",
+        "button": "Take me home"
+    },
+    "menu": {
+        "overview": "Overview",
+        "stocksReport": "Stocks Report",
+        "stockGraph": "Stock Graph",
+        "salesReport": "Sales Report",
+        "salesGraph": "Sales Graph"
+    },
+    "coming_soon": {
+        "title": "Coming Soon!",
+        "subtitle": "We're working hard to bring you something amazing.",
+        "back_home": "Back to Home"
+    },
+    "filter": {
+        "date_range": "Date Range",
+        "date_range_placeholder": "From Date - To Date",
+        "search": "Search For Items...",
+        "created_by": "Sales By"
+    },
+    "form": {
+        "create": "Create",
+        "view": "View",
+        "view_detail": "View Detail",
+        "edit": "Edit",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "update": "Update",
+        "delete": "Delete",
+        "create_success": "{name} created successfully!",
+        "update_success": "{name} updated successfully!",
+        "delete_success": "{name} deleted successfully!",
+        "create_error": "Failed to create. Please try again.",
+        "update_error": "Failed to update. Please try again.",
+        "delete_error": "Failed to delete. Please try again.",
+        "save_error": "An error occurred while saving. Please try again."
+    }
 }
-        

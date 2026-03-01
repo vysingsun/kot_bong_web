@@ -1,88 +1,104 @@
 <template>
     <BaseForm
-        title="Fuel Stock"
+        :title="t('fuel_stock.title')"
         :is-loading="loadingFrom"
         :editing-id="fuel_stock_id"
         :form-data="store.formData"
         :api-service="fuel_stockService"
+        :show-delete="true"
+        :delete-title="t('fuel_stock.confirm_delete')"
+        :delete-description="t('fuel_stock.confirm_delete_desc')"
+        :record-name="recordName"
         @on-save="handleSaveLoading"
+        @on-delete="handleDelete"
     >
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Fuel Type </label>
-            <select
-                v-model="selectedFuelId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-                :disabled="mode === 'view'"
-                @click="getFuelService"
-            >
-                <option v-if="loading">Loading...</option>
-                <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
-                    {{ item.fuel_name }}
-                </option>
-            </select>
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity as Liter</label>
-            <input
-                v-model="store.formData.quantity_liter"
-                type="number"
-                step="0.01"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount as Ton</label>
-            <input
-                v-model="store.formData.amount_ton"
-                type="number"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier Name</label>
-            <input
-                v-model="store.formData.supplier_name"
-                type="text"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Exchange Rate</label>
-            <input
-                v-model="store.formData.exchange_rate"
-                type="number"
-                step="0.01"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                required
-                :disabled="mode === 'view'"
-            />
-        </div>
-
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Date </label>
-
-            <div class="relative max-w-sm">
-                <VueDatePicker
-                    v-model="store.formData.createdAt"
-                    class="DatePicker"
-                    auto-apply
-                    :partial-range="false"
-                    :enable-time-picker="false"
+        <div class="form-grid">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.fuel_type') }}
+                </label>
+                <select
+                    v-model="selectedFuelId"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                    required
+                    :disabled="mode === 'view'"
+                >
+                    <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
+                        {{ item.fuel_name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.quantity_as_liter') }}
+                </label>
+                <input
+                    v-model="store.formData.quantity_liter"
+                    type="number"
+                    step="0.01"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
                 />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.amount_as_ton')
+                }}</label>
+                <input
+                    v-model="store.formData.amount_ton"
+                    type="number"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.supplier_name')
+                }}</label>
+                <input
+                    v-model="store.formData.supplier_name"
+                    type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                    t('fuel_stock.exchange_rate')
+                }}</label>
+                <input
+                    v-model="store.formData.exchange_rate"
+                    type="number"
+                    step="0.01"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    required
+                    :disabled="mode === 'view'"
+                />
+            </div>
+
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_stock.create_date') }}
+                </label>
+                <div class="relative w-full">
+                    <VueDatePicker
+                        v-model="store.formData.createdAt"
+                        class="DatePicker"
+                        auto-apply
+                        :partial-range="false"
+                        :enable-time-picker="false"
+                    />
+                </div>
             </div>
         </div>
     </BaseForm>
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, computed, onBeforeUnmount, watch } from 'vue'
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
     import { fuel_stockService } from '@/modules/fuel-stock/services/api.service'
     import { useFuelStockStore } from '@/modules/fuel-stock/store/index'
@@ -90,7 +106,9 @@
     import { getFromCache } from '@/composables/useCache'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
+    import { useI18n } from 'vue-i18n'
 
+    const { t } = useI18n()
     const store = useFuelStockStore()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -98,6 +116,11 @@
     const loadingFrom = ref(true)
     const stationId = ref('')
     const fuel_stock_id = route.path.split('/').pop()
+
+    // Compute record name for delete confirmation
+    const recordName = computed(() => {
+        return store.formData.fuel?.fuel_name || 'this record'
+    })
 
     const getFuelService = async () => {
         if (store.fuels.length <= 1) {
@@ -111,10 +134,10 @@
 
     const selectedFuelId = computed({
         get() {
-            return typeof store.formData.fuel_id === 'object' ? store.formData.fuel_id?._id : store.formData.fuel_id
+            return typeof store.formData.fuel === 'object' ? store.formData.fuel?._id : store.formData.fuel
         },
         set(value) {
-            store.formData.fuel_id = value
+            store.formData.fuel = value
         },
     })
 
@@ -123,16 +146,33 @@
     }
 
     onMounted(async () => {
-        let appData = getFromCache('app_data')
-        stationId.value = appData.value.stations[0]._id
-        store.formData.station_id = stationId.value
-        if (mode.value !== 'create') {
-            await store.readDataFromApi(fuel_stock_id)
+        try {
+            let appData = getFromCache('app_data')
+            stationId.value = appData.value.stations[0]._id
+            store.formData.station_id = stationId.value
+
+            if (mode.value === 'create') {
+                store.formData.createdAt = new Date()
+                store.fuels = [] // ✅ reset before calling
+                await getFuelService()
+            } else if (mode.value === 'edit') {
+                await store.readDataFromApi(fuel_stock_id) // ✅ then sets selected fuel
+                store.fuels = []
+                await getFuelService() // ✅ loads ALL fuels first
+            } else if (mode.value === 'view') {
+                await store.readDataFromApi(fuel_stock_id)
+            }
+        } catch (error) {
+        } finally {
             loadingFrom.value = false
-        } else {
-            store.formData.createdAt = new Date()
         }
-        loadingFrom.value = false
+    })
+
+    watch(mode, async newMode => {
+        if (newMode === 'edit' || newMode === 'create') {
+            store.fuels = [] // ✅ force refetch
+            await getFuelService()
+        }
     })
 
     onBeforeUnmount(() => {
@@ -143,6 +183,7 @@
         mode.value = to.params.mode
         next()
     })
+    const handleDelete = () => {}
 </script>
 
 <style lang="scss" scoped>

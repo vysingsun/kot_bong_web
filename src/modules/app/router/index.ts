@@ -31,4 +31,3 @@ const APP_ROUTES = [
 ]
 
 export const APP = { APP_ROUTES, MODULE_NAME, MODULE_PATH }
-        

@@ -1,4 +1,5 @@
-const MODULE_NAME = 'Fuel-stock'
+import i18n from '@/plugins/i18n'
+const MODULE_NAME = i18n.global.t('menu.stocksReport')
 const MODULE_PATH = '/fuel-stock'
 
 export const routes = [
@@ -11,15 +12,15 @@ export const routes = [
         },
         component: () => import('@/modules/fuel-stock/views/index.vue'),
     },
-    {
-        module: MODULE_NAME,
-        name: `${MODULE_NAME}-Detail`,
-        path: `${MODULE_PATH}/:mode/:id?`,
-        meta: {
-            title: MODULE_NAME,
-        },
-        component: () => import('@/modules/fuel-stock/views/form.vue'),
-    },
+    // {
+    //     module: MODULE_NAME,
+    //     name: `${MODULE_NAME}-Detail`,
+    //     path: `${MODULE_PATH}/:mode/:id?`,
+    //     meta: {
+    //         title: MODULE_NAME,
+    //     },
+    //     component: () => import('@/modules/fuel-stock/views/form.vue'),
+    // },
 ]
 
 const FUEL_STOCK_ROUTES = [

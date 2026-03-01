@@ -1,8 +1,12 @@
 <template>
-    <div v-if="isLoading" class="progress w-full mb-1"></div>
-    <div class="relative sm:rounded-lg">
-        <div v-if="isGlobalSearch" class="pb-4">
-            <label for="table-search" class="sr-only">Search</label>
+    <div class="px-4">
+        <div v-if="isLoading" class="progress w-full mb-1"></div>
+    </div>
+    <div class="relative sm:rounded-lg p-4">
+        <div v-if="isGlobalSearch" class="pb-4 max-w-[400px]">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ t('fuel_sold.search') }}
+            </label>
             <div class="relative">
                 <div
                     class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none"
@@ -25,8 +29,8 @@
                     id="table-search"
                     v-model="search"
                     type="text"
-                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search for items"
+                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                    :placeholder="t('filter.search')"
                     @input="updateSearch"
                 />
             </div>
@@ -41,7 +45,7 @@
                                 {{ item.text }}
                             </th>
                         </template>
-                        <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
+                        <th v-if="isAction" scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,33 +75,35 @@
                                 </slot>
                             </td>
                         </template>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                        <td v-if="isAction" class="px-6 py-4 text-center whitespace-nowrap">
                             <a
                                 class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
                                 @click.stop="onRemove(item)"
                             >
-                                Remove
+                                {{ t('form.delet') }}
                             </a>
                             <a
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline inline-block"
                                 @click.stop="onEdit(item)"
                             >
-                                Edit
+                                {{ t('form.edit') }}
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <!-- Summary Bar -->
+        <slot name="summary-bar" :totals="props.totals" />
         <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                Total Records:
+                {{ t('fuel_sold.total_records') }}
                 <span class="font-semibold text-gray-900 dark:text-white">{{ totalRecords }}</span></span
             >
             <select
                 id="small"
                 v-model="tableParams.page_size"
-                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="updatePageSize(tableParams.page_size)"
             >
                 <option value="7">7</option>
@@ -179,7 +185,11 @@
     import { initFlowbite } from 'flowbite'
     import { useRoute, useRouter } from 'vue-router'
     import { useModal } from '@/composables/useModal'
+    import { useAppStore } from '@/modules/app/store/index'
+    import { useI18n } from 'vue-i18n'
 
+    const appStore = useAppStore()
+    const { t } = useI18n()
     const { isVisible, showModal, closeModal } = useModal()
     const router = useRouter()
     const route = useRoute()
@@ -222,6 +232,14 @@
         isGlobalSearch: {
             type: Boolean,
             default: false,
+        },
+        isAction: {
+            type: Boolean,
+            default: true,
+        },
+        totals: {
+            type: Object as () => Record<string, any> | null,
+            default: null,
         },
     })
     const disable_btn_decrease_page = ref(true)
@@ -299,13 +317,40 @@
     }
 
     const handleConfirmToDelete = async () => {
-        const res = await props.apiService['delete'](record_id.value)
-        if (res.data.result.success) {
-            alert(`Delete ${props.name} Successfully`)
-        } else {
-            alert(`Delete ${props.name} Unsuccessfully`)
+        try {
+            appStore.loading = true
+            const res = await props.apiService['delete'](record_id.value)
+
+            // ✅ Check if response exists and has data
+            if (res && res.data) {
+                if (res.data.success) {
+                    alert(`Delete ${props.name} Successfully`)
+                    window.location.reload()
+                } else {
+                    // ✅ Show the actual error message from backend
+                    const errorMsg = res.data.error || `Delete ${props.name} Unsuccessfully`
+                    alert(errorMsg)
+                }
+            } else {
+                alert(`Delete ${props.name} Unsuccessfully - No response`)
+            }
+            appStore.loading = false
+        } catch (err) {
+            // ✅ Handle error response from backend
+            const error = err as any
+            if (error.response && error.response.data) {
+                // Backend returned an error response (400, 404, 500, etc.)
+                const errorMsg = error.response.data.error || error.response.data.message
+                alert(`Error: ${errorMsg}`)
+            } else if (error.request) {
+                // Request was made but no response received
+                alert(`Network error: Unable to reach server`)
+            } else {
+                // Something else happened
+                alert(`An error occurred: ${error.message}`)
+            }
+            appStore.loading = false
         }
-        window.location.reload()
     }
 
     const onEdit = (item: any) => {
@@ -359,32 +404,4 @@
     })
 </script>
 
-<style lang="scss" scoped>
-    .progress {
-        height: 4.5px;
-        background: linear-gradient(#faca15 0 0), linear-gradient(#faca15 0 0), #dbdcef;
-        background-size: 60% 100%;
-        background-repeat: no-repeat;
-        animation: progress-7x9cg2 2.4000000000000004s infinite;
-    }
-
-    @keyframes progress-7x9cg2 {
-        0% {
-            background-position:
-                -150% 0,
-                -150% 0;
-        }
-
-        66% {
-            background-position:
-                250% 0,
-                -150% 0;
-        }
-
-        100% {
-            background-position:
-                250% 0,
-                250% 0;
-        }
-    }
-</style>
+<style lang="scss" scoped></style>

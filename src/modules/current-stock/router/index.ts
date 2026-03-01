@@ -13,6 +13,15 @@ export const routes = [
         },
         component: () => import('@/modules/current-stock/views/index.vue'),
     },
+    {
+        module: MODULE_NAME,
+        name: i18n.global.t('fuel_stock.fuel_stock_management'),
+        path: `${MODULE_PATH}/:mode/:id?`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/fuel-stock/views/form.vue'),
+    },
 ]
 
 const CURRENT_STOCK_ROUTES = [
