@@ -205,10 +205,6 @@
         fuels.value = result?.data
     }
 
-    const getRow = (item: any) => {
-        router.push(`/fuel-sold/view/${item._id}`)
-    }
-
     function prepareFilterParams() {
         params.value = store.prepareFuelSoldParams()
         // for refresh data
