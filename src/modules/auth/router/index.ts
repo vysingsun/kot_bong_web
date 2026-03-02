@@ -12,6 +12,47 @@ export const routes = [
         },
         component: () => import('@/modules/auth/views/login.vue'),
     },
+    {
+        module: MODULE_NAME,
+        name: 'Register',
+        path: `${MODULE_PATH}/register`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/auth/views/register.vue'),
+    },
+    {
+        module: MODULE_NAME,
+        name: 'ForgotPassword',
+        path: `${MODULE_PATH}/forgot-password`,
+        meta: {
+            title: 'Forgot Password',
+            requiresAuth: false,
+        },
+        component: () => import('@/modules/auth/views/ForgotPassword.vue'),
+    },
+]
+
+const oauthCallbackRoutes = [
+    {
+        module: MODULE_NAME,
+        name: 'GoogleAuthSuccess',
+        path: `${MODULE_PATH}/google/success`,
+        meta: {
+            title: MODULE_NAME,
+            requiresAuth: false,
+        },
+        component: () => import('@/modules/auth/views/GoogleAuthSuccess.vue'),
+    },
+    {
+        module: MODULE_NAME,
+        name: 'FacebookAuthSuccess',
+        path: `${MODULE_PATH}/facebook/success`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/auth/views/FacebookAuthSuccess.vue'),
+    },
 ]
 
 const AUTH_ROUTES = [
@@ -25,6 +66,7 @@ const AUTH_ROUTES = [
             moduleName: MODULE_NAME,
         },
     },
+    ...oauthCallbackRoutes,
 ]
 
 export const AUTH = { AUTH_ROUTES, MODULE_NAME, MODULE_PATH }

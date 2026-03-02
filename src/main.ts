@@ -5,16 +5,28 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import i18n from '@/plugins/i18n'
 // register Flowbite
 import { initFlowbite } from 'flowbite'
+import { useThemeStore } from './stores/theme'
 
 import BaseLoading from './components/app/BaseLoading.vue'
 import ShapeBgAnimate from './components/app/ShapeBgAnimate.vue'
 import BaseModal from '@/components/app/BaseModal.vue'
 import TablePaging from '@/components/table/TablePaging.vue'
 import BaseForm from '@/components/form/BaseForm.vue'
+import ErrorModal from '@/components/app/ErrorModal.vue'
+import SuccessModal from '@/components/app/SuccessModal.vue'
+import AppIcon from '@/components/app/AppIcon.vue'
+import AppAvatar from '@/components/app/AppAvatar.vue'
+import AppFuel from '@/components/app/AppFuel.vue'
 
-import { getFromCache, removeCaches } from '@/composables/useCache'
+import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
+import { showErrorModal } from '@/composables/useErrorModal'
+import { COMPANY_THEMES } from './configs/themes'
+import { useFormatDate } from './composables/useFormatDate'
+
+const t = i18n.global.t
 
 const getToken = () => {
     const token = getFromCache('token')?.value
@@ -27,7 +39,16 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
 const isUnauthorized = ref(false)
 axios.interceptors.request.use(
     function (req) {
-        if (req.url === 'login') isUnauthorized.value = false
+        if (
+            req.url === 'auth/login' ||
+            req.url === 'auth/register' ||
+            req.url === 'auth/send-otp' ||
+            req.url === 'auth/verify-otp' ||
+            req.url === 'auth/google/success' ||
+            req.url === 'auth/facebook/success'
+        ) {
+            isUnauthorized.value = false
+        }
         if (isUnauthorized.value) throw new Error('Unauthorized access detected. Further requests blocked.')
         const token = req.headers.has('Authorization') ? req.headers.Authorization : getToken()
 
@@ -47,6 +68,9 @@ axios.interceptors.response.use(
         if (error.response.status === 401) {
             removeCaches(['token', 'app_data'])
             sessionStorage.removeItem('has-show-fireworks')
+            removeAll()
+            const themeStore = useThemeStore()
+            themeStore.applyTheme(COMPANY_THEMES.lim_long)
             router.push({ name: 'Login' })
             if (error?.response?.data?.error?.errors?.detail) {
                 const message = error?.response?.data?.error?.errors?.detail
@@ -54,6 +78,13 @@ axios.interceptors.response.use(
             }
 
             isUnauthorized.value = true
+        } else if (error.response.status === 403) {
+            // 👇 Show modal for 403
+            showErrorModal(
+                error?.response?.data?.error || t('common.error.access_denied_desc'),
+                t('common.error.access_denied'), // i18n translation
+                403,
+            )
         } else {
             const errorResponse = error?.response?.data
             const message = errorResponse?.error?.form_errors?.[0] ?? errorResponse?.file?.[0]
@@ -71,10 +102,39 @@ initFlowbite()
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
+app.use(i18n)
+
+// Inject SVG sprite inline into DOM
+fetch('/icon-set.svg')
+    .then(res => res.text())
+    .then(svg => {
+        const div = document.createElement('div')
+        div.style.display = 'none'
+        div.innerHTML = svg
+        document.body.insertBefore(div, document.body.firstChild)
+    })
+
+app.config.globalProperties.$formatDate = null // placeholder
+
+// Register as global plugin
+app.mixin({
+    setup() {
+        const { formatDate, formatDateShort } = useFormatDate()
+        return { formatDate, formatDateShort }
+    },
+})
 
 app.component('BaseLoading', BaseLoading)
 app.component('ShapeBgAnimate', ShapeBgAnimate)
 app.component('BaseModal', BaseModal)
 app.component('TablePaging', TablePaging)
 app.component('BaseForm', BaseForm)
+app.component('ErrorModal', ErrorModal)
+app.component('SuccessModal', SuccessModal)
+app.component('AppIcon', AppIcon)
+app.component('AppAvatar', AppAvatar)
+app.component('AppFuel', AppFuel)
+// Initialize theme before mounting
+const themeStore = useThemeStore()
+themeStore.initializeTheme()
 app.mount('#app')

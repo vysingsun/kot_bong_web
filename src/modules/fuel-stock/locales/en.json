@@ -1,5 +1,36 @@
-
 {
-    "fuel-stock": "Fuel-stock"
+    "fuel_stock": {
+        "title": "Fuel Stock",
+        "fuel_stock_management": "Fuel Stock Management",
+        "subtitle": "Track and manage your fuel inventory",
+        "records": "records",
+        "add_stock": "Add",
+        "filters": "Filters",
+        "search": "Search",
+        "search_placeholder": "Search For Items...",
+        "fuel_type": "Fuel Type",
+        "quantity_as_liter": "Quantity as Liter ( L )",
+        "amount_as_ton": "Amount per Ton ( $ )",
+        "supplier_name": "Supplier Name",
+        "exchange_rate": "Exchange Rate ( KHR )",
+        "create_date": "Date of Income",
+        "all_fuels": "All Fuels",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "reset_filters": "Reset",
+        "tdollar_ton": "Dollar/Ton",
+        "no_records": "No Stock Records",
+        "no_records_desc": "Start adding fuel stock records",
+        "load_more": "Load More",
+        "loading": "Loading...",
+        "total_quantity_liter": "Total Quantity (Liters)",
+        "total_amount_us": "Total Amount (USD)",
+        "confirm_delete": "Delete Fuel Stock?",
+        "confirm_delete_desc": "Are you sure you want to delete this fuel stock record? This action cannot be undone.",
+        "created_by": "Created By",
+        "quantity_as_ton": "Quantity as Ton ( Ton )",
+        "amount_per_liter_us": "Amount per Liter ( USD )",
+        "amount_per_liter_khr": "Amount per Liter ( KHR )",
+        "date": "Date"
+    }
 }
-        

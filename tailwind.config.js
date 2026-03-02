@@ -1,10 +1,16 @@
 /** @type {import('tailwindcss').Config} */
+import flowbite from 'flowbite/plugin'
+
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './node_modules/flowbite/**/*.js'],
   theme: {
     extend: {
       colors: {
         primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          dark: 'var(--color-primary-dark)',
+          light: 'var(--color-primary-light)',
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
@@ -17,6 +23,27 @@ export default {
           900: '#1e3a8a',
           950: '#172554'
         }
+      },
+      textColor: {
+        primary: 'var(--color-primary)',
+        'on-primary': 'var(--color-text-on-primary)',
+        secondary: 'var(--color-secondary)',
+      },
+      backgroundColor: {
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          dark: 'var(--color-primary-dark)',
+          light: 'var(--color-primary-light)',
+        }
+      },
+      borderColor: {
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+      },
+      ringColor: {
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
       }
     },
     fontFamily: {
@@ -52,9 +79,11 @@ export default {
         'Apple Color Emoji',
         'Segoe UI Emoji',
         'Segoe UI Symbol',
-        'Noto Color Emoji'
+        'Noto Color Emoji',
+        'Kantumruy Pro',
       ]
     }
   },
-  plugins: [require('flowbite/plugin')]
+  plugins: [flowbite],
+  darkMode: 'class'
 }

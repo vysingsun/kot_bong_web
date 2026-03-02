@@ -1,8 +1,12 @@
 <template>
-    <div v-if="isLoading" class="progress w-full mb-1"></div>
-    <div class="relative sm:rounded-lg">
-        <div v-if="isGlobalSearch" class="pb-4">
-            <label for="table-search" class="sr-only">Search</label>
+    <div class="px-4">
+        <div v-if="isLoading" class="progress w-full mb-1"></div>
+    </div>
+    <div class="relative sm:rounded-lg p-4">
+        <div v-if="isGlobalSearch" class="pb-4 max-w-[400px]">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ t('fuel_sold.search') }}
+            </label>
             <div class="relative">
                 <div
                     class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none"
@@ -25,8 +29,8 @@
                     id="table-search"
                     v-model="search"
                     type="text"
-                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg w-80 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search for items"
+                    class="w-full block p-2 ps-10 text-sm text-gray-900 border border-gray-200 rounded-lg focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                    :placeholder="t('filter.search')"
                     @input="updateSearch"
                 />
             </div>
@@ -35,10 +39,13 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th v-if="columnNo" id="#" scope="col" class="px-6 py-3">#</th>
+                        <th v-if="columnNo" id="#" scope="col" class="px-6 py-3 whitespace-nowrap">#</th>
                         <template v-for="(item, idx) of getHeaders" :key="idx">
-                            <th :id="`header-${idx}`" scope="col" class="px-6 py-3">{{ item.text }}</th>
+                            <th :id="`header-${idx}`" scope="col" class="px-6 py-3 whitespace-nowrap">
+                                {{ item.text }}
+                            </th>
                         </template>
+                        <th v-if="isAction" scope="col" class="px-6 py-3 text-center whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,16 +57,17 @@
                             <span>No matching records found</span>
                         </td>
                     </tr>
-
                     <tr
                         v-for="(item, ridx) of items"
                         :key="item"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                         @click="clickableRow && isRowClickable(item) && onClickRow(item)"
                     >
-                        <th v-if="columnNo" scope="row" class="px-6 py-4">{{ getRowNumber(ridx) }}</th>
+                        <th v-if="columnNo" scope="row" class="px-6 py-4 whitespace-nowrap">
+                            {{ getRowNumber(ridx) }}
+                        </th>
                         <template v-for="({ align, value, visible, exportOnly }, cidx) of headers" :key="cidx">
-                            <td class="px-6 py-4 text-no-wrap">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <slot :name="value" :item="item" :search="search || params.search">
                                     <span>
                                         {{ getItem(item, value) ?? '--' }}
@@ -67,19 +75,35 @@
                                 </slot>
                             </td>
                         </template>
+                        <td v-if="isAction" class="px-6 py-4 text-center whitespace-nowrap">
+                            <a
+                                class="pr-2 font-medium text-red-600 dark:text-red-500 hover:underline inline-block"
+                                @click.stop="onRemove(item)"
+                            >
+                                {{ t('form.delet') }}
+                            </a>
+                            <a
+                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline inline-block"
+                                @click.stop="onEdit(item)"
+                            >
+                                {{ t('form.edit') }}
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <!-- Summary Bar -->
+        <slot name="summary-bar" :totals="props.totals" />
         <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                Total Records:
+                {{ t('fuel_sold.total_records') }}
                 <span class="font-semibold text-gray-900 dark:text-white">{{ totalRecords }}</span></span
             >
             <select
                 id="small"
                 v-model="tableParams.page_size"
-                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block w-20 h-[35px] text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="updatePageSize(tableParams.page_size)"
             >
                 <option value="7">7</option>
@@ -116,8 +140,9 @@
                     <a
                         href="#"
                         class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                        >{{ tableParams.page_number }}</a
                     >
+                        {{ tableParams.page_number }}
+                    </a>
                 </li>
                 <li>
                     <button
@@ -144,12 +169,30 @@
             </ul>
         </nav>
     </div>
+    <BaseModal
+        :is-visible="isVisible"
+        type="error"
+        :title="`Are you sure you want to delete this ${name}?`"
+        confirm-label="Confirm"
+        @close="closeModal()"
+        @confirm="handleConfirmToDelete"
+    />
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, reactive, computed, onBeforeMount } from 'vue'
+    import { onMounted, ref, reactive, computed } from 'vue'
     import _ from 'lodash'
     import { initFlowbite } from 'flowbite'
+    import { useRoute, useRouter } from 'vue-router'
+    import { useModal } from '@/composables/useModal'
+    import { useAppStore } from '@/modules/app/store/index'
+    import { useI18n } from 'vue-i18n'
+
+    const appStore = useAppStore()
+    const { t } = useI18n()
+    const { isVisible, showModal, closeModal } = useModal()
+    const router = useRouter()
+    const route = useRoute()
 
     /* emits */
     const emits = defineEmits(['rowClick', 'retrieveResult'])
@@ -190,6 +233,14 @@
             type: Boolean,
             default: false,
         },
+        isAction: {
+            type: Boolean,
+            default: true,
+        },
+        totals: {
+            type: Object as () => Record<string, any> | null,
+            default: null,
+        },
     })
     const disable_btn_decrease_page = ref(true)
     const disable_btn_increase_page = ref(false)
@@ -213,6 +264,7 @@
     const extraParams = ref<any>({})
     const items = ref([])
     const search = ref('')
+    const record_id = ref('')
     /* methods */
     const getItem = (obj: any, key: any) => {
         return _.get(obj, key)
@@ -257,6 +309,53 @@
 
     const onClickRow = (item: any) => {
         emits('rowClick', item)
+    }
+
+    const onRemove = (item: any) => {
+        record_id.value = item._id
+        showModal()
+    }
+
+    const handleConfirmToDelete = async () => {
+        try {
+            appStore.loading = true
+            const res = await props.apiService['delete'](record_id.value)
+
+            // ✅ Check if response exists and has data
+            if (res && res.data) {
+                if (res.data.success) {
+                    alert(`Delete ${props.name} Successfully`)
+                    window.location.reload()
+                } else {
+                    // ✅ Show the actual error message from backend
+                    const errorMsg = res.data.error || `Delete ${props.name} Unsuccessfully`
+                    alert(errorMsg)
+                }
+            } else {
+                alert(`Delete ${props.name} Unsuccessfully - No response`)
+            }
+            appStore.loading = false
+        } catch (err) {
+            // ✅ Handle error response from backend
+            const error = err as any
+            if (error.response && error.response.data) {
+                // Backend returned an error response (400, 404, 500, etc.)
+                const errorMsg = error.response.data.error || error.response.data.message
+                alert(`Error: ${errorMsg}`)
+            } else if (error.request) {
+                // Request was made but no response received
+                alert(`Network error: Unable to reach server`)
+            } else {
+                // Something else happened
+                alert(`An error occurred: ${error.message}`)
+            }
+            appStore.loading = false
+        }
+    }
+
+    const onEdit = (item: any) => {
+        const baseUrl = route.path.split('/edit')[0]
+        router.push(`${baseUrl}/edit/${item._id}`)
     }
 
     const updateSearch = _.debounce(async () => {
@@ -305,32 +404,4 @@
     })
 </script>
 
-<style lang="scss" scoped>
-    .progress {
-        height: 4.5px;
-        background: linear-gradient(#faca15 0 0), linear-gradient(#faca15 0 0), #dbdcef;
-        background-size: 60% 100%;
-        background-repeat: no-repeat;
-        animation: progress-7x9cg2 2.4000000000000004s infinite;
-    }
-
-    @keyframes progress-7x9cg2 {
-        0% {
-            background-position:
-                -150% 0,
-                -150% 0;
-        }
-
-        66% {
-            background-position:
-                250% 0,
-                -150% 0;
-        }
-
-        100% {
-            background-position:
-                250% 0,
-                250% 0;
-        }
-    }
-</style>
+<style lang="scss" scoped></style>

@@ -1,17 +1,26 @@
 // import prefetchResources from '@/middlewares/prefetch-resources'
-
-const MODULE_NAME = 'Current stock'
+import i18n from '@/plugins/i18n' // Ensure you import the i18n instance
+const MODULE_NAME = i18n.global.t('current_stock')
 const MODULE_PATH = '/current-stock'
-
+// const { t } = useI18n()
 export const routes = [
     {
         module: MODULE_NAME,
-        name: 'Current Stock',
+        name: MODULE_NAME,
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
         },
         component: () => import('@/modules/current-stock/views/index.vue'),
+    },
+    {
+        module: MODULE_NAME,
+        name: i18n.global.t('fuel_stock.fuel_stock_management'),
+        path: `${MODULE_PATH}/:mode/:id?`,
+        meta: {
+            title: MODULE_NAME,
+        },
+        component: () => import('@/modules/fuel-stock/views/form.vue'),
     },
 ]
 
