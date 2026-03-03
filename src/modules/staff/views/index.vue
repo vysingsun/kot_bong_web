@@ -200,11 +200,19 @@
     </div>
 
     <!-- Delete Confirm Modal -->
-    <BaseModal
+    <!-- <BaseModal
         :is-visible="isVisible"
         type="error"
         :title="t('staff.delete_confirm')"
         :confirm-label="t('form.confirm')"
+        @close="closeModal"
+        @confirm="handleConfirmDelete"
+    /> -->
+    <!-- Delete Confirmation Modal -->
+    <DeleteModal
+        :show="isVisible"
+        :title="t('staff.delete_confirm')"
+        :description="''"
         @close="closeModal"
         @confirm="handleConfirmDelete"
     />
@@ -222,6 +230,7 @@
     import { getFromCache } from '@/composables/useCache'
     import type { IStaff } from '@/modules/staff/store/index'
     import { useFormatDate } from '@/composables/useFormatDate'
+    import DeleteModal from '@/components/app/DeleteModal.vue'
 
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
