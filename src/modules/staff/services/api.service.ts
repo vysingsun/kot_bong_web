@@ -14,10 +14,10 @@ export const staffService = {
     create: async (payload: object) => {
         return axios.post('staff/create', payload)
     },
-    update: async (id: string, payload: object) => {
-        return axios.put(`staff/${id}`, payload)
+    edit: async (id: string, payload: object) => {
+        return axios.post(`staff/update/${id}`, payload)
     },
     delete: async (id: string) => {
-        return axios.delete(`staff/${id}`)
+        return axios.post(`staff/delete/${id}`)
     },
 }

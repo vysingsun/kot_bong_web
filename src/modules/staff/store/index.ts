@@ -7,9 +7,10 @@ class FormData {
     lastName: string = ''
     phone?: string | null = null
     email?: string | null = null
-    role?: string | null = null
-    station_id?: string | null = null
-    language: string = 'en'
+    role?: any
+    stations?: string | null = null
+    language: string = 'kh'
+    password?: string = ''
 }
 
 export interface IRole {
@@ -54,7 +55,7 @@ export const useStaffStore = defineStore('staffStore', () => {
     }
 
     const updateStaff = async (id: string) => {
-        const res = await staffService.update(id, formData.value)
+        const res = await staffService.edit(id, formData.value)
         return res.data.success
     }
 
@@ -71,16 +72,17 @@ export const useStaffStore = defineStore('staffStore', () => {
     const readDataFromApi = async (id: any) => {
         const { data } = await staffService.get(id)
         readStaff(data.data)
+        roles.value = [data.data.role]
     }
 
     const readStaff = ({
         firstName = '',
         lastName = '',
         phone = null,
-        email = null,
+        email = undefined,
         role = null,
-        station_id = null,
-        language = 'en',
+        stations = null,
+        language = 'kh',
     }: Partial<FormData> = {}) => {
         formData.value = {
             firstName,
@@ -88,7 +90,7 @@ export const useStaffStore = defineStore('staffStore', () => {
             phone,
             email,
             role,
-            station_id,
+            stations,
             language,
         }
     }
