@@ -38,30 +38,16 @@
                 />
             </div>
 
-            <!-- Phone -->
+            <!-- Phone or email-->
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('staff.phone') }}
+                    {{ t('staff.phone_or_email') }}
                 </label>
                 <input
                     v-model="store.formData.phone"
                     type="tel"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     :placeholder="t('staff.phone_placeholder')"
-                    :disabled="mode === 'view'"
-                />
-            </div>
-
-            <!-- Email -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('staff.email') }}
-                </label>
-                <input
-                    v-model="store.formData.email"
-                    type="email"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    :placeholder="t('staff.email_placeholder')"
                     :disabled="mode === 'view'"
                 />
             </div>
@@ -81,21 +67,6 @@
                     <option v-for="role in store.roles" :key="role._id" :value="role._id">
                         {{ t(`staff.${role.role_name}`) }}
                     </option>
-                </select>
-            </div>
-
-            <!-- Language -->
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('staff.language') }}
-                </label>
-                <select
-                    v-model="store.formData.language"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-                    :disabled="mode === 'view'"
-                >
-                    <option value="en">English</option>
-                    <option value="km">ខ្មែរ</option>
                 </select>
             </div>
         </div>

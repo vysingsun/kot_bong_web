@@ -4,7 +4,7 @@
         "staff_management": "ការគ្រប់គ្រងបុគ្គលិក",
         "first_name": "នាមខ្លួន",
         "last_name": "នាមត្រកូល",
-        "phone": "លេខទូរស័ព្ទ",
+        "phone_or_email": "លេខទូរស័ព្ទ ឬអ៊ីមែល",
         "email": "អ៊ីមែល",
         "role": "តួនាទី",
         "language": "ភាសា",

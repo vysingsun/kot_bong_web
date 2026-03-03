@@ -4,7 +4,7 @@
         "staff_management": "Staff Management",
         "first_name": "First Name",
         "last_name": "Last Name",
-        "phone": "Phone",
+        "phone_or_email": "Phone or Email",
         "email": "Email",
         "role": "Role",
         "language": "Language",
