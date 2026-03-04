@@ -302,6 +302,28 @@
                                 {{ t('auth.login.sign_up') }}
                             </button>
                         </p>
+
+                        <!-- Policy Link -->
+                        <!-- <p class="text-xs text-center text-gray-400 dark:text-gray-500">
+                            {{ t('auth.login.by_signing_in') }}
+                            <RouterLink
+                                to="/policy"
+                                class="font-medium text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                            >
+                                {{ t('auth.login.system_policy') }}
+                            </RouterLink>
+                        </p> -->
+
+                        <!-- Policy Link -->
+                        <p class="text-xs text-center text-gray-400 dark:text-gray-500">
+                            {{ t('auth.login.policy_agree') }}
+                            <RouterLink
+                                to="/policy"
+                                class="font-medium text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                            >
+                                {{ t('auth.login.policy_link') }}
+                            </RouterLink>
+                        </p>
                     </div>
                 </div>
             </div>

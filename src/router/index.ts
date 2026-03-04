@@ -33,7 +33,13 @@ const router = createRouter({
         {
             path: '/comingsoon',
             name: 'ComingSoon',
+            beforeEnter: isAuthenticated,
             component: () => import('@/components/app/ComingSoon.vue'),
+        },
+        {
+            path: '/policy',
+            name: 'Policy',
+            component: () => import('@/components/home/Policy.vue'),
         },
     ],
 })
