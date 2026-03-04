@@ -1,0 +1,29 @@
+{
+    "staff": {
+        "title": "បុគ្គលិក",
+        "staff_management": "ការគ្រប់គ្រងបុគ្គលិក",
+        "first_name": "នាមខ្លួន",
+        "last_name": "នាមត្រកូល",
+        "phone": "លេខទូរស័ព្ទ",
+        "email": "អ៊ីមែល",
+        "optional": "(មិនតម្រូវ)",
+        "password": "ពាក្យសម្ងាត់សម្រាប់បុគ្គលិក",
+        "role": "តួនាទី",
+        "language": "ភាសា",
+        "created_at": "កាលបរិច្ឆេទបង្កើត",
+        "first_name_placeholder": "បញ្ចូលនាមខ្លួន",
+        "last_name_placeholder": "បញ្ចូលនាមត្រកូល",
+        "phone_placeholder": "បញ្ចូលលេខទូរស័ព្ទ",
+        "email_placeholder": "បញ្ចូលអ៊ីមែល",
+        "password_placeholder": "បញ្ចូលពាក្យសម្ងាត់",
+        "role_placeholder": "ជ្រើសរើសតួនាទី",
+        "total_staff": "សរុប {count} នាក់",
+        "no_staff": "រកមិនឃើញបុគ្គលិក",
+        "delete_confirm": "តើអ្នកពិតជាចង់លុបបុគ្គលិកនេះមែនទេ?",
+        "delete_failed": "បរាជ័យក្នុងការលុបបុគ្គលិក",
+        "active": "សកម្ម",
+        "inactive": "អសកម្ម",
+        "Admin": "អ្នកគ្រប់គ្រង",
+        "User": "បុគ្គលិក"
+    }
+}
