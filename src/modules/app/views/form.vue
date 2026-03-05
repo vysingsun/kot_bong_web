@@ -1,23 +1,6 @@
 <template>
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
-        <!-- Top Bar -->
-        <div
-            class="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 px-4 py-3 flex items-center gap-3"
-        >
-            <button
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                @click="router.back()"
-            >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <h1 class="text-base font-semibold text-gray-900 dark:text-white">{{ t('profile.title') }}</h1>
-        </div>
-
-        <div v-if="isPageLoading" class="flex items-center justify-center py-20">
-            <div class="w-8 h-8 border-4 border-secondary border-t-transparent rounded-full animate-spin" />
-        </div>
+        <BaseLoading v-if="isPageLoading" />
 
         <div v-else class="max-w-2xl mx-auto px-4 py-5 space-y-4">
             <!-- Profile Header -->
@@ -120,7 +103,7 @@
                             :disabled="isSavingInfo"
                             @click="saveBasicInfo"
                         >
-                            {{ isSavingInfo ? `${t('fuel.saving')}...` : t('fuel.save') }}
+                            {{ isSavingInfo ? `${t('fuel.saving')}` : t('fuel.save') }}
                         </button>
                     </div>
                 </div>
@@ -138,75 +121,200 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.phone') }}</label
                         >
+                            {{ t('staff.phone') }}
+                        </label>
                         <div class="flex gap-2">
-                            <input
-                                type="tel"
-                                :value="user.phone || ''"
-                                class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white opacity-60 cursor-not-allowed"
-                                :placeholder="user.phone || t('staff.phone_placeholder')"
-                                disabled
-                            />
-                            <button
-                                v-if="!user.phone"
-                                class="shrink-0 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors whitespace-nowrap"
-                                @click="openOtp('phone')"
-                            >
-                                {{ t('profile.add_and_verify') }}
-                            </button>
-                            <span
-                                v-else
-                                class="shrink-0 inline-flex items-center gap-1 px-3 rounded-lg text-xs font-medium bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
-                            >
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2.5"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                {{ t('profile.verified') }}
-                            </span>
+                            <template v-if="user.phone && !editingPhone">
+                                <input
+                                    type="tel"
+                                    :value="user.phone"
+                                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white opacity-60 cursor-not-allowed"
+                                    disabled
+                                />
+                                <span
+                                    class="shrink-0 inline-flex items-center gap-1 px-3 rounded-lg text-xs font-medium bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2.5"
+                                            d="M5 13l4 4L19 7"
+                                        />
+                                    </svg>
+                                    {{ t('profile.verified') }}
+                                </span>
+                                <button
+                                    class="shrink-0 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
+                                    @click="(editingPhone = true), (contactForm.phone = user.phone)"
+                                >
+                                    {{ t('form.edit') }}
+                                </button>
+                            </template>
+                            <template v-else>
+                                <input
+                                    v-model="contactForm.phone"
+                                    type="tel"
+                                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    :placeholder="t('staff.phone_placeholder')"
+                                />
+                                <button
+                                    v-if="editingPhone"
+                                    class="shrink-0 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
+                                    @click="(editingPhone = false), (contactForm.phone = '')"
+                                >
+                                    {{ t('form.cancel') }}
+                                </button>
+                                <button
+                                    class="shrink-0 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50 whitespace-nowrap"
+                                    :disabled="!contactForm.phone"
+                                    @click="openOtpCard('phone')"
+                                >
+                                    {{ t('profile.add_and_verify') }}
+                                </button>
+                            </template>
                         </div>
                     </div>
+
                     <!-- Email -->
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.email') }}</label
                         >
+                            {{ t('staff.email') }}
+                        </label>
                         <div class="flex gap-2">
-                            <input
-                                type="email"
-                                :value="user.email || ''"
-                                class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white opacity-60 cursor-not-allowed"
-                                :placeholder="user.email || t('staff.email_placeholder')"
-                                disabled
-                            />
-                            <button
-                                v-if="!user.email"
-                                class="shrink-0 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors whitespace-nowrap"
-                                @click="openOtp('email')"
-                            >
-                                {{ t('profile.add_and_verify') }}
-                            </button>
-                            <span
-                                v-else
-                                class="shrink-0 inline-flex items-center gap-1 px-3 rounded-lg text-xs font-medium bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
-                            >
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2.5"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                {{ t('profile.verified') }}
-                            </span>
+                            <template v-if="user.email && !editingEmail">
+                                <input
+                                    type="email"
+                                    :value="user.email"
+                                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white opacity-60 cursor-not-allowed"
+                                    disabled
+                                />
+                                <span
+                                    class="shrink-0 inline-flex items-center gap-1 px-3 rounded-lg text-xs font-medium bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2.5"
+                                            d="M5 13l4 4L19 7"
+                                        />
+                                    </svg>
+                                    {{ t('profile.verified') }}
+                                </span>
+                                <button
+                                    class="shrink-0 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
+                                    @click="(editingEmail = true), (contactForm.email = user.email)"
+                                >
+                                    {{ t('form.edit') }}
+                                </button>
+                            </template>
+                            <template v-else>
+                                <input
+                                    v-model="contactForm.email"
+                                    type="email"
+                                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    :placeholder="t('staff.email_placeholder')"
+                                />
+                                <button
+                                    v-if="editingEmail"
+                                    class="shrink-0 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
+                                    @click="(editingEmail = false), (contactForm.email = '')"
+                                >
+                                    {{ t('form.cancel') }}
+                                </button>
+                                <button
+                                    class="shrink-0 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50 whitespace-nowrap"
+                                    :disabled="!contactForm.email"
+                                    @click="openOtpCard('email')"
+                                >
+                                    {{ t('profile.add_and_verify') }}
+                                </button>
+                            </template>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTP Verification card -->
+            <div
+                v-if="otpState.show"
+                class="bg-white dark:bg-gray-800 rounded-2xl border border-secondary/40 dark:border-secondary/30 overflow-hidden"
+            >
+                <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                            />
+                        </svg>
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                            {{ t('profile.enter_otp') }}
+                        </h3>
+                    </div>
+                    <!-- Close button -->
+                    <button
+                        class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300 transition-colors"
+                        @click="closeOtpCard"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5 space-y-3">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ t('profile.otp_sent_to') }}
+                        <span class="font-semibold text-gray-900 dark:text-white">{{ otpState.sentTo }}</span>
+                    </p>
+                    <div class="flex gap-2 justify-center py-1">
+                        <input
+                            v-for="(_, i) in 6"
+                            :key="i"
+                            :ref="
+                                el => {
+                                    if (el) otpInputs[i] = el as HTMLInputElement
+                                }
+                            "
+                            v-model="otpDigits[i]"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="1"
+                            class="w-11 h-13 text-center text-lg font-bold bg-gray-50 border border-gray-200 rounded-xl focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors"
+                            @input="onOtpInput(i, $event)"
+                            @keydown="onOtpKeydown(i, $event)"
+                            @paste="onOtpPaste"
+                        />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button
+                            v-if="resendTimer <= 0"
+                            class="text-xs text-secondary hover:underline"
+                            @click="resendOtp"
+                        >
+                            {{ t('profile.resend_otp') }}
+                        </button>
+                        <span v-else class="text-xs text-gray-400">{{
+                            t('profile.resend_in', { s: resendTimer })
+                        }}</span>
+                        <button
+                            class="px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
+                            :disabled="otpCode.length < 6"
+                            @click="verifyOtp"
+                        >
+                            {{ t('profile.verify') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -222,7 +330,6 @@
                     </h3>
                 </div>
                 <div class="p-5 space-y-4">
-                    <!-- Current Password -->
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
@@ -237,14 +344,40 @@
                             />
                             <button
                                 type="button"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                 @click="showPw.current = !showPw.current"
                             >
-                                <EyeIcon :open="showPw.current" />
+                                <svg
+                                    v-if="showPw.current"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    />
+                                </svg>
+                                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                    />
+                                </svg>
                             </button>
                         </div>
                     </div>
-                    <!-- New Password -->
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
@@ -260,13 +393,39 @@
                             />
                             <button
                                 type="button"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                 @click="showPw.new = !showPw.new"
                             >
-                                <EyeIcon :open="showPw.new" />
+                                <svg
+                                    v-if="showPw.new"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    />
+                                </svg>
+                                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                    />
+                                </svg>
                             </button>
                         </div>
-                        <!-- Strength Bar -->
                         <div v-if="passwordForm.new_password" class="mt-2 space-y-1.5">
                             <div class="flex gap-1">
                                 <div
@@ -301,11 +460,11 @@
                                         />
                                     </svg>
                                     {{ t(`profile.pw_check_${check.key}`) }}
+                                    {{ check.key === 'special' ? `(@$!%*?&)` : '' }}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <!-- Confirm Password -->
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
@@ -321,19 +480,44 @@
                             />
                             <button
                                 type="button"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                 @click="showPw.confirm = !showPw.confirm"
                             >
-                                <EyeIcon :open="showPw.confirm" />
+                                <svg
+                                    v-if="showPw.confirm"
+                                    class="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    />
+                                </svg>
+                                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                                    />
+                                </svg>
                             </button>
                         </div>
                         <p v-if="passwordMismatch" class="mt-1.5 text-xs text-red-500">
                             {{ t('profile.password_mismatch') }}
                         </p>
                     </div>
-
                     <div class="flex items-center justify-between pt-1">
-                        <!-- Forgot Password link -->
                         <button
                             class="text-xs text-secondary hover:underline"
                             @click="router.push('/auth/forgot-password')"
@@ -350,7 +534,7 @@
                             "
                             @click="changePassword"
                         >
-                            {{ isSavingPw ? `${t('form.saving')}...` : t('profile.update_password') }}
+                            {{ isSavingPw ? `${t('fuel.saving')}...` : t('profile.update_password') }}
                         </button>
                     </div>
                 </div>
@@ -379,42 +563,175 @@
                 </p>
             </div>
 
-            <!-- Station / Company -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
-            >
-                <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+            <!-- Station / Change Company -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
+                <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('profile.stations') }}</h3>
-                    <button
-                        class="text-xs font-medium text-secondary hover:underline"
-                        @click="stationModal.show = true"
-                    >
-                        {{ t('profile.change_company') }}
-                    </button>
                 </div>
                 <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                    <div v-for="station in user.stations" :key="station._id" class="px-5 py-4 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
-                            <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    <div v-for="station in user.stations" :key="station._id" class="px-5 py-4 space-y-4">
+                        <!-- Station Info -->
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
+                                <svg
+                                    class="w-4 h-4 text-secondary"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {{ station.station_name }}
+                                </p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">
+                                    {{ t('profile.owner') }}: {{ station.owner }}
+                                </p>
+                            </div>
+                            <span class="text-xs text-gray-400 dark:text-gray-500 shrink-0">{{
+                                formatDate(station.createdAt)
+                            }}</span>
+                        </div>
+
+                        <!-- Edit Owner Name -->
+                        <div>
+                            <label
+                                class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
+                            >
+                                {{ t('profile.station_owner') }}
+                            </label>
+                            <div class="flex gap-2">
+                                <input
+                                    v-model="stationForms[station._id].owner"
+                                    type="text"
+                                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    :placeholder="t('profile.station_owner_placeholder')"
                                 />
-                            </svg>
+                                <button
+                                    class="shrink-0 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50 whitespace-nowrap"
+                                    :disabled="!stationForms[station._id].owner || stationForms[station._id].saving"
+                                    @click="saveStationOwner(station._id)"
+                                >
+                                    {{ stationForms[station._id].saving ? `${t('fuel.saving')}` : t('fuel.save') }}
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                {{ station.station_name }}
-                            </p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500">
-                                {{ t('profile.owner') }}: {{ station.owner }}
-                            </p>
+
+                        <!-- Change Company dropdown -->
+                        <div>
+                            <label
+                                class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
+                            >
+                                {{ t('profile.change_company') }}
+                            </label>
+                            <div class="relative" :ref="el => (companyDropdownRefs[station._id] = el as HTMLElement)">
+                                <button
+                                    type="button"
+                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-sm"
+                                    @click="toggleCompanyDropdown(station._id)"
+                                >
+                                    <div
+                                        v-if="stationForms[station._id].selectedCompany"
+                                        class="flex items-center gap-2.5"
+                                    >
+                                        <img
+                                            :src="stationForms[station._id].selectedCompany?.image"
+                                            :alt="stationForms[station._id].selectedCompany?.name"
+                                            class="w-6 h-6 object-contain rounded bg-white p-0.5"
+                                        />
+                                        <span class="font-medium">{{
+                                            stationForms[station._id].selectedCompany?.name
+                                        }}</span>
+                                    </div>
+                                    <span v-else class="text-gray-500 dark:text-gray-400">{{
+                                        t('onboarding.choose_company')
+                                    }}</span>
+                                    <svg
+                                        class="w-4 h-4 text-gray-400 transition-transform shrink-0"
+                                        :class="{ 'rotate-180': openDropdownId === station._id }"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <transition
+                                    enter-active-class="transition ease-out duration-100"
+                                    enter-from-class="opacity-0 scale-95"
+                                    enter-to-class="opacity-100 scale-100"
+                                    leave-active-class="transition ease-in duration-75"
+                                    leave-from-class="opacity-100 scale-100"
+                                    leave-to-class="opacity-0 scale-95"
+                                >
+                                    <div
+                                        v-if="openDropdownId === station._id"
+                                        class="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden"
+                                    >
+                                        <ul class="py-1 max-h-52 overflow-y-auto">
+                                            <li
+                                                v-for="company in COMPANIES"
+                                                :key="company._id"
+                                                class="px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors flex items-center gap-3 text-sm"
+                                                :class="{
+                                                    'bg-secondary/5 dark:bg-secondary/10':
+                                                        stationForms[station._id].selectedCompany?._id === company._id,
+                                                }"
+                                                @click="selectCompany(station._id, company)"
+                                            >
+                                                <img
+                                                    :src="company.image"
+                                                    :alt="company.name"
+                                                    class="w-8 h-8 object-contain rounded bg-gray-50 dark:bg-gray-600 p-1 shrink-0"
+                                                />
+                                                <span class="font-medium text-gray-900 dark:text-white flex-1">{{
+                                                    company.name
+                                                }}</span>
+                                                <svg
+                                                    v-if="
+                                                        stationForms[station._id].selectedCompany?._id === company._id
+                                                    "
+                                                    class="w-4 h-4 text-secondary shrink-0"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </transition>
+                            </div>
+                            <button
+                                v-if="stationForms[station._id].selectedCompany"
+                                class="mt-2 w-full py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
+                                :disabled="stationForms[station._id].savingCompany"
+                                @click="updateCompany(station._id)"
+                            >
+                                {{
+                                    stationForms[station._id].savingCompany
+                                        ? `${t('fuel.saving')}`
+                                        : t('profile.save_company')
+                                }}
+                            </button>
                         </div>
-                        <span class="text-xs text-gray-400 dark:text-gray-500 shrink-0">{{
-                            formatDate(station.createdAt)
-                        }}</span>
                     </div>
                 </div>
             </div>
@@ -426,15 +743,33 @@
                 <div class="px-5 py-4 border-b border-red-100 dark:border-red-900/30">
                     <h3 class="text-sm font-semibold text-red-600 dark:text-red-400">{{ t('profile.danger_zone') }}</h3>
                 </div>
-                <div class="p-5 flex items-start justify-between gap-4">
+                <div class="p-5 space-y-4">
                     <div>
                         <p class="text-sm font-medium text-gray-900 dark:text-white">
                             {{ t('profile.deactivate_title') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('profile.deactivate_desc') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+                            {{ t('profile.deactivate_desc') }}
+                        </p>
                     </div>
+
+                    <!-- Checkbox confirmation -->
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="relative mt-0.5 shrink-0">
+                            <input
+                                v-model="deactivateConfirmed"
+                                type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-red-600 focus:ring-red-500 focus:ring-offset-0 cursor-pointer"
+                            />
+                        </div>
+                        <span class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                            {{ t('profile.deactivate_checkbox') }}
+                        </span>
+                    </label>
+
                     <button
-                        class="shrink-0 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors"
+                        class="w-full py-2.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        :disabled="!deactivateConfirmed"
                         @click="deleteModal.show = true"
                     >
                         {{ t('profile.deactivate_btn') }}
@@ -442,200 +777,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ───────── OTP Modal ───────── -->
-    <div
-        v-if="otpModal.show"
-        class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-    >
-        <div
-            class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 w-full max-w-sm p-6 shadow-xl"
-        >
-            <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                {{ otpModal.type === 'phone' ? t('profile.add_phone') : t('profile.add_email') }}
-            </h3>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">{{ t('profile.otp_desc') }}</p>
-
-            <!-- Step 1: Enter contact -->
-            <div v-if="!otpModal.codeSent" class="space-y-3">
-                <input
-                    v-model="otpModal.value"
-                    :type="otpModal.type === 'phone' ? 'tel' : 'email'"
-                    class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    :placeholder="
-                        otpModal.type === 'phone' ? t('staff.phone_placeholder') : t('staff.email_placeholder')
-                    "
-                />
-                <div class="flex gap-2">
-                    <button
-                        class="flex-1 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
-                        @click="otpModal.show = false"
-                    >
-                        {{ t('form.cancel') }}
-                    </button>
-                    <button
-                        class="flex-1 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
-                        :disabled="!otpModal.value"
-                        @click="sendOtp"
-                    >
-                        {{ t('profile.send_otp') }}
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Enter OTP -->
-            <div v-else class="space-y-3">
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('profile.otp_sent_to') }}
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ otpModal.value }}</span>
-                </p>
-                <div class="flex gap-2 justify-center">
-                    <input
-                        v-for="(_, i) in 6"
-                        :key="i"
-                        :ref="
-                            el => {
-                                if (el) otpInputs[i] = el as HTMLInputElement
-                            }
-                        "
-                        v-model="otpDigits[i]"
-                        type="text"
-                        inputmode="numeric"
-                        maxlength="1"
-                        class="w-10 h-12 text-center text-lg font-bold bg-gray-50 border border-gray-200 rounded-lg focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        @input="onOtpInput(i, $event)"
-                        @keydown="onOtpKeydown(i, $event)"
-                        @paste="onOtpPaste"
-                    />
-                </div>
-                <!-- Resend -->
-                <div class="flex items-center justify-center">
-                    <button v-if="resendTimer <= 0" class="text-xs text-secondary hover:underline" @click="resendOtp">
-                        {{ t('profile.resend_otp') }}
-                    </button>
-                    <span v-else class="text-xs text-gray-400">{{ t('profile.resend_in', { s: resendTimer }) }}</span>
-                </div>
-                <div class="flex gap-2">
-                    <button
-                        class="flex-1 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
-                        @click="otpModal.show = false"
-                    >
-                        {{ t('form.cancel') }}
-                    </button>
-                    <button
-                        class="flex-1 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
-                        :disabled="otpCode.length < 6"
-                        @click="verifyOtp"
-                    >
-                        {{ t('profile.verify') }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ───────── Change Company Modal ───────── -->
-    <div
-        v-if="stationModal.show"
-        class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-    >
-        <div
-            class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 w-full max-w-sm p-6 shadow-xl"
-        >
-            <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                {{ t('profile.change_company') }}
-            </h3>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">{{ t('profile.change_company_desc') }}</p>
-
-            <!-- Company Dropdown (reuse your existing pattern) -->
-            <div class="relative mb-4" ref="companyDropdownRef">
-                <button
-                    type="button"
-                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-sm"
-                    @click="stationModal.dropdownOpen = !stationModal.dropdownOpen"
-                >
-                    <div v-if="stationModal.selected" class="flex items-center gap-3">
-                        <img
-                            :src="stationModal.selected.image"
-                            :alt="stationModal.selected.name"
-                            class="w-7 h-7 object-contain rounded bg-white p-1"
-                        />
-                        <span class="font-medium">{{ stationModal.selected.name }}</span>
-                    </div>
-                    <span v-else class="text-gray-500 dark:text-gray-400">{{ t('onboarding.choose_company') }}</span>
-                    <svg
-                        class="w-4 h-4 text-gray-400 transition-transform"
-                        :class="{ 'rotate-180': stationModal.dropdownOpen }"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                <transition
-                    enter-active-class="transition ease-out duration-100"
-                    enter-from-class="opacity-0 scale-95"
-                    enter-to-class="opacity-100 scale-100"
-                    leave-active-class="transition ease-in duration-75"
-                    leave-from-class="opacity-100 scale-100"
-                    leave-to-class="opacity-0 scale-95"
-                >
-                    <div
-                        v-if="stationModal.dropdownOpen"
-                        class="absolute z-10 w-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden"
-                    >
-                        <ul class="py-1">
-                            <li
-                                v-for="company in COMPANIES"
-                                :key="company._id"
-                                class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors flex items-center gap-3 text-sm"
-                                :class="{
-                                    'bg-blue-50 dark:bg-blue-900/20': stationModal.selected?._id === company._id,
-                                }"
-                                @click="(stationModal.selected = company), (stationModal.dropdownOpen = false)"
-                            >
-                                <img
-                                    :src="company.image"
-                                    :alt="company.name"
-                                    class="w-8 h-8 object-contain rounded bg-gray-50 dark:bg-gray-600 p-1"
-                                />
-                                <span class="font-medium text-gray-900 dark:text-white">{{ company.name }}</span>
-                                <svg
-                                    v-if="stationModal.selected?._id === company._id"
-                                    class="w-4 h-4 ml-auto text-secondary"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                            </li>
-                        </ul>
-                    </div>
-                </transition>
-            </div>
-
-            <div class="flex gap-2">
-                <button
-                    class="flex-1 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 transition-colors"
-                    @click="stationModal.show = false"
-                >
-                    {{ t('form.cancel') }}
-                </button>
-                <button
-                    class="flex-1 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 transition-colors disabled:opacity-50"
-                    :disabled="!stationModal.selected || stationModal.saving"
-                    @click="updateCompany"
-                >
-                    {{ stationModal.saving ? `${t('form.saving')}...` : t('form.save') }}
-                </button>
-            </div>
-        </div>
+        <BottomNavigation />
     </div>
 
     <!-- ───────── Modals ───────── -->
@@ -668,35 +811,24 @@
     import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
+    import BottomNavigation from '@/components/home/BottomNavigation.vue'
+    import { COMPANIES, type Company } from '@/data/constants'
     import { userService } from '@/modules/app/services/api.service'
     import { stationService } from '@/modules/OnboardingView/services/api.service'
     import { getFromCache, setCache } from '@/composables/useCache'
     import { useThemeStore } from '@/stores/theme'
+    import { useAuthStore } from '@/modules/auth/store/index'
     import { useFormatDate } from '@/composables/useFormatDate'
+    import BaseLoading from '@/components/app/BaseLoading.vue'
 
     const { formatDate } = useFormatDate()
-
-    // ─── Eye Icon inline component ───
-    const EyeIcon = {
-        props: ['open'],
-        template: `
-            <svg v-if="open" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-            </svg>
-        `,
-    }
-
+    const authStore = useAuthStore()
     const { t } = useI18n()
     const router = useRouter()
     const themeStore = useThemeStore()
 
+    // Get user from cache — no separate userId/stationId needed
     const appData = getFromCache('app_data')
-    const userId = appData.value?._id
-    const stationId = ref('')
 
     // ─── User state ───
     const isPageLoading = ref(true)
@@ -713,18 +845,21 @@
     })
 
     const basicForm = reactive({ firstName: '', lastName: '' })
+    const contactForm = reactive({ phone: '', email: '' })
+    const editingPhone = ref(false)
+    const editingEmail = ref(false)
+    const isSavingInfo = ref(false)
+    const isSavingContact = ref(false)
 
     // ─── Password ───
     const passwordForm = reactive({ current_password: '', new_password: '', repeat_password: '' })
     const showPw = reactive({ current: false, new: false, confirm: false })
-    const isSavingInfo = ref(false)
     const isSavingPw = ref(false)
 
     const passwordMismatch = computed(
         () => !!passwordForm.repeat_password && passwordForm.new_password !== passwordForm.repeat_password,
     )
 
-    // Password strength
     const passwordChecks = reactive({
         length: false,
         lowercase: false,
@@ -766,8 +901,8 @@
         return t('register.strong')
     }
 
-    // ─── OTP ───
-    const otpModal = reactive({ show: false, type: 'phone' as 'phone' | 'email', value: '', codeSent: false })
+    // ─── OTP (inline, no modal) ───
+    const otpState = reactive({ show: false, type: 'phone' as 'phone' | 'email', sentTo: '' })
     const otpDigits = ref<string[]>(Array(6).fill(''))
     const otpInputs = ref<HTMLInputElement[]>([])
     const otpCode = computed(() => otpDigits.value.join(''))
@@ -782,19 +917,53 @@
         }, 1000)
     }
 
-    const openOtp = (type: 'phone' | 'email') => {
-        otpModal.type = type
-        otpModal.value = ''
-        otpModal.codeSent = false
+    // Opens the OTP card and pre-fills sentTo — does NOT call API yet
+    const openOtpCard = async (type: 'phone' | 'email') => {
+        const value = type === 'phone' ? contactForm.phone.trim() : contactForm.email.trim()
+        if (!value) return
+        // Skip if value unchanged
+        const current = type === 'phone' ? user.phone : user.email
+        if (value === current) {
+            if (type === 'phone') {
+                editingPhone.value = false
+                contactForm.phone = ''
+            } else {
+                editingEmail.value = false
+                contactForm.email = ''
+            }
+            return
+        }
+
+        otpState.type = type
+        otpState.sentTo = value
+        otpState.show = true
         otpDigits.value = Array(6).fill('')
-        otpModal.show = true
+        await sendOtp()
     }
 
+    // Called when user clicks "Send Code" / resend — this is where you call the API
     const sendOtp = async () => {
-        // TODO: call your OTP send API
-        otpModal.codeSent = true
-        startResendTimer()
-        setTimeout(() => otpInputs.value[0]?.focus(), 100)
+        try {
+            if (otpState.type === 'phone') {
+                await authStore.sendOTPtoSMS({ phone: otpState.sentTo, firstName: user.firstName })
+            } else {
+                await authStore.sendOTP({ email: otpState.sentTo, firstName: user.firstName })
+            }
+            startResendTimer()
+            setTimeout(() => otpInputs.value[0]?.focus(), 100)
+        } catch (err: any) {
+            otpState.show = false
+            errorModal.show = true
+            errorModal.description = t('profile.otp_send_failed')
+            errorModal.message = err.response?.data?.error || err.message
+        }
+    }
+
+    const closeOtpCard = () => {
+        otpState.show = false
+        otpDigits.value = Array(6).fill('')
+        if (resendInterval) clearInterval(resendInterval)
+        resendTimer.value = 0
     }
 
     const resendOtp = async () => {
@@ -803,8 +972,7 @@
     }
 
     const onOtpInput = (index: number, event: Event) => {
-        const input = event.target as HTMLInputElement
-        const val = input.value.replace(/\D/g, '')
+        const val = (event.target as HTMLInputElement).value.replace(/\D/g, '')
         otpDigits.value[index] = val
         if (val && index < 5) otpInputs.value[index + 1]?.focus()
     }
@@ -828,39 +996,146 @@
     }
 
     const verifyOtp = async () => {
-        // TODO: call your verify OTP API
-        if (otpModal.type === 'phone') user.phone = otpModal.value
-        else user.email = otpModal.value
-        otpModal.show = false
-        showSuccess(t('profile.contact_added'))
+        try {
+            if (otpState.type === 'phone') {
+                user.phone = otpState.sentTo
+                await authStore.verifyOTP({
+                    identifier: user.phone,
+                    otp: otpCode.value,
+                })
+                contactForm.phone = ''
+                editingPhone.value = false
+            } else {
+                user.email = otpState.sentTo
+                await authStore.verifyOTP({
+                    identifier: user.email,
+                    otp: otpCode.value,
+                })
+                contactForm.email = ''
+                editingEmail.value = false
+            }
+            const payload = otpState.type === 'phone' ? { phone: otpState.sentTo } : { email: otpState.sentTo }
+
+            try {
+                await userService.update(user._id, payload)
+            } catch (error: any) {
+                errorModal.show = true
+                errorModal.description = t('profile.otp_verify_failed')
+                errorModal.message = error.response?.data?.error || error.message
+            }
+            otpState.show = false
+            showSuccess(t('profile.contact_added'))
+        } catch (err: any) {
+            errorModal.show = true
+            errorModal.description = t('profile.otp_verify_failed')
+            errorModal.message = err.response?.data?.error || err.message
+        }
     }
 
-    // ─── Company / Station ───
-    const COMPANIES: any[] = [] // TODO: import from your constants
+    // ─── Station forms (one per station) ───
+    // stationForms[stationId] = { owner, saving, selectedCompany, savingCompany }
+    const stationForms = reactive<
+        Record<
+            string,
+            {
+                owner: string
+                saving: boolean
+                selectedCompany: Company | null
+                savingCompany: boolean
+            }
+        >
+    >({})
 
-    const stationModal = reactive({
-        show: false,
-        selected: null as any,
-        dropdownOpen: false,
-        saving: false,
-    })
+    const matchCompanyFromName = (stationName: string): Company | null => {
+        if (!stationName) return COMPANIES[0] ?? null
 
-    const updateCompany = async () => {
-        if (!stationModal.selected) return
-        stationModal.saving = true
+        // Try exact match (spaces vs underscores)
+        let match = COMPANIES.find(c => c.name.toLowerCase() === stationName.toLowerCase().replace(/_/g, ' '))
+        // Try by _id
+        if (!match) match = COMPANIES.find(c => c._id === stationName.toLowerCase())
+        // Try partial match
+        if (!match) {
+            const lower = stationName.toLowerCase()
+            match = COMPANIES.find(c => lower.includes(c._id) || c._id.includes(lower))
+        }
+        return match || COMPANIES[0] || null
+    }
+
+    const initStationForms = () => {
+        user.stations.forEach((s: any) => {
+            if (!stationForms[s._id]) {
+                stationForms[s._id] = {
+                    owner: s.owner ?? '',
+                    saving: false,
+                    selectedCompany: matchCompanyFromName(s.station_name),
+                    savingCompany: false,
+                }
+            }
+        })
+    }
+
+    // Dropdown open state — only one open at a time
+    const openDropdownId = ref<string | null>(null)
+    const companyDropdownRefs = reactive<Record<string, HTMLElement>>({})
+
+    const toggleCompanyDropdown = (stationId: string) => {
+        openDropdownId.value = openDropdownId.value === stationId ? null : stationId
+    }
+
+    const selectCompany = (stationId: string, company: Company) => {
+        stationForms[stationId].selectedCompany = company
+        openDropdownId.value = null
+    }
+
+    // Close dropdown on outside click
+    const handleOutsideClick = (e: MouseEvent) => {
+        if (!openDropdownId.value) return
+        const ref = companyDropdownRefs[openDropdownId.value]
+        if (ref && !ref.contains(e.target as Node)) {
+            openDropdownId.value = null
+        }
+    }
+
+    const saveStationOwner = async (stationId: string) => {
+        const form = stationForms[stationId]
+        if (!form?.owner.trim()) return
+
+        // Skip if nothing changed
+        const station = user.stations.find((s: any) => s._id === stationId)
+        if (form.owner.trim() === station?.owner) return
+        form.saving = true
+        const cached = appData
         try {
-            const newStationName = stationModal.selected.name.replace(/\s+/g, '_')
-            const response = await stationService.updateStation(stationId.value, { station_name: newStationName })
+            await stationService.updateStation(stationId, { owner: form.owner.trim() })
+            if (station) station.owner = form.owner.trim()
+            cached.value.stations[0].owner = station.owner
+            setCache('app_data', cached.value)
+            showSuccess(t('profile.station_owner_updated'))
+        } catch (err: any) {
+            errorModal.show = true
+            errorModal.description = t('profile.station_owner_update_failed')
+            errorModal.message = err.response?.data?.error || err.message
+        } finally {
+            form.saving = false
+        }
+    }
+
+    const updateCompany = async (stationId: string) => {
+        const form = stationForms[stationId]
+        if (!form?.selectedCompany) return
+        form.savingCompany = true
+        try {
+            const newStationName = form.selectedCompany.name.replace(/\s+/g, '_')
+            const response = await stationService.updateStation(stationId, { station_name: newStationName })
 
             if (response.data.result.success) {
-                // Update local storage / cache
-                const cached = getFromCache('app_data')
+                const cached = appData
                 if (cached.value?.stations?.[0]) {
                     cached.value.stations[0].station_name = newStationName
                     setCache('app_data', cached.value)
                 }
-                themeStore.setTheme(stationModal.selected._id)
-                stationModal.show = false
+                themeStore.setTheme(form.selectedCompany._id)
+                form.selectedCompany = null
                 showSuccess(t('profile.company_updated'))
             } else {
                 throw new Error('Failed to update station')
@@ -870,12 +1145,15 @@
             errorModal.description = t('profile.company_update_error')
             errorModal.message = err.response?.data?.details?.[0]?.error || err.message
         } finally {
-            stationModal.saving = false
+            form.savingCompany = false
         }
     }
 
-    // ─── Modals ───
+    // ─── Danger zone ───
+    const deactivateConfirmed = ref(false)
     const deleteModal = reactive({ show: false })
+
+    // ─── Modals ───
     const successModal = reactive({ show: false, type: 'success', title: '', description: '' })
     const errorModal = reactive({ show: false, description: '', message: '' })
 
@@ -886,7 +1164,7 @@
         successModal.show = true
     }
 
-    // ─── API Actions ───
+    // ─── API calls (use appData directly, no separate userId) ───
     const fetchUser = async () => {
         try {
             const { data } = await userService.get()
@@ -897,16 +1175,24 @@
             console.error('Failed to fetch user', e)
         } finally {
             isPageLoading.value = false
+            initStationForms()
         }
     }
 
     const saveBasicInfo = async () => {
+        // Skip if nothing changed
+        if (basicForm.firstName === user.firstName && basicForm.lastName === user.lastName) return
+
         isSavingInfo.value = true
+        const cached = appData
         try {
-            await userService.update(userId, { firstName: basicForm.firstName, lastName: basicForm.lastName })
+            await userService.update(user._id, { firstName: basicForm.firstName, lastName: basicForm.lastName })
             user.firstName = basicForm.firstName
             user.lastName = basicForm.lastName
             showSuccess(t('profile.info_updated'))
+            cached.value.firstName = basicForm.firstName
+            cached.value.lastName = basicForm.lastName
+            setCache('app_data', cached.value)
         } catch (err: any) {
             errorModal.show = true
             errorModal.description = t('profile.update_failed')
@@ -920,7 +1206,7 @@
         if (passwordMismatch.value || !passwordForm.current_password || !passwordForm.new_password) return
         isSavingPw.value = true
         try {
-            await userService.updatePassword(userId, {
+            await userService.updatePassword(user._id, {
                 current_password: passwordForm.current_password,
                 new_password: passwordForm.new_password,
                 repeat_password: passwordForm.repeat_password,
@@ -934,6 +1220,10 @@
             errorModal.show = true
             errorModal.description = t('profile.password_update_failed')
             errorModal.message = err.response?.data?.error || err.message
+            passwordForm.current_password = ''
+            passwordForm.new_password = ''
+            passwordForm.repeat_password = ''
+            passwordStrength.value = 0
         } finally {
             isSavingPw.value = false
         }
@@ -941,7 +1231,7 @@
 
     const deactivateAccount = async () => {
         try {
-            await userService.delete(userId)
+            await userService.delete(user._id)
             deleteModal.show = false
             showSuccess(t('profile.deactivated_title'), t('profile.deactivated_desc'))
             setTimeout(() => router.push('/auth/login'), 3000)
@@ -954,11 +1244,11 @@
     }
 
     onMounted(() => {
-        console.log(appData.value?._id)
-
         fetchUser()
+        document.addEventListener('click', handleOutsideClick)
     })
     onBeforeUnmount(() => {
         if (resendInterval) clearInterval(resendInterval)
+        document.removeEventListener('click', handleOutsideClick)
     })
 </script>
