@@ -4,8 +4,7 @@
     import { useThemeStore } from '@/stores/theme'
 
     interface Props {
-        firstName?: string
-        lastName?: string
+        owner?: string
         customBannerImage?: string // Optional custom banner image
     }
 
@@ -21,7 +20,7 @@
     <div class="relative bg-primary w-full h-24 rounded-lg overflow-hidden shadow-lg">
         <!-- Content -->
         <div class="relative z-10 font-semibold text-on-primary text-sm absolute top-2 left-3">
-            <div class="text-lg">{{ t('home.welcome') }} {{ firstName }} {{ lastName }}</div>
+            <div class="text-lg">{{ t('home.welcome') }} {{ owner }}</div>
             <div class="pt-1 text-sm opacity-90">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
         </div>
 

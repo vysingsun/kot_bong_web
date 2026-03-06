@@ -8,7 +8,7 @@ export interface CreateFuelPayload {
 }
 
 export const stationService = {
-    updateStation: async (stationId: string, data: { station_name: string }) => {
+    updateStation: async (stationId: string, data: { station_name?: string; owner?: string }) => {
         return axios.post(`/station/update/${stationId}`, data)
     },
 

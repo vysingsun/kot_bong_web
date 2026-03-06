@@ -26,6 +26,12 @@ const router = createRouter({
         },
         ...ONBOARDINGVIEW.ONBOARDINGVIEW_ROUTES,
         {
+            path: '/profile',
+            name: 'Profile',
+            beforeEnter: isAuthenticated,
+            component: () => import('@/modules/app/views/form.vue'),
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'not-found',
             component: () => import('@/components/app/404.vue'),
