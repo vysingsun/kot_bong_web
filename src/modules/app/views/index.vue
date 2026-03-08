@@ -95,8 +95,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.first_name') }}</label
                         >
+                            {{ t('staff.first_name') }}
+                        </label>
                         <input
                             v-model="basicForm.firstName"
                             type="text"
@@ -106,8 +107,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.last_name') }}</label
                         >
+                            {{ t('staff.last_name') }}
+                        </label>
                         <input
                             v-model="basicForm.lastName"
                             type="text"
@@ -138,8 +140,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.phone') }}</label
                         >
+                            {{ t('staff.phone') }}
+                        </label>
                         <div class="flex gap-2">
                             <input
                                 type="tel"
@@ -175,8 +178,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('staff.email') }}</label
                         >
+                            {{ t('staff.email') }}
+                        </label>
                         <div class="flex gap-2">
                             <input
                                 type="email"
@@ -226,8 +230,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('profile.current_password') }}</label
                         >
+                            {{ t('profile.current_password') }}
+                        </label>
                         <div class="relative">
                             <input
                                 v-model="passwordForm.current_password"
@@ -248,8 +253,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('profile.new_password') }}</label
                         >
+                            {{ t('profile.new_password') }}
+                        </label>
                         <div class="relative">
                             <input
                                 v-model="passwordForm.new_password"
@@ -309,8 +315,9 @@
                     <div>
                         <label
                             class="block mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-                            >{{ t('profile.confirm_password') }}</label
                         >
+                            {{ t('profile.confirm_password') }}
+                        </label>
                         <div class="relative">
                             <input
                                 v-model="passwordForm.repeat_password"
