@@ -20,3 +20,21 @@ export const appService = {
         })
     },
 }
+
+export const userService = {
+    get: async () => {
+        return axios.get('/auth/me')
+    },
+    update: async (id: string, payload: object) => {
+        return axios.post(`user/update/${id}`, payload)
+    },
+    updatePassword: async (
+        id: string,
+        payload: { current_password: string; new_password: string; repeat_password: string },
+    ) => {
+        return axios.post(`user/update-password/${id}`, payload)
+    },
+    delete: async (id: string) => {
+        return axios.post(`user/delete/${id}`)
+    },
+}

@@ -4,9 +4,18 @@ export interface IUser {
     firstName: string
     lastName: string
     role_id: string
-    stations?: []
+    stations?: IStation[]
     createdAt?: string
     updatedAt?: string
+}
+
+export interface IStation {
+    _id: string
+    station_name: string
+    owner: string
+    users: string[]
+    createdAt: string
+    updatedAt: string
 }
 
 export interface Company {
