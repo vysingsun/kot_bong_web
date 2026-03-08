@@ -59,6 +59,62 @@
             ])
         }
     })
+    // Computed property for summary title
+    const summaryTitle = computed(() => {
+        if (hasActiveFilters.value) {
+            return t('fuel_sold.filtered_summary')
+        }
+        return t('fuel_sold.total_summary')
+    })
+
+    // Check if any filters are active
+    const hasActiveFilters = computed(() => {
+        return !!(
+            store.filters.search ||
+            store.filters.createdBy ||
+            store.filters.fuel_type ||
+            (date_range.value && date_range.value.length === 2)
+        )
+    })
+
+    // Generate active filters as an array (breakdown line by line)
+    const activeFiltersList = computed(() => {
+        const filters: string[] = []
+
+        if (store.filters.search) {
+            filters.push(`${t('fuel_sold.search')}: "${store.filters.search}"`)
+        }
+
+        if (store.filters.createdBy) {
+            const usersList = Array.isArray(users.value) ? users.value : users.value ? Object.values(users.value) : []
+            const user = usersList.find((u: any) => u._id === store.filters.createdBy)
+
+            if (user) {
+                // Handle different user name formats
+                const userName =
+                    user.firstName && user.lastName
+                        ? `${user.firstName} ${user.lastName}`
+                        : user.name || user.username || t('common.unknown_user')
+                filters.push(`${t('filter.created_by')}: ${userName}`)
+            }
+        }
+
+        if (store.filters.fuel_type) {
+            const fuel = fuelStore.fuels?.find(f => f._id === store.filters.fuel_type)
+            if (fuel) {
+                filters.push(`${t('fuel_sold.fuel_type')}: ${fuel.fuel_name}`)
+            }
+        }
+
+        if (date_range.value && date_range.value.length === 2) {
+            const [start, end] = date_range.value
+            const startDate = new Date(start).toLocaleDateString()
+            const endDate = new Date(end).toLocaleDateString()
+            filters.push(`${t('fuel_sold.date_range')}: ${startDate} - ${endDate}`)
+        }
+
+        return filters
+    })
 
     const handleCreate = () => {
         router.push('/fuel-sold/create')
@@ -330,7 +386,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-gray-900 dark:text-white">{{ date }}</h2>
+                            <h2 class="text-base font-bold text-gray-900 dark:text-white">{{ formatDate(date) }}</h2>
                         </div>
                     </div>
 
@@ -475,6 +531,64 @@
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">
                     {{ t('fuel_sold.no_records_desc') }}
+                </p>
+            </div>
+
+            <!-- Dynamic Summary Title -->
+            <div
+                class="mb-4 p-4 rounded-xl border transition-all duration-300"
+                :class="
+                    hasActiveFilters
+                        ? 'bg-blue-50/50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
+                        : 'bg-blue-50/30 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800'
+                "
+            >
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-5 h-5 text-blue-600 dark:text-blue-400"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+                        />
+                    </svg>
+                    {{ summaryTitle }}
+                </h2>
+
+                <!-- Active filters breakdown -->
+                <div v-if="hasActiveFilters && activeFiltersList.length > 0" class="mt-2 space-y-1">
+                    <div
+                        v-for="(filter, index) in activeFiltersList"
+                        :key="index"
+                        class="text-sm text-blue-700 dark:text-blue-300 flex items-start gap-2"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            class="w-4 h-4 mt-0.5 flex-shrink-0"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span>{{ filter }}</span>
+                    </div>
+                </div>
+
+                <!-- No filters message -->
+                <p v-else class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    {{ t('fuel_sold.showing_all_data') }}
                 </p>
             </div>
 
