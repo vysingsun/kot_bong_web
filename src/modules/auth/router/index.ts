@@ -21,16 +21,6 @@ export const routes = [
         },
         component: () => import('@/modules/auth/views/register.vue'),
     },
-    {
-        module: MODULE_NAME,
-        name: 'ForgotPassword',
-        path: `${MODULE_PATH}/forgot-password`,
-        meta: {
-            title: 'Forgot Password',
-            requiresAuth: false,
-        },
-        component: () => import('@/modules/auth/views/ForgotPassword.vue'),
-    },
 ]
 
 const oauthCallbackRoutes = [
@@ -67,6 +57,16 @@ const AUTH_ROUTES = [
         },
     },
     ...oauthCallbackRoutes,
+    {
+        module: MODULE_NAME,
+        name: 'ForgotPassword',
+        path: `${MODULE_PATH}/forgot-password`,
+        meta: {
+            title: 'Forgot Password',
+            requiresAuth: false,
+        },
+        component: () => import('@/modules/auth/views/ForgotPassword.vue'),
+    },
 ]
 
 export const AUTH = { AUTH_ROUTES, MODULE_NAME, MODULE_PATH }

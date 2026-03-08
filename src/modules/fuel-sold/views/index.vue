@@ -11,6 +11,7 @@
     import DeleteModal from '@/components/app/DeleteModal.vue'
     import { useAppStore } from '@/modules/app/store/index'
     import { useFormatDate } from '@/composables/useFormatDate'
+    import { staffService } from '@/modules/staff/services/api.service'
 
     const { formatDate } = useFormatDate()
 
@@ -44,10 +45,18 @@
 
                 // Load fuels for filter
                 fuelStore.getFuelsByStation(stationId.value),
-            ])
 
-            // TODO: Load users for createdBy filter if needed
-            // await loadUsers()
+                // Load users for createdBy filter if needed
+                await staffService
+                    .getStaffByStationId()
+                    .then(res => res.data)
+                    .then(data => {
+                        users.value = data.data.map((staff: any) => ({
+                            _id: staff._id,
+                            name: `${staff.firstName} ${staff.lastName}`,
+                        }))
+                    }),
+            ])
         }
     })
 
@@ -240,6 +249,23 @@
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                                 :placeholder="t('fuel_sold.search_placeholder')"
                             />
+                        </div>
+
+                        <!-- Created By -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ t('filter.created_by') }}
+                            </label>
+                            <select
+                                v-model="store.filters.createdBy"
+                                @change="handleSearch"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
+                            >
+                                <option value="">{{ t('filter.all_staff') }}</option>
+                                <option v-for="user in users" :key="user._id" :value="user._id">
+                                    {{ user.name }}
+                                </option>
+                            </select>
                         </div>
 
                         <!-- Fuel Type -->

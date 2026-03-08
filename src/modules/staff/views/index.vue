@@ -165,9 +165,17 @@
 
                 <!-- Card Footer Actions — always visible -->
                 <div
+                    v-if="currentUserRole !== 'User'"
                     class="border-t border-gray-200 dark:border-gray-700 px-5 py-3 flex items-center justify-end gap-3"
                 >
+                    <span
+                        v-if="staff._id === currentUserId"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                    >
+                        {{ t('staff.me') }}
+                    </span>
                     <button
+                        v-if="staff._id !== currentUserId"
                         class="text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
                         @click.stop="onEdit(staff)"
                     >
@@ -180,8 +188,9 @@
                             />
                         </svg>
                     </button>
-                    <span class="text-gray-300 dark:text-gray-600">|</span>
+                    <span v-if="staff._id !== currentUserId" class="text-gray-300 dark:text-gray-600">|</span>
                     <button
+                        v-if="staff._id !== currentUserId"
                         class="text-xs font-medium text-red-600 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
                         @click.stop="onDelete(staff)"
                     >
@@ -249,6 +258,8 @@
 
     const appData = getFromCache('app_data')
     const stationId = appData.value.stations[0]._id
+    const currentUserId = appData.value?._id
+    const currentUserRole = appData.value?.role?.role_name
 
     const getData = async () => {
         isLoading.value = true
@@ -271,6 +282,10 @@
     }, 600)
 
     const onView = (staff: IStaff) => {
+        if (staff._id === currentUserId) {
+            router.push('/profile')
+            return
+        }
         router.push(`${basePath}/view/${staff._id}`)
     }
 
@@ -279,8 +294,9 @@
     }
 
     const onDelete = (staff: IStaff) => {
-        deleteId.value = staff._id
-        showModal()
+        router.push('/comingsoon')
+        // deleteId.value = staff._id
+        // showModal()
     }
 
     const handleConfirmDelete = async () => {
