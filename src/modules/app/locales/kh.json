@@ -16,7 +16,10 @@
         "my_profile": "ប្រវត្តិរូបរបស់ខ្ញុំ",
         "account_settings": "ការកំណត់គណនី",
         "sign_out": "ចាកចេញ",
-        "coming_soon": "នឹងមកឆាប់ៗ..."
+        "coming_soon": "នឹងមកឆាប់ៗ...",
+        "logout_confirmation": "តើអ្នកប្រាកដថាចង់ចាកចេញមែនទេ?",
+        "logout_description": "អ្នកនឹងត្រូវចូលគណនីម្តងទៀត។",
+        "logout_button": "ចាកចេញ"
     },
     "common": {
         "success": {
@@ -61,7 +64,8 @@
         "date_range": "ចន្លោះកាលបរិច្ឆេទ",
         "date_range_placeholder": "ពីថ្ងៃទី - ដល់ថ្ងៃទី",
         "search": "បញ្ចូលអ្វីដែលចង់ស្វែងរក...",
-        "created_by": "លក់ដោយ"
+        "created_by": "លក់ដោយ",
+        "all_staff": "បុគ្គលិកទាំងអស់"
     },
     "form": {
         "create": "បង្កើត",

@@ -820,6 +820,7 @@
     import { useAuthStore } from '@/modules/auth/store/index'
     import { useFormatDate } from '@/composables/useFormatDate'
     import BaseLoading from '@/components/app/BaseLoading.vue'
+    import DeleteModal from '@/components/app/DeleteModal.vue'
 
     const { formatDate } = useFormatDate()
     const authStore = useAuthStore()
@@ -1231,10 +1232,11 @@
 
     const deactivateAccount = async () => {
         try {
-            await userService.delete(user._id)
-            deleteModal.show = false
-            showSuccess(t('profile.deactivated_title'), t('profile.deactivated_desc'))
-            setTimeout(() => router.push('/auth/login'), 3000)
+            // await userService.delete(user._id)
+            // deleteModal.show = false
+            // showSuccess(t('profile.deactivated_title'), t('profile.deactivated_desc'))
+            // setTimeout(() => router.push('/auth/login'), 3000)
+            router.push('/comingsoon')
         } catch (err: any) {
             deleteModal.show = false
             errorModal.show = true
