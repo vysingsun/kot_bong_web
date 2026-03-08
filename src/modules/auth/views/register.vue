@@ -1059,11 +1059,11 @@
         loading.value = true
 
         try {
-            const locale = localStorage.getItem('locale') || 'en'
+            const locale = localStorage.getItem('locale') || 'kh'
             const owner = `${formData.firstName} ${formData.lastName}`.trim()
 
             const payload = {
-                email: isEmail.value ? formData.emailOrPhone : `kotpreng${formData.emailOrPhone}@gmail.com`,
+                email: isEmail.value ? formData.emailOrPhone : undefined,
                 phone: !isEmail.value ? formData.emailOrPhone : undefined,
                 password: formData.password,
                 repeat_password: formData.confirmPassword,
