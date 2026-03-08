@@ -65,11 +65,7 @@
         <main class="p-4 md:ml-64 pt-20 relative z-10">
             <div class="space-y-4 mb-4">
                 <!-- Welcome Banner -->
-                <WelcomeBanner
-                    :firstName="user?.firstName"
-                    :lastName="user?.lastName"
-                    :customBannerImage="customBannerImage"
-                />
+                <WelcomeBanner :owner="user?.stations?.[0]?.owner" :customBannerImage="customBannerImage" />
 
                 <!-- Quick Actions -->
                 <QuickActions :onLogout="showModal" />
