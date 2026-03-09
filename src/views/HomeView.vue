@@ -14,6 +14,8 @@
     import ButtonNavigation from '@/components/home/BottomNavigation.vue'
     import SideNav from '@/components/home/SideNav.vue'
     import { useI18n } from 'vue-i18n'
+    import { lookupService } from '@/atoms/lookup/lookup.services'
+    import FuelSalesChart from '@/components/home/FuelSalesChart.vue'
 
     const { isVisible, showModal, closeModal } = useModal()
     const loading = ref(false)
@@ -33,14 +35,28 @@
         onLogout()
     }
 
-    onMounted(() => {
+    onMounted(async () => {
         initFlowbite()
         const appData = getFromCache('app_data')?.value
         user.value = appData
 
         // You can set custom banner image from user data if available
         // customBannerImage.value = appData?.customBanner
+        await fetchFuelSales()
     })
+
+    const apiResponse = ref<any>(null)
+
+    const fetchFuelSales = async () => {
+        if (user.value?.stations?.[0]?._id) {
+            try {
+                const response = await lookupService.getFuelSales(user.value.stations[0]._id)
+                apiResponse.value = response.data
+            } catch (error) {
+                console.error('Error fetching fuel sales:', error)
+            }
+        }
+    }
 </script>
 
 <template>
@@ -72,6 +88,8 @@
 
                 <!-- Quick Actions -->
                 <QuickActions :onLogout="showModal" />
+
+                <FuelSalesChart v-if="apiResponse" :response="apiResponse" />
             </div>
         </main>
 
