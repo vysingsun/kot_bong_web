@@ -369,9 +369,10 @@
         fuelStocks.value.forEach((item: any, index: number) => {
             const chartElementId = `#radial-chart-do-${index}`
             const current_stock_as_percent = (100 * item?.current_stock_liter) / item?.fuel_tank_size
-            if (document.querySelector(chartElementId)) {
+            const el = document.querySelector<HTMLElement>(chartElementId)
+            if (el) {
                 const chart = new ApexCharts(
-                    document.querySelector(chartElementId),
+                    el,
                     storeCurrentStock.getChartOptions(
                         current_stock_as_percent,
                         item?.fuel?.fuel_name,
