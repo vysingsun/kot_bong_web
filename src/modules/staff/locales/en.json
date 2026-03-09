@@ -19,6 +19,7 @@
         "password_placeholder": "Enter password",
         "search": "Search Staff",
         "Admin": "Owner",
-        "User": "Staff"
+        "User": "Staff",
+        "me": "Me"
     }
 }

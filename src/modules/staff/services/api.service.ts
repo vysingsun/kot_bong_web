@@ -8,7 +8,7 @@ export const staffService = {
     get: async (id: string) => {
         return axios.get(`staff/${id}`)
     },
-    getStaffByStationId: async (params: object) => {
+    getStaffByStationId: async (params?: object) => {
         return axios.get(`staff/station/${stationId}`, { params })
     },
     create: async (payload: object) => {
