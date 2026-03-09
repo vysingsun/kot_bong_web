@@ -6,6 +6,7 @@ import { AUTH } from '@/modules/auth/router/index'
 import { isAuthenticated } from '@/middlewares/auth'
 import { ONBOARDINGVIEW } from '@/modules/OnboardingView/router'
 import { useAppStore } from '@/modules/app/store'
+import i18n from '@/plugins/i18n'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,19 @@ const router = createRouter({
             path: '/policy',
             name: 'Policy',
             component: () => import('@/components/home/Policy.vue'),
+        },
+        {
+            path: '/fuelsalesgraph',
+            name: i18n.global.t('menu.salesGraph'),
+            beforeEnter: isAuthenticated,
+            component: Default_header,
+            children: [
+                {
+                    path: '',
+                    name: i18n.global.t('menu.salesGraph'),
+                    component: () => import('@/components/home/SideNavs/FuelSalesGraph.vue'),
+                },
+            ],
         },
     ],
 })

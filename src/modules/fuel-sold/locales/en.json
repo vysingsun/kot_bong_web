@@ -39,5 +39,31 @@
         "total_summary": "Total Summary",
         "filtered_summary": "Filtered Summary",
         "showing_all_data": "Showing all sales data from the beginning and for all fuel types"
+    },
+    "fuel_sales_chart": {
+        "title": "Fuel Sales Overview",
+        "period": "Period",
+        "amount": "Amount",
+        "custom_range": "Custom Range",
+        "date_range_placeholder": "Select date range...",
+        "apply": "Apply",
+        "reset": "Reset",
+        "loading": "Loading...",
+        "no_data": "No data available",
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year",
+        "total_liters": "Total Liters",
+        "total_revenue": "Total Revenue",
+        "volume_sold": "Volume Sold",
+        "quantity_liters": "Quantity (Liters)",
+        "revenue_earned": "Revenue Earned",
+        "amount_khr": "Amount (KHR)",
+        "distribution": "Distribution",
+        "liter_share": "Liter Share",
+        "revenue_share": "Revenue Share",
+        "liters": "Liters",
+        "khr": "KHR"
     }
 }
