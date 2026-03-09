@@ -24,6 +24,7 @@ class FormData {
 class ReportFilters {
     date_range?: any
     fuel_type?: any
+    createdBy?: string
 }
 
 export interface IFuelSold {
@@ -134,6 +135,8 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         const params: any = {}
         const filter = filterForm.value
         if (filter.fuel_type) params['fuelId'] = filter.fuel_type
+
+        if (filter.createdBy) params['createdBy'] = filter.createdBy
 
         if (filter.date_range) {
             params['start_date'] = filter.date_range?.start

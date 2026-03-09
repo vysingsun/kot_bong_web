@@ -14,13 +14,31 @@
             :enable-time-picker="false"
             @update:model-value="onChangeDateRange"
         />
+
+        <!-- Created By -->
+        <div class="pb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ t('filter.created_by') }}
+            </label>
+            <select
+                v-model="store.filters.createdBy"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
+                @change="onChangeFuelType"
+            >
+                <option value="">{{ t('filter.all_staff') }}</option>
+                <option v-for="user in users" :key="user._id" :value="user._id">
+                    {{ user.name }}
+                </option>
+            </select>
+        </div>
+
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             {{ t('fuel_sold.fuel_type') }}
         </label>
         <div class="relative">
             <select
                 v-model="fuel_type"
-                class="border border-gray-200 text-gray-400 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
+                class="border border-gray-200 text-gray-900 rounded-lg focus:ring-secondary focus:border-secondary block w-full px-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
                 @change="onChangeFuelType"
             >
                 <option value="">{{ t('fuel_sold.all_fuels') }}</option>
@@ -178,6 +196,7 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import moment from 'moment'
     import { useFormatDate } from '@/composables/useFormatDate'
+    import { staffService } from '@/modules/staff/services/api.service'
 
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
@@ -192,6 +211,7 @@
     const filterParams = computed(() => params.value)
     const loading = ref(false)
     const totals = ref(null)
+    const users = ref<any[]>([])
 
     const onRetrieveResult = (result: any) => {
         totals.value = result.allData?.totals ?? null
@@ -203,6 +223,20 @@
         const response = await lookupService.getFuelByStationId(stationId.value)
         const result = response?.data
         fuels.value = result?.data
+
+        // Load users for createdBy filter if needed
+        await staffService
+            .getStaffByStationId()
+            .then(res => res.data)
+            .then(data => {
+                users.value = data.data.map((staff: any) => ({
+                    _id: staff._id,
+                    name: `${staff.firstName} ${staff.lastName}`,
+                }))
+            }),
+            (err: any) => {
+                console.error('Failed to load staff for filter', err)
+            }
     }
 
     function prepareFilterParams() {
@@ -230,6 +264,7 @@
 
     const onChangeFuelType = () => {
         store.filterForm.fuel_type = fuel_type.value
+        store.filterForm.createdBy = store.filters.createdBy
         prepareFilterParams()
     }
 </script>

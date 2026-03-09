@@ -13,10 +13,13 @@
     import QuickActions from '@/components/home/QuickActions.vue'
     import ButtonNavigation from '@/components/home/BottomNavigation.vue'
     import SideNav from '@/components/home/SideNav.vue'
+    import { useI18n } from 'vue-i18n'
+
     const { isVisible, showModal, closeModal } = useModal()
     const loading = ref(false)
     const authStore = useAuthStore()
     const user = ref<IUser>()
+    const { t } = useI18n()
 
     // Optional: Custom banner image (can be stored in user data or company config)
     const customBannerImage = ref<string | undefined>(undefined)
@@ -81,7 +84,11 @@
         :isVisible="isVisible"
         type="error"
         :title="$t('home.logout_confirmation')"
+        :confirmLabel="$t('home.logout_button')"
+        :cancelLabel="$t('common.cancel')"
         @confirm="handleConfirm"
         @close="closeModal"
-    />
+    >
+        {{ t('home.logout_description') }}
+    </BaseModal>
 </template>

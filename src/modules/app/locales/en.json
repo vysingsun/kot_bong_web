@@ -16,7 +16,10 @@
         "my_profile": "My profile",
         "account_settings": "Account settings",
         "sign_out": "Sign out",
-        "coming_soon": "Coming soon..."
+        "coming_soon": "Coming soon...",
+        "logout_confirmation": "Are you sure you want to logout?",
+        "logout_description": "You will need to sign in again.",
+        "logout_button": "Logout"
     },
     "common": {
         "success": {
@@ -61,7 +64,8 @@
         "date_range": "Date Range",
         "date_range_placeholder": "From Date - To Date",
         "search": "Search For Items...",
-        "created_by": "Sales By"
+        "created_by": "Sales By",
+        "all_staff": "All Staff"
     },
     "form": {
         "create": "Create",

@@ -35,6 +35,9 @@
         "amount_per_liter_us": "Amount per Liter (USD)",
         "amount_per_liter_khr": "Amount per Liter (KHR)",
         "total_amount_khr": "Total Amount (KHR)",
-        "date": "Date"
+        "date": "Date",
+        "total_summary": "Total Summary",
+        "filtered_summary": "Filtered Summary",
+        "showing_all_data": "Showing all sales data from the beginning and for all fuel types"
     }
 }
