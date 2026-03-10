@@ -14,6 +14,8 @@
     import ButtonNavigation from '@/components/home/BottomNavigation.vue'
     import SideNav from '@/components/home/SideNav.vue'
     import { useI18n } from 'vue-i18n'
+    import { lookupService } from '@/atoms/lookup/lookup.services'
+    import FuelLiterBarChart from '@/components/home/FuelLiterBarChart.vue'
 
     const { isVisible, showModal, closeModal } = useModal()
     const loading = ref(false)
@@ -33,18 +35,35 @@
         onLogout()
     }
 
-    onMounted(() => {
+    onMounted(async () => {
         initFlowbite()
         const appData = getFromCache('app_data')?.value
         user.value = appData
 
         // You can set custom banner image from user data if available
         // customBannerImage.value = appData?.customBanner
+        await fetchFuelSales()
     })
+
+    const apiResponse = ref<any>(null)
+
+    const fetchFuelSales = async () => {
+        if (user.value?.stations?.[0]?._id) {
+            try {
+                loading.value = true
+                const response = await lookupService.getFuelSales(user.value.stations[0]._id)
+                apiResponse.value = response.data
+                loading.value = false
+            } catch (error) {
+                loading.value = false
+                console.error('Error fetching fuel sales:', error)
+            }
+        }
+    }
 </script>
 
 <template>
-    <BaseLoading v-if="loading" />
+    <!-- <BaseLoading v-if="loading" /> -->
     <div class="antialiased h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
         <AppHeader
@@ -65,13 +84,17 @@
         <ShapeBgAnimate />
 
         <!-- Main Content -->
-        <main class="p-4 md:ml-64 pt-20 relative z-10">
-            <div class="space-y-4 mb-4">
+        <main class="p-4 md:ml-64 pt-20 relative z-10 mb-42">
+            <div class="space-y-4 mb-4 h-[760px]">
                 <!-- Welcome Banner -->
                 <WelcomeBanner :owner="user?.stations?.[0]?.owner" :customBannerImage="customBannerImage" />
 
                 <!-- Quick Actions -->
                 <QuickActions :onLogout="showModal" />
+
+                <div class="pb-24">
+                    <FuelLiterBarChart :response="apiResponse" :loading="loading" />
+                </div>
             </div>
         </main>
 
