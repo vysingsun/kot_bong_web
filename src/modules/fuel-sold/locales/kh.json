@@ -39,5 +39,31 @@
         "total_summary": "សរុបទាំងអស់",
         "filtered_summary": "សរុបតាមការត្រង",
         "showing_all_data": "ទិន្នន័យលក់ទាំងអស់ រាប់ពីថ្ញៃដំបូង និងគ្រប់ប្រភេទប្រេងឥន្ធនៈ"
+    },
+    "fuel_sales_chart": {
+        "title": "ទិដ្ឋភាពការលក់ប្រេង",
+        "period": "រយៈពេល",
+        "amount": "ចំនួន",
+        "custom_range": "ជ្រើសរើសកាលបរិច្ឆេទ",
+        "date_range_placeholder": "ជ្រើសរើសកាលបរិច្ឆេទ...",
+        "apply": "ច្រោះយក",
+        "reset": "កំណត់ឡើងវិញ",
+        "loading": "កំពុងផ្ទុក...",
+        "no_data": "គ្មានទិន្នន័យ",
+        "day": "ថ្ងៃ",
+        "week": "សប្តាហ៍",
+        "month": "ខែ",
+        "year": "ឆ្នាំ",
+        "total_liters": "លីត្រសរុប",
+        "total_revenue": "ចំណូលសរុប",
+        "volume_sold": "បរិមាណដែលបានលក់",
+        "quantity_liters": "បរិមាណ (លីត្រ)",
+        "revenue_earned": "ចំណូលដែលទទួលបាន",
+        "amount_khr": "ចំនួនទឹកប្រាក់ (រៀល)",
+        "distribution": "ការចែកចាយ",
+        "liter_share": "ចំណែកលីត្រ",
+        "revenue_share": "ចំណែកចំណូល",
+        "liters": "លីត្រ",
+        "khr": "រៀល"
     }
 }

@@ -7,4 +7,7 @@ export const lookupService = {
     getRoles: async () => {
         return axios.get('/role/all')
     },
+    getFuelSales: async (stationId: string, params?: any) => {
+        return axios.get(`/fuel_sold/station/${stationId}/sales`, { params })
+    },
 }

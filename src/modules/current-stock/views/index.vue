@@ -28,19 +28,18 @@
                 </button>
             </div>
         </div>
-        <div class="flex flex-col gap-4">
-            <div
-                v-for="(item, index) in fuelStocks"
-                :key="item?._id"
-                class="w-full md:mx-auto flex px-2.5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700"
-            >
-                <div :id="'radial-chart-do-' + index" class="w-[120px] bg-inherit pb-4"></div>
-                <div class="flex items-center mr-3">
-                    <div
-                        class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg"
-                    >
-                        {{ $t('total_stock') }} : {{ item?.current_stock_liter.toFixed(2) }} L
-                    </div>
+
+        <div
+            v-for="(item, index) in fuelStocks"
+            :key="item?._id"
+            class="w-full md:mx-auto flex items-center px-2.5 justify-between max-w-sm bg-white border border-gray-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700"
+        >
+            <div :id="'radial-chart-do-' + index" class="w-[120px] h-[120px] bg-inherit"></div>
+            <div class="flex items-center mr-3">
+                <div
+                    class="text-xs font-semibold text-black bg-gray-300 bg-opacity-30 backdrop-blur-md backdrop-opacity-60 py-3 px-5 rounded-lg"
+                >
+                    {{ $t('total_stock') }} : {{ item?.current_stock_liter.toFixed(2) }} L
                 </div>
             </div>
         </div>
@@ -48,7 +47,6 @@
 
     <div class="md:mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 pb-4 px-4">
         <div class="flex-1 border-t border-gray-300 dark:border-gray-600 mb-3"></div>
-        <!-- <BaseLoading v-if="store.loading && store.filters.page_number === 1" /> -->
 
         <div class="max-w-4xl mx-auto">
             <!-- Filters -->
@@ -79,7 +77,6 @@
                     leave-to-class="opacity-0 -translate-y-2"
                 >
                     <div v-if="showFilters" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Search by Supplier -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ t('fuel_stock.search') }}
@@ -93,7 +90,6 @@
                             />
                         </div>
 
-                        <!-- Fuel Type -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ t('fuel_stock.fuel_type') }}
@@ -110,7 +106,6 @@
                             </select>
                         </div>
 
-                        <!-- Date Range -->
                         <div class="sm:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ t('filter.date_range') }}
@@ -127,7 +122,6 @@
                             />
                         </div>
 
-                        <!-- Reset Button -->
                         <div class="sm:col-span-2 flex justify-end">
                             <button
                                 @click="handleResetFilters"
@@ -143,7 +137,6 @@
             <!-- Grouped Stock List -->
             <div v-if="Object.keys(store.groupedByDate).length > 0" class="space-y-3 mb-5">
                 <div v-for="(stocks, date) in store.groupedByDate" :key="date">
-                    <!-- Date Header -->
                     <div class="flex items-center gap-3">
                         <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,13 +150,9 @@
                         </div>
                         <div>
                             <h2 class="text-base font-bold text-gray-900 dark:text-white">{{ date }}</h2>
-                            <!-- <p class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ stocks.length }} {{ t('fuel_stock.records') }}
-                            </p> -->
                         </div>
                     </div>
 
-                    <!-- Stock Items -->
                     <div class="space-y-2">
                         <div
                             v-for="stock in stocks"
@@ -172,9 +161,7 @@
                             class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer border border-gray-200 dark:border-gray-700 p-4"
                         >
                             <div class="flex items-center justify-between">
-                                <!-- Left: Icon + Info -->
                                 <div class="flex items-center gap-3 flex-1 min-w-0">
-                                    <!-- Fuel Drop Icon with Dynamic Color -->
                                     <div
                                         class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                         :style="{ backgroundColor: stock.fuel.color + '20' }"
@@ -188,8 +175,6 @@
                                             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
                                         </svg>
                                     </div>
-
-                                    <!-- Fuel Name & Supplier -->
                                     <div class="flex-1 min-w-0">
                                         <h3 class="text-base font-bold text-gray-900 dark:text-white truncate">
                                             {{ stock.fuel.fuel_name }}
@@ -199,8 +184,6 @@
                                         </p>
                                     </div>
                                 </div>
-
-                                <!-- Right: Amount -->
                                 <div class="text-right flex-shrink-0 ml-4">
                                     <div class="text-base font-bold text-[#149c49] dark:text-green-400">
                                         +{{ stock.quantity_liter.toLocaleString() }} L
@@ -236,7 +219,7 @@
                 </p>
             </div>
 
-            <!-- Load More Button -->
+            <!-- Load More -->
             <div v-if="hasMoreRecords" class="flex justify-center mb-6">
                 <button
                     @click="loadMore"
@@ -320,9 +303,10 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, nextTick, computed } from 'vue'
+    import { onMounted, ref, nextTick, computed, onUnmounted } from 'vue'
     import { initFlowbite } from 'flowbite'
     import ApexCharts from 'apexcharts'
+    import type { ApexOptions } from 'apexcharts'
     import { useCurrentStockStore } from '@/modules/current-stock/store'
     import { current_stockService } from '@/modules/current-stock/services/api.service'
     import { getFromCache } from '@/composables/useCache'
@@ -343,35 +327,64 @@
     const fuels = ref<Ifuel[]>([])
     const showFilters = ref(false)
     const date_range = ref([])
+    const chartInstances = ref<ApexCharts[]>([])
 
-    onMounted(async () => {
-        initFlowbite()
-        let appData = getFromCache('app_data')
-        stationId.value = appData.value.stations[0]._id
-        loading.value = true
-        if (appData && appData.value?.stations?.[0]?._id) {
-            stationId.value = appData.value.stations[0]._id
-
-            // Call both at the same time
-            const [_, response] = await Promise.all([
-                store.getFuelStocks(),
-                current_stockService.getCurrentStock(stationId.value),
-            ])
-            const result = response?.data
-
-            fuelStocks.value = result?.data
-
-            fuels.value = result?.data?.map((item: IFuelStock) => item.fuel)
+    // ── Chart options (moved from store into component) ───────────────────────
+    const getChartOptions = (percent: number, fuelName: string, color: string): ApexOptions => {
+        return {
+            series: [percent],
+            colors: [color],
+            chart: {
+                type: 'radialBar' as const,
+                height: 120,
+                width: 120,
+                sparkline: { enabled: true },
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    track: {
+                        background: '#e5e7eb',
+                        strokeWidth: '97%',
+                        margin: 2,
+                    },
+                    hollow: {
+                        size: '55%',
+                    },
+                    dataLabels: {
+                        name: {
+                            show: true,
+                            fontSize: '9px',
+                            fontWeight: '700',
+                            color: '#1f2937',
+                            offsetY: 4,
+                        },
+                        value: {
+                            show: false,
+                        },
+                    },
+                },
+            },
+            stroke: {
+                lineCap: 'round' as const,
+            },
         }
+    }
+
+    // ── Render charts ─────────────────────────────────────────────────────────
+    const renderCharts = async () => {
+        chartInstances.value.forEach(c => c.destroy())
+        chartInstances.value = []
 
         await nextTick()
-        loading.value = false
+
         fuelStocks.value.forEach((item: any, index: number) => {
-            const chartElementId = `#radial-chart-do-${index}`
-            const current_stock_as_percent = (100 * item?.current_stock_liter) / item?.fuel_tank_size
-            if (document.querySelector(chartElementId)) {
+            const el = document.querySelector<HTMLElement>(`#radial-chart-do-${index}`)
+            if (el) {
+                const current_stock_as_percent = (100 * item?.current_stock_liter) / item?.fuel_tank_size
                 const chart = new ApexCharts(
-                    document.querySelector(chartElementId),
+                    el,
                     storeCurrentStock.getChartOptions(
                         current_stock_as_percent,
                         item?.fuel?.fuel_name,
@@ -379,17 +392,46 @@
                     ),
                 )
                 chart.render()
+                chartInstances.value.push(chart)
             }
         })
+    }
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    onMounted(async () => {
+        initFlowbite()
+        const appData = getFromCache('app_data')
+
+        if (appData?.value?.stations?.[0]?._id) {
+            stationId.value = appData.value.stations[0]._id
+            loading.value = true
+
+            try {
+                const [_, response] = await Promise.all([
+                    store.getFuelStocks(),
+                    current_stockService.getCurrentStock(stationId.value),
+                ])
+                const result = response?.data
+                fuelStocks.value = result?.data ?? []
+                fuels.value = result?.data?.map((item: IFuelStock) => item.fuel) ?? []
+            } catch (e) {
+                console.error(e)
+            } finally {
+                loading.value = false
+            }
+
+            await renderCharts()
+        }
     })
 
-    const handleCreate = () => {
-        router.push('/current-stock/create')
-    }
+    onUnmounted(() => {
+        chartInstances.value.forEach(c => c.destroy())
+    })
 
-    const handleViewDetail = (stock: IFuelStock) => {
-        router.push(`/current-stock/view/${stock._id}`)
-    }
+    // ── Handlers ──────────────────────────────────────────────────────────────
+    const handleCreate = () => router.push('/current-stock/create')
+
+    const handleViewDetail = (stock: IFuelStock) => router.push(`/current-stock/view/${stock._id}`)
 
     const handleSearch = async () => {
         store.filters.page_number = 1
@@ -399,16 +441,14 @@
     }
 
     const onChangeDateRange = async (value: any) => {
-        if (value && value[0] && value[1]) {
+        if (value?.[0] && value?.[1]) {
             store.filters.date_from = new Date(value[0]).toISOString().split('T')[0]
             store.filters.date_to = new Date(value[1]).toISOString().split('T')[0]
         } else {
             store.filters.date_from = ''
             store.filters.date_to = ''
         }
-        loading.value = true
         await handleSearch()
-        loading.value = false
     }
 
     const handleResetFilters = async () => {
@@ -424,16 +464,10 @@
         await store.getFuelStocks()
     }
 
-    const hasMoreRecords = computed(() => {
-        return store.fuelStocks.length < store.totalCount
-    })
+    const hasMoreRecords = computed(() => store.fuelStocks.length < store.totalCount)
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(amount)
-    }
+    const formatCurrency = (amount: number) =>
+        new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
 </script>
 
 <style lang="scss" scoped>
@@ -442,7 +476,6 @@
             border-radius: 8px;
         }
     }
-
     :deep(.dp__input::placeholder) {
         font-family: 'Kantumruy Pro', sans-serif;
     }

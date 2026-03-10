@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'
+import type { ApexOptions } from 'apexcharts'
+
 export const useCurrentStockStore = defineStore('current-stockStore', () => {
-    const getChartOptions = (current_stock_liter: any, fuel_title: string, color: any) => {
+    const getChartOptions = (current_stock_liter: any, fuel_title: string, color: any): ApexOptions => {
         return {
             series: [current_stock_liter],
             colors: [color],
             chart: {
                 height: '180px',
                 width: '100%',
-                type: 'radialBar',
-                color: '#000',
+                type: 'radialBar' as const,
                 sparkline: {
                     enabled: true,
                 },
@@ -26,7 +27,6 @@ export const useCurrentStockStore = defineStore('current-stockStore', () => {
                             label: fuel_title,
                             color: '#fff',
                             fontSize: '8px',
-                            offsetY: 30,
                         },
                         value: {
                             show: false,
@@ -40,10 +40,11 @@ export const useCurrentStockStore = defineStore('current-stockStore', () => {
                 },
             },
             stroke: {
-                lineCap: 'round',
+                lineCap: 'round' as const,
             },
         }
     }
+
     return {
         getChartOptions,
     }
