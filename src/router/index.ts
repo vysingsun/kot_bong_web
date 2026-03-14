@@ -61,6 +61,12 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            name: 'payment',
+            path: '/payment',
+            beforeEnter: isAuthenticated,
+            component: () => import('@/modules/payment/views/form.vue'),
+        },
     ],
 })
 

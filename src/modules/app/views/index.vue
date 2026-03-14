@@ -961,8 +961,6 @@
     }
 
     onMounted(() => {
-        console.log(appData.value?._id)
-
         fetchUser()
     })
     onBeforeUnmount(() => {
