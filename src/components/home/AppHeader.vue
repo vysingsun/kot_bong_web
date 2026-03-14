@@ -103,7 +103,7 @@
                         </li>
                         <li>
                             <RouterLink
-                                to="/comingsoon"
+                                to="/subscription"
                                 class="flex justify-between items-center py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                                 <span class="flex items-center">

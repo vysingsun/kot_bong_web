@@ -1,0 +1,83 @@
+{
+    "subscription": {
+        "title": "Subscription Plans",
+        "subtitle": "Choose the right plan for your business",
+        "currentPlan": "Current Plan",
+        "active": "Active",
+        "trialDaysLeft": "days remaining",
+        "nextBilling": "Next billing",
+        "viewHistory": "Payment History",
+        "noHistory": "No payment records yet.",
+        "currentBadge": "Current",
+        "popularBadge": "Most Popular",
+        "trialBadge": "Free Trial",
+        "freeBadge": "Basic",
+        "appliesAfterTrial": "Applies after trial ends",
+        "status": {
+            "success": "Paid",
+            "failed": "Failed",
+            "expired": "Expired",
+            "pending": "Pending"
+        }
+    },
+    "plans": {
+        "trial": {
+            "name": "Free Trial",
+            "price": "Free",
+            "period": "3 months",
+            "desc": "Full Pro access for 3 months — no payment needed.",
+            "features": ["All Pro features", "Unlimited staff", "Excel export", "Priority support"],
+            "cta": "Your Current Plan"
+        },
+        "pro": {
+            "name": "Pro",
+            "price": "$10",
+            "period": "/ month",
+            "desc": "Everything your business needs at full speed.",
+            "features": [
+                "All features unlocked",
+                "Unlimited staff accounts",
+                "Excel export",
+                "Priority support",
+                "Early feature access"
+            ],
+            "cta": "Upgrade to Pro",
+            "ctaRenew": "Renew Subscription"
+        },
+        "free": {
+            "name": "Free",
+            "price": "$0",
+            "period": "/ month",
+            "desc": "Limited access after trial ends.",
+            "features": ["Max 1 staff account", "No Excel export", "Standard support"],
+            "cta": "Upgrade to Pro"
+        }
+    },
+    "payment": {
+        "kotPreng": "Station Name",
+        "amount": "Amount",
+        "expiresIn": "Expires in",
+        "scanHint": "Open Bakong or any bank app and scan the QR code to pay",
+        "generating": "Generating QR Code…",
+        "waitingPayment": "Waiting for payment…",
+        "cancelBtn": "Cancel",
+        "retryBtn": "Generate New QR",
+        "closeBtn": "Back to Plans",
+        "success": {
+            "title": "Payment Successful!",
+            "desc": "Your Pro plan has been activated. Thank you!"
+        },
+        "failed": {
+            "title": "Payment Failed",
+            "desc": "Something went wrong. Please try again."
+        },
+        "expired": {
+            "title": "QR Code Expired",
+            "desc": "The QR code has expired. Please generate a new one."
+        },
+        "successLabel": "Payment Successful!",
+        "payDate": "Pay Date",
+        "totalPay": "Total Pay",
+        "subscription": "Subscription"
+    }
+}
