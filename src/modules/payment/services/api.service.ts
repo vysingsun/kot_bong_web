@@ -10,6 +10,10 @@ export interface PaymentInitiateResponse {
     amount: number
     currency: string
     expiresAt: string
+    // Returned so the frontend can poll Bakong directly
+    // (server is CloudFront-blocked, browser is not)
+    bakongToken: string
+    bakongApiUrl: string
 }
 
 export interface PaymentStatusResponse {
@@ -74,13 +78,37 @@ export interface StationUser {
     createdAt: string
 }
 
+export interface BakongTransaction {
+    hash: string
+    fromAccountId: string
+    toAccountId: string
+    currency: string
+    amount: number
+    description?: string
+}
+
 export const paymentService = {
     initiate: async (data: InitiatePaymentPayload) => {
         return axios.post<{ success: boolean; data: PaymentInitiateResponse }>('/payments/initiate', data)
     },
 
-    getStatus: async (md5: string) => {
-        return axios.get<{ success: boolean } & PaymentStatusResponse>(`/payments/status/${md5}`)
+    // getStatus: async (md5: string) => {
+    //     return axios.get<{ success: boolean } & PaymentStatusResponse>(`/payments/status/${md5}`)
+    // },
+
+    // Called after frontend detects success from Bakong
+    confirm: async (md5: string, transaction: BakongTransaction) => {
+        return axios.post<{ success: boolean; data: PaymentHistoryItem }>('/payments/confirm', { md5, transaction })
+    },
+
+    // Proxy call — browser → your server → Bakong (avoids CORS + CloudFront)
+    checkMd5: async (md5: string) => {
+        return axios.post<any>('/payments/check-md5', { md5 })
+    },
+
+    // Called after frontend detects failure from Bakong
+    recordFailed: async (md5: string) => {
+        return axios.post('/payments/failed', { md5 })
     },
 
     cancelSession: async (md5: string) => {

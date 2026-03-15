@@ -64,6 +64,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         } catch {}
     }
 
+    // ── Payment ────────────────────────────────────────────
     async function initiatePayment(subscriptionId: string) {
         isInitiatingPayment.value = true
         error.value = null
@@ -74,7 +75,10 @@ export const usePaymentStore = defineStore('paymentStore', () => {
             const res = await paymentService.initiate({ subscriptionId })
             currentPayment.value = res.data.data
             paymentSessionStatus.value = 'pending'
-            startPolling(res.data.data.md5)
+
+            // The browser polls Bakong directly using the token from the server.
+            // This bypasses the CloudFront IP block that hits the server.
+            startPolling(res.data.data)
         } catch (err: any) {
             error.value = err?.response?.data?.message ?? 'Failed to generate QR'
         } finally {
@@ -82,25 +86,65 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         }
     }
 
-    function startPolling(md5: string) {
+    /**
+     * Poll via your own server's /api/payments/check-md5 proxy.
+     *
+     * Why not call Bakong directly from the browser?
+     *   - With Authorization header → CORS blocks it (Bakong doesn't allow the header cross-origin)
+     *   - Without Authorization header → CloudFront still blocks some IPs
+     * Solution: browser calls YOUR server (same origin = no CORS),
+     * server forwards to Bakong server-side (no CORS restriction server-to-server).
+     */
+    function startPolling(payment: PaymentInitiateResponse) {
         stopPolling()
         isPolling.value = true
+        const { md5, expiresAt } = payment
 
         pollInterval = setInterval(async () => {
-            try {
-                const res = await paymentService.getStatus(md5)
-                const { resolved, data } = res.data
+            // Stop if QR expired
+            if (new Date() >= new Date(expiresAt)) {
+                stopPolling()
+                paymentSessionStatus.value = 'expired'
+                return
+            }
 
-                if (resolved) {
+            try {
+                // Call YOUR server proxy — no CORS issue, token stays server-side
+                const res = await paymentService.checkMd5(md5)
+                const json = res.data
+
+                if (json?.responseCode === 0 && json?.data) {
+                    // ── SUCCESS ──────────────────────────────────
                     stopPolling()
-                    paymentSessionStatus.value = data.status as any
-                    if (data.status === 'success') {
-                        await fetchHistory()
-                        // Refresh subscription to get updated plan
+                    paymentSessionStatus.value = 'success'
+
+                    try {
+                        await paymentService.confirm(md5, json.data)
                         if (station.value?._id) await fetchStation(station.value._id)
+                        await fetchHistory()
+                    } catch (confirmErr: any) {
+                        console.error('[Payment] Confirm error:', confirmErr.message)
+                        // Payment was real — don't revert status to failed
                     }
+                } else if (json?.responseCode === 1 && json?.responseMessage?.toLowerCase().includes('failed')) {
+                    // ── FAILED ───────────────────────────────────
+                    stopPolling()
+                    paymentSessionStatus.value = 'failed'
+                    try {
+                        await paymentService.recordFailed(md5)
+                    } catch {}
+                } else if (res.data?.cloudfront) {
+                    // ── SERVER IS CLOUDFRONT BLOCKED ─────────────
+                    // Stop polling — nothing will work until NBC whitelists the IP
+                    stopPolling()
+                    paymentSessionStatus.value = 'failed'
+                    console.error('[Payment] Server IP is blocked by Bakong CloudFront')
                 }
-            } catch {}
+                // "not found" → keep polling
+            } catch (err) {
+                // Network error — keep polling until expiry
+                console.warn('[Payment] Poll error:', err)
+            }
         }, 3000)
     }
 
