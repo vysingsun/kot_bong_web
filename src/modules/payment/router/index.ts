@@ -1,12 +1,12 @@
 import i18n from '@/plugins/i18n'
 const MODULE_NAME = 'Subscription'
-const MODULE_PATH = '/payment'
+const MODULE_PATH = '/subscription'
 
 export const routes = [
     {
         module: MODULE_NAME,
         name: i18n.global.t('payment.subscription'),
-        path: '/subscription',
+        path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
         },
