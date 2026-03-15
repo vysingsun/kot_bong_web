@@ -19,4 +19,8 @@ export const fuel_stockService = {
     delete: async (id: any) => {
         return axios.post(`fuel_stock/delete/${id}`)
     },
+    download: async (params?: object) => {
+        const param = { ...params, stationId: stationId }
+        return axios.get(`fuel_stock/download`, { params: param, responseType: 'blob' })
+    },
 }

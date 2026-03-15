@@ -58,6 +58,7 @@
         :clickable-row="false"
         :is-action="false"
         :totals="totals"
+        exportable
         @retrieve-result="onRetrieveResult"
     >
         <!-- Custom slot for fuel.fuel_name -->
@@ -197,6 +198,7 @@
     import moment from 'moment'
     import { useFormatDate } from '@/composables/useFormatDate'
     import { staffService } from '@/modules/staff/services/api.service'
+    import { fuelSoldColumns, fuelSoldSheet, fuelSoldTitle, fuelSoldTotalsKeys } from '@/utils/fuel-sold-excel'
 
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
@@ -212,6 +214,8 @@
     const loading = ref(false)
     const totals = ref(null)
     const users = ref<any[]>([])
+    const { locale } = useI18n()
+    const lang = locale.value === 'km' || locale.value === 'kh' ? 'kh' : 'en'
 
     const onRetrieveResult = (result: any) => {
         totals.value = result.allData?.totals ?? null
