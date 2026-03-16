@@ -38,7 +38,8 @@
         "date": "Date",
         "total_summary": "Total Summary",
         "filtered_summary": "Filtered Summary",
-        "showing_all_data": "Showing all sales data from the beginning and for all fuel types"
+        "showing_all_data": "Showing all sales data from the beginning and for all fuel types",
+        "download_report": "Download Sales Report"
     },
     "fuel_sales_chart": {
         "title": "Fuel Sales Overview",
