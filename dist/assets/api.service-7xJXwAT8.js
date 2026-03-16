@@ -1,0 +1,1 @@
+import{g as s,a5 as a}from"./index-CJqN-jP3.js";const n=s("app_data"),r=n.value.stations[0]._id,o={get:async t=>a.get(`staff/${t}`),getStaffByStationId:async t=>a.get(`staff/station/${r}`,{params:t}),create:async t=>a.post("staff/create",t),edit:async(t,e)=>a.post(`staff/update/${t}`,e),delete:async t=>a.post(`staff/delete/${t}`)};export{o as s};
