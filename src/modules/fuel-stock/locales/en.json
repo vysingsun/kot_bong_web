@@ -31,6 +31,7 @@
         "quantity_as_ton": "Quantity as Ton ( Ton )",
         "amount_per_liter_us": "Amount per Liter ( USD )",
         "amount_per_liter_khr": "Amount per Liter ( KHR )",
-        "date": "Date"
+        "date": "Date",
+        "download_report": "Download Stock Report"
     }
 }

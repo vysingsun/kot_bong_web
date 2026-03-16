@@ -41,7 +41,8 @@
             "description": "This action cannot be undone. The Data will be permanently removed.",
             "action": "Delete"
         },
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "downloading": "Downloading..."
     },
     "notFound": {
         "typing": "Page NOT FOUND",
