@@ -41,6 +41,7 @@
         :clickable-row="false"
         :is-action="false"
         :totals="totals"
+        exportable
         @retrieve-result="onRetrieveResult"
     >
         <!-- Custom slot for fuel.fuel_name -->
