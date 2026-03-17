@@ -107,6 +107,8 @@
             </table>
         </div>
 
+        <slot name="dynamic-title-summary-bar" :totals="props.totals" />
+
         <slot name="summary-bar" :totals="props.totals" />
 
         <nav class="flex items-center justify-between pt-6" aria-label="Table navigation">
