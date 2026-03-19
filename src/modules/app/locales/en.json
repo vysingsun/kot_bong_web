@@ -148,5 +148,18 @@
         "station_owner_updated": "Owner name updated",
         "station_owner_update_failed": "Failed to update owner",
         "update": "Update"
-    }
+    },
+    "suspended": {
+    "title": "Account Suspended",
+    "subtitle": "You are unable to access the system at this time",
+    "reason": "Your staff account has been suspended because the gas station owner has not renewed their Pro subscription. This is not your fault.",
+    "what_to_do": "What should you do?",
+    "step1": "Contact your gas station owner and inform them about this situation.",
+    "step2": "Ask the owner to renew the Pro subscription at $10 per month.",
+    "step3": "Once the owner renews, your account will be reactivated automatically.",
+    "contact_owner_label": "Contact Gas Station Owner",
+    "contact_owner_desc": "Your gas station owner can restore your access by renewing the Kot Preng Pro subscription from their account settings.",
+    "back_to_login": "Back to Login",
+    "footer_note": "Kot Preng Pro — If you believe this is a mistake, please contact your gas station owner."
+  }
 }
