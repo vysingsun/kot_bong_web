@@ -1,68 +1,26 @@
 <template>
     <div class="p-4">
         <!-- Loading -->
-        <Transition name="fade">
-            <div
-                v-if="store.loading"
-                class="relative z-10 flex flex-col items-center justify-center gap-4 min-h-screen"
-            >
-                <div class="w-16 h-16 rounded-full glass-panel flex items-center justify-center">
-                    <div class="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                </div>
-                <p class="text-slate-500 text-sm font-light tracking-wide">{{ t('station.loading') }}</p>
-            </div>
-        </Transition>
+        <BaseLoading v-if="store.loading" />
 
         <!-- Main Content -->
         <Transition name="slide-up">
             <div v-if="!store.loading && store.station" class="relative z-10 w-full max-w-lg mx-auto">
-                <!-- Alerts — top of page -->
-                <div class="mb-4 space-y-2">
-                    <Transition name="toast">
-                        <div
-                            v-if="store.successMessage"
-                            class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-sm"
-                        >
-                            <div
-                                class="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center"
-                            >
-                                <svg
-                                    class="w-4 h-4 text-emerald-600"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                            </div>
-                            <p class="text-emerald-700 text-sm font-medium">{{ store.successMessage }}</p>
-                        </div>
-                    </Transition>
-                    <Transition name="toast">
-                        <div
-                            v-if="store.error"
-                            class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-red-50 border border-red-200 shadow-sm"
-                        >
-                            <div class="flex-shrink-0 w-7 h-7 rounded-full bg-red-100 flex items-center justify-center">
-                                <svg
-                                    class="w-4 h-4 text-red-600"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
-                                    />
-                                </svg>
-                            </div>
-                            <p class="text-red-700 text-sm font-medium">{{ store.error }}</p>
-                        </div>
-                    </Transition>
-                </div>
+                <!-- Modals -->
+                <SuccessModal
+                    :show="successModal.show"
+                    type="success"
+                    :title="successModal.title"
+                    :description="successModal.description"
+                    @close="successModal.show = false"
+                    @confirm="handleSuccessModal"
+                />
+                <ErrorModal
+                    :show="errorModal.show"
+                    :description="errorModal.description"
+                    :error-message="errorModal.message"
+                    @confirm="handleErrorModalConfirm"
+                />
 
                 <!-- Glass Card -->
                 <div class="glass-card rounded-3xl overflow-hidden">
@@ -123,7 +81,7 @@
                                     </svg>
                                 </div>
                                 <select
-                                    v-model="store.currency"
+                                    v-model="localCurrency"
                                     class="glass-input w-full pl-10 pr-10 py-3.5 rounded-2xl text-slate-700 text-sm appearance-none cursor-pointer focus:outline-none transition-all"
                                 >
                                     <option v-for="(label, code) in currencies" :key="code" :value="code">
@@ -174,31 +132,29 @@
                                         <p class="text-slate-700 text-sm font-semibold leading-tight">
                                             {{ t('station.isNozzle') }}
                                         </p>
-                                        <!-- <p class="text-slate-400 text-xs mt-0.5 leading-relaxed">
-                                            {{ t('station.isNozzleDesc') }}
-                                        </p> -->
                                     </div>
                                 </div>
 
                                 <!-- Toggle — secondary color -->
                                 <button
                                     type="button"
-                                    @click="store.isNozzle = !store.isNozzle"
-                                    :class="['toggle-track', store.isNozzle ? 'toggle-on bg-secondary' : 'toggle-off']"
-                                    :aria-checked="store.isNozzle"
+                                    @click="localIsNozzle = !localIsNozzle"
+                                    :class="['toggle-track', localIsNozzle ? 'toggle-on bg-secondary' : 'toggle-off']"
+                                    :aria-checked="localIsNozzle"
                                     role="switch"
                                 >
                                     <span
-                                        :class="['toggle-thumb', store.isNozzle ? 'translate-x-7' : 'translate-x-0']"
+                                        :class="['toggle-thumb', localIsNozzle ? 'translate-x-7' : 'translate-x-0']"
                                     />
                                 </button>
                             </div>
 
-                            <!-- Info hint when enabled -->
-                            <Transition name="expand">
+                            <!-- Hint — swaps based on toggle -->
+                            <Transition name="expand" mode="out-in">
                                 <div
-                                    v-if="store.isNozzle"
-                                    class="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl hint-box"
+                                    v-if="localIsNozzle"
+                                    key="on"
+                                    class="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl hint-box-on"
                                 >
                                     <svg
                                         class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 icon-secondary"
@@ -211,11 +167,15 @@
                                             clip-rule="evenodd"
                                         />
                                     </svg>
-                                    <p class="text-xs leading-relaxed hint-text">{{ t('station.isNozzleHint') }}</p>
+                                    <p class="text-xs leading-relaxed hint-text-on">{{ t('station.isNozzleHint') }}</p>
                                 </div>
-                                <div v-else class="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl hint-box">
+                                <div
+                                    v-else
+                                    key="off"
+                                    class="mt-3 flex items-start gap-2 px-3 py-2.5 rounded-xl hint-box-off"
+                                >
                                     <svg
-                                        class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 icon-secondary"
+                                        class="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-slate-400"
                                         fill="currentColor"
                                         viewBox="0 0 20 20"
                                     >
@@ -225,7 +185,9 @@
                                             clip-rule="evenodd"
                                         />
                                     </svg>
-                                    <p class="text-xs leading-relaxed hint-text">{{ t('station.isNotNozzleHint') }}</p>
+                                    <p class="text-xs leading-relaxed text-slate-400">
+                                        {{ t('station.isNotNozzleHint') }}
+                                    </p>
                                 </div>
                             </Transition>
                         </div>
@@ -234,15 +196,15 @@
                         <div class="flex gap-3 pt-1">
                             <button
                                 type="button"
-                                @click="store.resetForm()"
-                                :disabled="store.saving"
+                                @click="handleCancel"
+                                :disabled="store.saving || !hasChanges"
                                 class="flex-1 py-3.5 rounded-2xl btn-secondary text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-40"
                             >
                                 {{ t('station.cancel') }}
                             </button>
                             <button
                                 type="button"
-                                :disabled="store.saving"
+                                :disabled="store.saving || !hasChanges"
                                 class="flex-[2] py-3.5 rounded-2xl bg-secondary text-white text-sm font-semibold transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2.5"
                                 @click="handleSave"
                             >
@@ -271,7 +233,7 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, computed, ref } from 'vue'
+    import { onMounted, computed, ref, reactive } from 'vue'
     import { useI18n } from 'vue-i18n'
     import { getFromCache, setCache } from '@/composables/useCache'
     import { useStationSettingsStore } from '@/modules/setting/store/index'
@@ -279,9 +241,33 @@
     const { t } = useI18n()
     const store = useStationSettingsStore()
 
-    const stationId = ref('')
+    // ── Cache ──────────────────────────────────────────────────────────
     const appData = getFromCache('app_data')
+    const stationId = ref<string>('')
 
+    // ── Local form state (does NOT mutate store or cache until Save) ───
+    const localCurrency = ref<string>('')
+    const localIsNozzle = ref<boolean>(false)
+
+    // ── Detect unsaved changes to enable/disable Save & Cancel ─────────
+    const hasChanges = computed(() => {
+        return localCurrency.value !== store.station?.currency || localIsNozzle.value !== store.station?.isNozzle
+    })
+
+    // ── Modal state ────────────────────────────────────────────────────
+    const successModal = reactive({
+        show: false,
+        title: '',
+        description: '',
+    })
+
+    const errorModal = reactive({
+        show: false,
+        description: '',
+        message: '',
+    })
+
+    // ── Currencies list ────────────────────────────────────────────────
     const currencies = computed(() => ({
         USD: t('station.currencies.USD'),
         KHR: t('station.currencies.KHR'),
@@ -291,33 +277,88 @@
         SGD: t('station.currencies.SGD'),
     }))
 
-    const handleSave = async () => {
-        await store.updateSettings(stationId.value)
+    // ── Handlers ───────────────────────────────────────────────────────
+    const handleCancel = () => {
+        // Reset local values back to current station values (no API call)
+        localCurrency.value = store.station!.currency
+        localIsNozzle.value = store.station!.isNozzle
     }
 
-    onMounted(() => {
-        stationId.value = appData.value.stations[0]._id
-        store.fetchStation(stationId.value)
+    const handleSave = async () => {
+        // Guard: only call API if something actually changed
+        if (!hasChanges.value) return
+
+        const success = await store.updateSettings(stationId.value, {
+            currency: localCurrency.value,
+            isNozzle: localIsNozzle.value,
+        })
+
+        if (success) {
+            // Update store state locally — no extra GET request
+            store.station!.currency = localCurrency.value
+            store.station!.isNozzle = localIsNozzle.value
+
+            // Update cache so app_data stays in sync
+            if (appData.value?.stations?.[0]) {
+                appData.value.stations[0].currency = localCurrency.value
+                appData.value.stations[0].isNozzle = localIsNozzle.value
+                setCache('app_data', appData.value)
+            }
+
+            successModal.title = t('station.successTitle')
+            successModal.description = t('station.successDesc')
+            successModal.show = true
+        } else {
+            errorModal.description = t('station.errorDesc')
+            errorModal.message = store.error ?? ''
+            errorModal.show = true
+        }
+    }
+
+    const handleSuccessModal = () => {
+        successModal.show = false
+    }
+
+    const handleErrorModalConfirm = () => {
+        errorModal.show = false
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────
+    onMounted(async () => {
+        stationId.value = appData.value?.stations?.[0]?._id ?? ''
+
+        // Try to hydrate from cache first to avoid an API call
+        const cached = appData.value?.stations?.[0]
+        if (cached?.currency !== undefined && cached?.isNozzle !== undefined) {
+            // Populate store from cache so the card renders immediately
+            store.station = {
+                ...store.station,
+                ...cached,
+            } as any
+            localCurrency.value = cached.currency
+            localIsNozzle.value = cached.isNozzle
+        } else {
+            // Fall back to API only if cache has no data
+            await store.fetchStation(stationId.value)
+            localCurrency.value = store.station?.currency ?? ''
+            localIsNozzle.value = store.station?.isNozzle ?? false
+        }
     })
 </script>
 
 <style scoped>
-    /* ─── Brand tokens — swap to match your Tailwind/Flowbite config ─── */
+    /* ─── Brand tokens ─── */
     :root,
     :host {
-        --primary: #3b82f6; /* blue-500  */
-        --secondary: #6366f1; /* indigo-500 */
+        --primary: #3b82f6;
+        --secondary: #6366f1;
     }
 
-    /* colour helpers */
     .icon-primary {
         color: var(--primary);
     }
     .icon-secondary {
         color: var(--secondary);
-    }
-    .border-primary {
-        border-color: var(--primary);
     }
 
     /* ─── Light Glass Card ─── */
@@ -376,8 +417,8 @@
     .toggle-track {
         position: relative;
         flex-shrink: 0;
-        width: 3.5rem; /* 56px */
-        height: 1.75rem; /* 28px */
+        width: 3.5rem;
+        height: 1.75rem;
         border-radius: 9999px;
         transition:
             background 0.3s,
@@ -386,11 +427,10 @@
         cursor: pointer;
     }
     .toggle-on {
-        background: var(--secondary);
         box-shadow: 0 0 14px color-mix(in srgb, var(--secondary) 35%, transparent);
     }
     .toggle-off {
-        background: #cbd5e1; /* slate-300 */
+        background: #cbd5e1;
     }
     .toggle-on:focus,
     .toggle-off:focus {
@@ -410,26 +450,22 @@
         display: block;
     }
 
-    /* ─── Nozzle hint box ─── */
-    .hint-box {
+    /* ─── Hints ─── */
+    .hint-box-on {
         background: color-mix(in srgb, var(--secondary) 8%, transparent);
         border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent);
     }
-    .hint-text {
+    .hint-text-on {
         color: color-mix(in srgb, var(--secondary) 80%, #1e293b);
+    }
+    .hint-box-off {
+        background: rgba(241, 245, 249, 0.9);
+        border: 1px solid rgba(226, 232, 240, 0.9);
     }
 
     /* ─── Buttons ─── */
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        border: none;
-        box-shadow: 0 4px 16px color-mix(in srgb, var(--secondary) 28%, transparent);
-        transition:
-            box-shadow 0.2s,
-            transform 0.15s;
-    }
-    .btn-primary:hover:not(:disabled) {
-        box-shadow: 0 8px 28px color-mix(in srgb, var(--secondary) 40%, transparent);
+    .bg-secondary {
+        background-color: var(--secondary);
     }
 
     .btn-secondary {
@@ -449,36 +485,12 @@
     }
 
     /* ─── Transitions ─── */
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.3s ease;
-    }
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
-
     .slide-up-enter-active {
         transition: all 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
     }
     .slide-up-enter-from {
         opacity: 0;
         transform: translateY(20px) scale(0.98);
-    }
-
-    .toast-enter-active {
-        transition: all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
-    }
-    .toast-leave-active {
-        transition: all 0.2s ease;
-    }
-    .toast-enter-from {
-        opacity: 0;
-        transform: translateY(-6px) scale(0.98);
-    }
-    .toast-leave-to {
-        opacity: 0;
-        transform: translateY(-4px);
     }
 
     .expand-enter-active {
