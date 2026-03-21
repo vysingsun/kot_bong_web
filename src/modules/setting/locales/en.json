@@ -1,0 +1,33 @@
+{
+    "Setting": "Setting",
+    "station": {
+        "settings": "Station Settings",
+        "settingsDesc": "Configure currency and fuel recording method for your station",
+        "name": "Station Name",
+        "owner": "Owner",
+        "currency": "Currency",
+        "currencyPlaceholder": "Select currency",
+        "isNozzle": "Record Sales by Nozzle Reading (End − Start)",
+        "isNozzleHint": "When ON, fuel quantity is calculated automatically: New Reading − Old Reading = Liters Sold. Staff enter the nozzle meter's new and old readings instead of typing a quantity.",
+        "isNotNozzleHint": "When OFF, staff enter the quantity sold (liters) directly. No nozzle meter readings required.",
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "loading": "Loading station data...",
+        "successTitle": "Settings Updated",
+        "successDesc": "Station settings have been saved successfully.",
+        "errorTitle": "Update Failed",
+        "errorDesc": "Failed to update station settings. Please try again.",
+        "fetchError": "Failed to load station data.",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "currencies": {
+            "USD": "US Dollar (USD)",
+            "KHR": "Cambodian Riel (KHR)",
+            "VND": "Vietnamese Dong (VND)",
+            "EUR": "Euro (EUR)",
+            "CNY": "Chinese Yuan (CNY)",
+            "SGD": "Singapore Dollar (SGD)"
+        }
+    }
+}
