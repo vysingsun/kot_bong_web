@@ -19,6 +19,9 @@ class FormData {
     station_id: any
     fuel_old?: string | null
     createdAt: any
+    description?: string | null = ''
+    startTime?: string = ''
+    endTime?: string = ''
 }
 
 class ReportFilters {
@@ -43,6 +46,9 @@ export interface IFuelSold {
     station_id: string
     createdAt: string
     updatedAt: string
+    description?: string
+    startTime?: string
+    endTime?: string
     createdBy?: {
         _id: string
         firstName: string
@@ -89,107 +95,50 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
     })
 
     const headers = ref([
-        {
-            text: t('fuel_sold.fuel_type'),
-            value: 'fuel',
-        },
-        {
-            text: t('fuel_sold.sold_by'),
-            value: 'createdBy',
-        },
-        {
-            text: t('fuel_sold.quantity_as_liter'),
-            value: 'quantity_sold_liter',
-        },
-        {
-            text: t('fuel_sold.quantity_as_ton'),
-            value: 'quantity_sold_ton',
-        },
-        {
-            text: t('fuel_sold.amount_per_liter_khr'),
-            value: 'amount_per_liter_khr',
-        },
-        {
-            text: t('fuel_sold.amount_per_liter_us'),
-            value: 'amount_per_liter_us',
-        },
-        {
-            text: t('fuel_sold.exchange_rate'),
-            value: 'exchange_rate',
-        },
-        {
-            text: t('fuel_sold.total_amount_khr'),
-            value: 'total_amount_khr',
-        },
-        {
-            text: t('fuel_sold.total_amount_us'),
-            value: 'total_amount_us',
-        },
-        {
-            text: t('fuel_sold.date'),
-            value: 'createdAt',
-        },
+        { text: t('fuel_sold.fuel_type'), value: 'fuel' },
+        { text: t('fuel_sold.sold_by'), value: 'createdBy' },
+        { text: t('fuel_sold.quantity_as_liter'), value: 'quantity_sold_liter' },
+        { text: t('fuel_sold.quantity_as_ton'), value: 'quantity_sold_ton' },
+        { text: t('fuel_sold.amount_per_liter_khr'), value: 'amount_per_liter_khr' },
+        { text: t('fuel_sold.amount_per_liter_us'), value: 'amount_per_liter_us' },
+        { text: t('fuel_sold.exchange_rate'), value: 'exchange_rate' },
+        { text: t('fuel_sold.total_amount_khr'), value: 'total_amount_khr' },
+        { text: t('fuel_sold.total_amount_us'), value: 'total_amount_us' },
+        { text: t('fuel_sold.start_time'), value: 'startTime' },
+        { text: t('fuel_sold.end_time'), value: 'endTime' },
+        { text: t('fuel_sold.date'), value: 'createdAt' },
     ])
 
     function prepareFuelSoldParams() {
         const params: any = {}
         const filter = filterForm.value
         if (filter.fuel_type) params['fuelId'] = filter.fuel_type
-
         if (filter.createdBy) params['createdBy'] = filter.createdBy
-
         if (filter.date_range) {
             params['start_date'] = filter.date_range?.start
             params['end_date'] = filter.date_range?.end
         }
-
         return params
     }
 
     const getFuelSales = async () => {
         try {
             loading.value = true
-
             const params: any = {
                 page_number: filters.value.page_number,
                 page_size: filters.value.page_size,
             }
-
-            if (filters.value.search) {
-                params.search = filters.value.search
-            }
-
-            if (filters.value.fuel_type) {
-                params.fuelId = filters.value.fuel_type
-            }
-
-            if (filters.value.createdBy) {
-                params.createdBy = filters.value.createdBy
-            }
-
-            if (filters.value.date_from) {
-                params.start_date = filters.value.date_from
-            }
-
-            if (filters.value.date_to) {
-                params.end_date = filters.value.date_to
-            }
+            if (filters.value.search) params.search = filters.value.search
+            if (filters.value.fuel_type) params.fuelId = filters.value.fuel_type
+            if (filters.value.createdBy) params.createdBy = filters.value.createdBy
+            if (filters.value.date_from) params.start_date = filters.value.date_from
+            if (filters.value.date_to) params.end_date = filters.value.date_to
 
             const res = await fuel_soldService.getFuelSoldByStationId(params)
-
             if (res.data.success) {
-                if (filters.value.page_number > 1) {
-                    fuelSales.value = [...fuelSales.value, ...res.data.data]
-                } else {
-                    fuelSales.value = res.data.data
-                }
-
+                fuelSales.value = filters.value.page_number > 1 ? [...fuelSales.value, ...res.data.data] : res.data.data
                 totalCount.value = res.data.count || 0
-                totals.value = res.data.totals || {
-                    quantity_sold_liter: 0,
-                    total_amount_us: 0,
-                    total_amount_khr: 0,
-                }
+                totals.value = res.data.totals || { quantity_sold_liter: 0, total_amount_us: 0, total_amount_khr: 0 }
             }
         } catch (error) {
             console.error('Error fetching fuel sales:', error)
@@ -198,23 +147,17 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         }
     }
 
-    // Group by date
     const groupedByDate = computed(() => {
         const groups: Record<string, IFuelSold[]> = {}
-
         fuelSales.value.forEach(sale => {
             const date = new Date(sale.createdAt).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
             })
-
-            if (!groups[date]) {
-                groups[date] = []
-            }
+            if (!groups[date]) groups[date] = []
             groups[date].push(sale)
         })
-
         return groups
     })
 
@@ -242,9 +185,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
 
     const saveFuelSold = async () => {
         const res = await fuel_soldService.create(formData.value)
-        if (!res.data.success) {
-            isCreatedSuccess.value = false
-        }
+        if (!res.data.success) isCreatedSuccess.value = false
     }
 
     const resetData = () => {
@@ -267,6 +208,9 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         amount_per_liter_khr = undefined,
         station_id = undefined,
         createdAt = undefined,
+        description = '',
+        startTime = '',
+        endTime = '',
     }: Partial<FormData> = {}) => {
         formData.value = {
             fuel,
@@ -275,6 +219,9 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             amount_per_liter_khr,
             station_id,
             createdAt,
+            description,
+            startTime,
+            endTime,
         }
     }
 

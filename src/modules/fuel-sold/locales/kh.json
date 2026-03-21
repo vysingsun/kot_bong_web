@@ -2,6 +2,7 @@
     "fuel_sold": {
         "title": "ការលក់ប្រេងឥន្ធនៈ",
         "fuel_sold_management": "ការគ្រប់គ្រងការលក់ប្រេងឥន្ធនៈ",
+        "fuel_type_placeholder": "ជ្រើសរើសប្រភេទឥន្ធនៈ",
         "records": "កំណត់ត្រា",
         "add_sale": "បង្កើតការលក់",
         "filters": "តម្រង",
@@ -33,13 +34,17 @@
         "delete_error": "បរាជ័យក្នុងការលុបកំណត់ត្រាការលក់។ សូមព្យាយាមម្តងទៀត។",
         "quantity_as_ton": "បរិមាណប្រេងឥន្ធនៈ (គិតជាតោន)",
         "amount_per_liter_us": "តម្លៃក្នុងមួយលីត្រ (USD)",
-        "amount_per_liter_khr": "តម្លៃក្នុងមួយលីត្រ (រៀល)",
-        "total_amount_khr": "ចំនួនទឹកប្រាក់សរុប (KHR)",
         "date": "កាលបរិច្ឆេទ",
         "total_summary": "សរុបទាំងអស់",
         "filtered_summary": "សរុបតាមការស្វែងរក",
         "showing_all_data": "ទិន្នន័យលក់ទាំងអស់ រាប់ពីថ្ញៃដំបូង និងគ្រប់ប្រភេទប្រេងឥន្ធនៈ",
-        "download_report": "ទាញយករបាយការណ៍ការលក់"
+        "download_report": "ទាញយករបាយការណ៍ការលក់",
+        "start_time": "ម៉ោងចាប់ផ្តើម",
+        "end_time": "ម៉ោងបញ្ចប់",
+        "time_placeholder": "ជ្រើសរើសម៉ោង",
+        "description": "កំណត់សម្គាល់",
+        "description_placeholder": "បញ្ចូលកំណត់ចំណាំ...",
+        "amount_per_lite_dynamic": "តម្លៃក្នុងមួយលីត្រ ({currency})"
     },
     "fuel_sales_chart": {
         "title": "ទិដ្ឋភាពការលក់ប្រេង",
@@ -66,5 +71,16 @@
         "revenue_share": "ចំណែកចំណូល",
         "liters": "លីត្រ",
         "khr": "រៀល"
+    },
+    "time_picker": {
+        "select_time": "ជ្រើសរើសម៉ោង",
+        "hour": "ម៉ោង",
+        "minute": "នាទី",
+        "period": "វេលា",
+        "am": "ព្រឹក(AM)",
+        "pm": "រសៀល(PM)",
+        "confirm": "បញ្ជាក់",
+        "placeholder": "ជ្រើសរើសម៉ោង",
+        "cancel": "បោះបង់"
     }
 }

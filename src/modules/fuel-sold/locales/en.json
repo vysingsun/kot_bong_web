@@ -2,6 +2,7 @@
     "fuel_sold": {
         "title": "Fuel Sales",
         "fuel_sold_management": "Fuel Sales Management",
+        "fuel_type_placeholder": "Select a fuel type",
         "records": "records",
         "add_sale": "Create Sale",
         "filters": "Filters",
@@ -39,7 +40,12 @@
         "total_summary": "Total Summary",
         "filtered_summary": "Filtered Summary",
         "showing_all_data": "Showing all sales data from the beginning and for all fuel types",
-        "download_report": "Download Sales Report"
+        "download_report": "Download Sales Report",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "time_placeholder": "Select time",
+        "description": "Description",
+        "description_placeholder": "Enter notes or remarks ..."
     },
     "fuel_sales_chart": {
         "title": "Fuel Sales Overview",
@@ -66,5 +72,16 @@
         "revenue_share": "Revenue Share",
         "liters": "Liters",
         "khr": "KHR"
+    },
+    "time_picker": {
+        "select_time": "Select Time",
+        "hour": "Hour",
+        "minute": "Minute",
+        "period": "Period",
+        "am": "AM",
+        "pm": "PM",
+        "confirm": "Confirm",
+        "placeholder": "Select time",
+        "cancel": "Cancel"
     }
 }

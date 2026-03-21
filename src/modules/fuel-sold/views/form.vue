@@ -8,41 +8,34 @@
         @on-save="handleSaveLoading"
     >
         <div class="form-grid">
-            <!-- Fuel Type -->
+            <!-- ① Fuel Type -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                    t('fuel_sold.fuel_type')
-                }}</label>
-                <select
-                    v-model="selectedFuelId"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-secondary dark:focus:border-secondary"
-                    required
-                    :disabled="mode === 'view'"
-                >
+                <label class="field-label"> {{ t('fuel_sold.fuel_type') }} <span class="req">*</span> </label>
+                <select v-model="selectedFuelId" class="field-input" required :disabled="mode === 'view'">
+                    <option value="" disabled>{{ t('fuel_sold.fuel_type_placeholder') }}</option>
                     <option v-for="item in store.fuels" :key="item?._id" :value="item._id">
                         {{ item.fuel_name }}
                     </option>
                 </select>
             </div>
 
-            <!-- Quantity Sold -->
+            <!-- ② Quantity Sold (liters) -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                    t('fuel_sold.quantity_as_liter')
-                }}</label>
+                <label class="field-label"> {{ t('fuel_sold.quantity_as_liter') }} <span class="req">*</span> </label>
                 <div class="relative">
                     <input
                         v-model="store.formData.quantity_sold_liter"
                         type="number"
                         step="0.01"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 pr-12 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                        min="0"
+                        class="field-input pr-12"
                         required
                         :disabled="mode === 'view'"
                     />
                     <button
                         v-if="mode !== 'view'"
                         type="button"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-secondary dark:text-gray-400 dark:hover:text-secondary"
                         @click="openScanner"
                     >
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
@@ -58,21 +51,21 @@
                 </div>
             </div>
 
-            <!-- Amount per Liter -->
+            <!-- ③ Amount per Liter — label uses station currency -->
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                    t('fuel_sold.amount_per_lite')
-                }}</label>
+                <label class="field-label"> {{ amountPerLiterLabel }} <span class="req">*</span> </label>
                 <input
                     v-model="store.formData.amount_per_liter_khr"
                     type="number"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    min="0"
+                    step="0.01"
+                    class="field-input"
                     required
                     :disabled="mode === 'view'"
                 />
             </div>
 
-            <!-- Exchange Rate -->
+            <!-- ④ Exchange Rate — label dynamic, hidden when USD -->
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                     t('fuel_sold.exchange_rate')
@@ -81,34 +74,80 @@
                     v-model="store.formData.exchange_rate"
                     type="number"
                     step="0.01"
+                    min="0"
                     :disabled="mode === 'view'"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    class="field-input"
+                    required
                 />
             </div>
 
-            <!-- Date — full width -->
+            <!-- ⑤ Date · Start Time · End Time — inline row -->
             <div class="col-span-full">
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
-                <div class="w-full md:w-64">
-                    <VueDatePicker
-                        v-model="store.formData.createdAt"
-                        class="DatePicker"
-                        auto-apply
-                        :partial-range="false"
-                        :enable-time-picker="false"
-                    />
+                <div class="date-time-row">
+                    <!-- Date -->
+                    <div class="date-time-cell">
+                        <label class="field-label"> {{ t('fuel_sold.date') }} <span class="req">*</span> </label>
+                        <VueDatePicker
+                            v-model="store.formData.createdAt"
+                            class="DatePicker"
+                            auto-apply
+                            :partial-range="false"
+                            :enable-time-picker="false"
+                        />
+                    </div>
+
+                    <div class="w-full flex justify-between gap-2">
+                        <!-- Start Time -->
+                        <div class="w-1/2 date-time-cell">
+                            <label class="field-label">
+                                {{ t('fuel_sold.start_time') }} <span class="req">*</span>
+                            </label>
+                            <TimePicker
+                                v-model="store.formData.startTime"
+                                :disabled="mode === 'view'"
+                                :placeholder="t('fuel_sold.time_placeholder')"
+                                required
+                            />
+                        </div>
+
+                        <!-- End Time -->
+                        <div class="w-1/2 date-time-cell">
+                            <label class="field-label">
+                                {{ t('fuel_sold.end_time') }} <span class="req">*</span>
+                            </label>
+                            <TimePicker
+                                v-model="store.formData.endTime"
+                                :disabled="mode === 'view'"
+                                :placeholder="t('fuel_sold.time_placeholder')"
+                                required
+                            />
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- ⑥ Description — optional, full width -->
+            <div class="col-span-full">
+                <label class="field-label">
+                    {{ t('fuel_sold.description') }}
+                </label>
+                <textarea
+                    v-model="store.formData.description"
+                    rows="3"
+                    :disabled="mode === 'view'"
+                    :placeholder="mode !== 'view' ? t('fuel_sold.description_placeholder') : ''"
+                    class="field-input resize-none"
+                />
             </div>
         </div>
     </BaseForm>
 
-    <!-- Fullscreen Camera Modal -->
+    <!-- Fullscreen Camera Scanner -->
     <Teleport to="body">
         <div v-if="showScanner" class="scanner-modal">
             <div class="scanner-container">
                 <video ref="videoRef" autoplay playsinline></video>
                 <canvas ref="canvasRef" style="display: none"></canvas>
-
                 <div class="scanner-overlay">
                     <div class="scanner-header">
                         <button class="close-btn" @click="closeScanner">
@@ -124,12 +163,10 @@
                             </svg>
                         </button>
                     </div>
-
                     <div class="scanner-guide">
                         <div class="guide-frame"></div>
                         <p class="guide-text">Point camera at numbers</p>
                     </div>
-
                     <div class="scanner-controls">
                         <button class="capture-btn" :disabled="scanning" @click="captureAndScan">
                             <div v-if="scanning" class="spinner"></div>
@@ -154,14 +191,19 @@
     import '@vuepic/vue-datepicker/dist/main.css'
     import { initFlowbite } from 'flowbite'
     import { createWorker, type Worker } from 'tesseract.js'
+    import TimePicker from '@/components/app/TimePicker.vue'
 
     const { t } = useI18n()
+
+    // ── Camera / OCR ──────────────────────────────────────────────────
     const videoRef = ref<HTMLVideoElement | null>(null)
     const canvasRef = ref<HTMLCanvasElement | null>(null)
     const showScanner = ref(false)
     const scanning = ref(false)
     let stream: MediaStream | null = null
+    let ocrWorker: Worker | null = null
 
+    // ── Store / Route ─────────────────────────────────────────────────
     const store = useFuelSoldStore()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -169,24 +211,22 @@
     const loadingFrom = ref(true)
     const stationId = ref('')
     const fuel_sold_id = route.path.split('/').pop()
-    let ocrWorker: Worker | null = null
 
-    const initializeOCR = async () => {
-        ocrWorker = await createWorker('eng')
-        await ocrWorker.setParameters({
-            tessedit_char_whitelist: '0123456789.',
-        })
-    }
+    // ── Cache ─────────────────────────────────────────────────────────
+    const appData = getFromCache('app_data')
 
-    const getFuelService = async () => {
-        if (store.fuels.length === 0) {
-            loading.value = true
-            const response = await lookupService.getFuelByStationId(stationId.value)
-            store.fuels = response?.data?.data ?? []
-            loading.value = false
-        }
-    }
+    // Station currency — fallback USD
+    const currency = computed<string>(() => appData.value?.stations?.[0]?.currency ?? 'USD')
 
+    // ── Dynamic labels ────────────────────────────────────────────────
+    /**
+     * "Amount per Liter" label shows the station currency in parentheses.
+     *   - Original KM key had "(គិតជារៀល)" hard-coded.
+     *   - We now inject the real currency so it reads e.g.  "(USD)" or "(KHR)"
+     */
+    const amountPerLiterLabel = computed(() => t('fuel_sold.amount_per_lite_dynamic', { currency: currency.value }))
+
+    // ── Fuel select ───────────────────────────────────────────────────
     const selectedFuelId = computed({
         get() {
             return typeof store.formData.fuel === 'object' ? store.formData.fuel?._id : store.formData.fuel
@@ -200,65 +240,65 @@
         loadingFrom.value = isLoading
     }
 
+    // ── Load fuels ────────────────────────────────────────────────────
+    const getFuelService = async () => {
+        if (store.fuels.length === 0) {
+            loading.value = true
+            const response = await lookupService.getFuelByStationId(stationId.value)
+            store.fuels = response?.data?.data ?? []
+            loading.value = false
+        }
+    }
+
+    // ── OCR ───────────────────────────────────────────────────────────
+    const initializeOCR = async () => {
+        ocrWorker = await createWorker('eng')
+        await ocrWorker.setParameters({ tessedit_char_whitelist: '0123456789.' })
+    }
+
     const openScanner = async () => {
         showScanner.value = true
         try {
             stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: 'environment',
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 },
-                },
+                video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
             })
-            await new Promise(resolve => setTimeout(resolve, 100))
-            if (videoRef.value) {
-                videoRef.value.srcObject = stream
-            }
-        } catch (error) {
-            console.error('Error accessing camera:', error)
+            await new Promise(r => setTimeout(r, 100))
+            if (videoRef.value) videoRef.value.srcObject = stream
+        } catch {
             alert('Could not access camera. Please check permissions.')
             closeScanner()
         }
     }
 
     const closeScanner = () => {
-        if (stream) {
-            stream.getTracks().forEach((track: { stop: () => any }) => track.stop())
-            stream = null
-        }
+        stream?.getTracks().forEach(t => t.stop())
+        stream = null
         showScanner.value = false
         scanning.value = false
     }
 
     const captureAndScan = async () => {
         if (!ocrWorker || scanning.value) return
-
         scanning.value = true
         const video = videoRef.value
         const canvas = canvasRef.value
-
         if (!video || !canvas) {
             scanning.value = false
             return
         }
-
         canvas.width = video.videoWidth
         canvas.height = video.videoHeight
-
         const ctx = canvas.getContext('2d')
         if (!ctx) {
             scanning.value = false
             return
         }
         ctx.drawImage(video, 0, 0)
-
         try {
             const {
                 data: { text },
             } = await ocrWorker.recognize(canvas)
-
             const numbers = text.replace(/[^\d.]/g, '').trim()
-
             if (numbers) {
                 store.formData.quantity_sold_liter = parseFloat(numbers)
                 closeScanner()
@@ -266,37 +306,43 @@
                 alert('No numbers detected. Please try again.')
                 scanning.value = false
             }
-        } catch (error) {
-            console.error('OCR Error:', error)
+        } catch {
             alert('Failed to scan. Please try again.')
-        } finally {
             scanning.value = false
         }
     }
 
+    // ── Lifecycle ─────────────────────────────────────────────────────
     onMounted(async () => {
         initializeOCR()
         initFlowbite()
-        let appData = getFromCache('app_data')
-        stationId.value = appData.value.stations[0]._id
+
+        stationId.value = appData.value?.stations?.[0]?._id ?? ''
         store.formData.station_id = stationId.value
+
         if (mode.value === 'create') {
             store.formData.createdAt = new Date()
-            store.fuels = [] // ✅ reset before calling
-            await getFuelService()
-        } else if (mode.value === 'edit') {
-            await store.readDataFromApi(fuel_sold_id) // ✅ then sets selected fuel
             store.fuels = []
-            await getFuelService() // ✅ loads ALL fuels first
+            await getFuelService()
+
+            // Pre-fill start/end time from cache — user can override.
+            // If cache has no values, fields stay empty (required → user must enter).
+            store.formData.startTime = appData.value?.timeStart ?? ''
+            store.formData.endTime = appData.value?.timeEnd ?? ''
+        } else if (mode.value === 'edit') {
+            await store.readDataFromApi(fuel_sold_id)
+            store.fuels = []
+            await getFuelService()
         } else if (mode.value === 'view') {
             await store.readDataFromApi(fuel_sold_id)
         }
+
         loadingFrom.value = false
     })
 
     watch(mode, async newMode => {
         if (newMode === 'edit' || newMode === 'create') {
-            store.fuels = [] // ✅ force refetch
+            store.fuels = []
             await getFuelService()
         }
     })
@@ -305,20 +351,55 @@
         closeScanner()
         store.resetData()
     })
-
     onUnmounted(() => {
-        if (ocrWorker) {
-            ocrWorker.terminate()
-        }
+        ocrWorker?.terminate()
     })
-
-    onBeforeRouteUpdate((to, from, next) => {
+    onBeforeRouteUpdate((to, _from, next) => {
         mode.value = to.params.mode
         next()
     })
 </script>
 
 <style lang="scss" scoped>
+    /* ── Shared field styles ── */
+    .field-label {
+        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+    }
+    .req {
+        @apply text-red-500 ml-0.5;
+    }
+    .optional {
+        @apply text-gray-400 font-normal text-xs ml-1;
+    }
+    .field-input {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+           focus:ring-secondary focus:border-secondary block w-full p-2.5
+           dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white;
+    }
+
+    /* ── Date + Time inline row ── */
+    .date-time-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    @media (min-width: 640px) {
+        .date-time-row {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media (min-width: 1024px) {
+        /* Date gets a bit more space than the two time pickers */
+        .date-time-row {
+            grid-template-columns: 1.5fr 1fr 1fr;
+        }
+    }
+    .date-time-cell {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ── DatePicker ── */
     :deep(.DatePicker) {
         .dp__pointer {
             border-radius: 8px;
@@ -327,6 +408,27 @@
         }
     }
 
+    /* ── Form grid ── */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    @media (min-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media (min-width: 1280px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .form-grid .col-span-full {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* ── Scanner ── */
     .scanner-modal {
         position: fixed;
         top: 0;
@@ -336,20 +438,17 @@
         z-index: 9999;
         background: #000;
     }
-
     .scanner-container {
         width: 100%;
         height: 100%;
         position: relative;
         overflow: hidden;
     }
-
     video {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
-
     .scanner-overlay {
         position: absolute;
         top: 0;
@@ -359,13 +458,11 @@
         display: flex;
         flex-direction: column;
     }
-
     .scanner-header {
         padding: 20px;
         display: flex;
         justify-content: flex-end;
     }
-
     .close-btn {
         background: rgba(0, 0, 0, 0.5);
         border: none;
@@ -378,11 +475,9 @@
         color: white;
         cursor: pointer;
     }
-
     .close-btn:hover {
         background: rgba(0, 0, 0, 0.7);
     }
-
     .scanner-guide {
         flex: 1;
         display: flex;
@@ -391,7 +486,6 @@
         justify-content: center;
         padding: 20px;
     }
-
     .guide-frame {
         width: 95%;
         max-width: 400px;
@@ -400,7 +494,6 @@
         border-radius: 12px;
         box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
     }
-
     .guide-text {
         margin-top: 30px;
         color: white;
@@ -408,7 +501,6 @@
         font-weight: 500;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
-
     .scanner-controls {
         padding: 40px 20px;
         display: flex;
@@ -416,7 +508,6 @@
         align-items: center;
         gap: 20px;
     }
-
     .capture-btn {
         background: transparent;
         border: 4px solid white;
@@ -429,23 +520,19 @@
         cursor: pointer;
         transition: all 0.2s;
     }
-
     .capture-btn:active:not(:disabled) {
         transform: scale(0.95);
     }
-
     .capture-btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
     }
-
     .capture-circle {
         width: 64px;
         height: 64px;
         background: white;
         border-radius: 50%;
     }
-
     .spinner {
         width: 40px;
         height: 40px;
@@ -453,28 +540,6 @@
         border-top-color: white;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr; /* mobile: 1 column */
-        gap: 1.25rem;
-    }
-
-    @media (min-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr 1fr; /* tablet+: 2 columns */
-        }
-    }
-
-    @media (min-width: 1280px) {
-        .form-grid {
-            grid-template-columns: 1fr 1fr 1fr 1fr; /* large screen: 4 columns */
-        }
-
-        .form-grid .col-span-full {
-            grid-column: 1 / -1;
-        }
     }
 
     @keyframes spin {
