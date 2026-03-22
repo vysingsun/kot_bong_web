@@ -54,8 +54,22 @@
             <!-- ③ Amount per Liter — label uses station currency -->
             <div>
                 <label class="field-label"> {{ amountPerLiterLabel }} <span class="req">*</span> </label>
+                <!-- Non-USD: user enters local currency amount -->
                 <input
+                    v-if="!isUSD"
                     v-model="store.formData.amount_per_liter_khr"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    class="field-input"
+                    required
+                    :disabled="mode === 'view'"
+                />
+
+                <!-- USD: user enters USD amount directly -->
+                <input
+                    v-else
+                    v-model="store.formData.amount_per_liter_us"
                     type="number"
                     min="0"
                     step="0.01"
@@ -217,7 +231,7 @@
 
     // Station currency — fallback USD
     const currency = computed<string>(() => appData.value?.stations?.[0]?.currency ?? 'USD')
-
+    const isUSD = computed(() => currency.value === 'USD')
     // ── Dynamic labels ────────────────────────────────────────────────
     /**
      * "Amount per Liter" label shows the station currency in parentheses.

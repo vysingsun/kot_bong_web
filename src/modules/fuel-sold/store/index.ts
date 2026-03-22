@@ -16,6 +16,7 @@ class FormData {
     quantity_sold_liter?: number | null
     exchange_rate?: number | null
     amount_per_liter_khr?: number | null
+    amount_per_liter_us?: number | null
     station_id: any
     fuel_old?: string | null
     createdAt: any
@@ -41,6 +42,7 @@ export interface IFuelSold {
     quantity_sold_liter: number
     exchange_rate: number
     amount_per_liter_khr: number
+    amount_per_liter_us: number
     total_amount_us: number
     total_amount_khr: number
     station_id: string
@@ -206,6 +208,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         quantity_sold_liter = undefined,
         exchange_rate = undefined,
         amount_per_liter_khr = undefined,
+        amount_per_liter_us = undefined,
         station_id = undefined,
         createdAt = undefined,
         description = '',
@@ -217,6 +220,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             quantity_sold_liter,
             exchange_rate,
             amount_per_liter_khr,
+            amount_per_liter_us,
             station_id,
             createdAt,
             description,
