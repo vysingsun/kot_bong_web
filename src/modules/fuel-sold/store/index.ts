@@ -13,6 +13,8 @@ interface Ifuel {
 
 class FormData {
     fuel: any
+    nozzle_start?: string | null
+    nozzle_end?: string | null
     quantity_sold_liter?: number | null
     exchange_rate?: number | null
     amount_per_liter_khr?: number | null
@@ -207,6 +209,8 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         fuel = undefined,
         quantity_sold_liter = undefined,
         exchange_rate = undefined,
+        nozzle_start = undefined,
+        nozzle_end = undefined,
         amount_per_liter_khr = undefined,
         amount_per_liter_us = undefined,
         station_id = undefined,
@@ -219,6 +223,8 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             fuel,
             quantity_sold_liter,
             exchange_rate,
+            nozzle_start,
+            nozzle_end,
             amount_per_liter_khr,
             amount_per_liter_us,
             station_id,
