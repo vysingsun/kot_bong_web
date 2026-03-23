@@ -341,8 +341,8 @@
 
             // Pre-fill start/end time from cache — user can override.
             // If cache has no values, fields stay empty (required → user must enter).
-            store.formData.startTime = appData.value?.timeStart ?? ''
-            store.formData.endTime = appData.value?.timeEnd ?? ''
+            store.formData.startTime = appData.value?.startTime ?? ''
+            store.formData.endTime = appData.value?.endTime ?? ''
         } else if (mode.value === 'edit') {
             await store.readDataFromApi(fuel_sold_id)
             store.fuels = []

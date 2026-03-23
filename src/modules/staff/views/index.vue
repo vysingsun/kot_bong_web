@@ -84,16 +84,16 @@
                             <span
                                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
                                 :class="
-                                    staff.isDeleted
-                                        ? 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                                    staff.isSuspended
+                                        ? 'bg-red-50 text-[#f00317] dark:bg-red-900/30 dark:text-red-400'
                                         : 'bg-green-50 text-[#19b23e] dark:bg-green-900/30 dark:text-green-400'
                                 "
                             >
                                 <span
                                     class="w-1.5 h-1.5 rounded-full"
-                                    :class="staff.isDeleted ? 'bg-red-500' : 'bg-[#19b23e]'"
+                                    :class="staff.isSuspended ? 'bg-[#f00317]' : 'bg-[#19b23e]'"
                                 />
-                                {{ staff.isDeleted ? t('staff.inactive') : t('staff.active') }}
+                                {{ staff.isSuspended ? t('staff.inactive') : t('staff.active') }}
                             </span>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                     </div>
 
                     <!-- Language -->
-                    <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+                    <!-- <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 stroke-linecap="round"
@@ -147,7 +147,7 @@
                             />
                         </svg>
                         <span>{{ staff.language === 'kh' ? 'ខ្មែរ' : 'English' }}</span>
-                    </div>
+                    </div> -->
 
                     <!-- Created At -->
                     <div class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
@@ -161,6 +161,24 @@
                         </svg>
                         <span>{{ formatDate(staff.createdAt) }}</span>
                     </div>
+
+                    <!-- Clock icon -->
+                    <div class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
+                        <svg
+                            class="w-4 h-4 flex-shrink-0 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
+                            />
+                        </svg>
+                        <span>{{ staff.startTime }} - {{ staff.endTime }}</span>
+                    </div>
                 </div>
 
                 <!-- Card Footer Actions — always visible -->
@@ -168,6 +186,27 @@
                     v-if="currentUserRole !== 'User'"
                     class="border-t border-gray-200 dark:border-gray-700 px-5 py-3 flex items-center justify-end gap-3"
                 >
+                    <!-- Suspend Toggle -->
+                    <button
+                        v-if="staff._id !== currentUserId"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                        :class="
+                            staff.isSuspended
+                                ? 'text-[#19b23e] bg-green-50 hover:bg-green-100 dark:text-green-400 dark:bg-green-900/20 dark:hover:bg-green-900/40'
+                                : 'text-[#f00317] bg-red-50 hover:bg-red-100 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40'
+                        "
+                        @click.stop="onToggleSuspend(staff)"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 3v4m-4.243 1.757a6 6 0 1 0 8.486 0"
+                            />
+                        </svg>
+                        {{ staff.isSuspended ? t('staff.activate') : t('staff.suspend') }}
+                    </button>
                     <span
                         v-if="staff._id === currentUserId"
                         class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
@@ -176,7 +215,8 @@
                     </span>
                     <button
                         v-if="staff._id !== currentUserId"
-                        class="text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
+                        :disabled="staff.isSuspended"
+                        class="text-blue-600 disabled:opacity-40 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
                         @click.stop="onEdit(staff)"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +231,8 @@
                     <span v-if="staff._id !== currentUserId" class="text-gray-300 dark:text-gray-600">|</span>
                     <button
                         v-if="staff._id !== currentUserId"
-                        class="text-xs font-medium text-red-600 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                        :disabled="staff.isSuspended"
+                        class="text-xs font-medium text-[#f00317] hover:text-[#f00317] dark:text-gray-400 dark:hover:text-red-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-[#f00317] dark:disabled:hover:text-gray-400"
                         @click.stop="onDelete(staff)"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,4 +361,15 @@
     onMounted(() => {
         getData()
     })
+
+    const onToggleSuspend = async (staff: IStaff) => {
+        try {
+            staff.isSuspended = !staff.isSuspended
+            await staffService.edit(staff._id, { isSuspended: !staff.isSuspended })
+        } catch (err: any) {
+            staff.isSuspended = !staff.isSuspended
+            // errorModal.show = true
+            // errorModal.message = err.response?.data?.error || err.message
+        }
+    }
 </script>

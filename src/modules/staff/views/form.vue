@@ -84,6 +84,34 @@
                 </select>
             </div>
 
+            <!-- ⑦ Date · Start Time · End Time -->
+            <div class="col-span-full">
+                <div class="date-time-row">
+                    <div class="w-full flex justify-between gap-2">
+                        <div class="w-1/2 date-time-cell">
+                            <label class="field-label">
+                                {{ t('fuel_sold.start_time') }} <span class="req">*</span>
+                            </label>
+                            <TimePicker
+                                v-model="store.formData.startTime"
+                                :disabled="mode === 'view'"
+                                :placeholder="t('fuel_sold.time_placeholder')"
+                            />
+                        </div>
+                        <div class="w-1/2 date-time-cell">
+                            <label class="field-label">
+                                {{ t('fuel_sold.end_time') }} <span class="req">*</span>
+                            </label>
+                            <TimePicker
+                                v-model="store.formData.endTime"
+                                :disabled="mode === 'view'"
+                                :placeholder="t('fuel_sold.time_placeholder')"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Password -->
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -139,8 +167,9 @@
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { staffService } from '@/modules/staff/services/api.service'
-    import { useStaffStore } from '@/modules/staff/store/index'
     import { lookupService } from '@/atoms/lookup/lookup.services'
+    import { useStaffStore } from '@/modules/staff/store/index'
+    import TimePicker from '@/components/app/TimePicker.vue'
     import { getFromCache } from '@/composables/useCache'
     import { initFlowbite } from 'flowbite'
 

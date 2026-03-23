@@ -245,8 +245,8 @@
             store.fuels = []
             await getFuelService()
             store.formData.createdAt = new Date()
-            store.formData.startTime = appData.value?.timeStart ?? ''
-            store.formData.endTime = appData.value?.timeEnd ?? ''
+            store.formData.startTime = appData.value?.startTime ?? ''
+            store.formData.endTime = appData.value?.endTime ?? ''
         } else if (mode.value === 'edit') {
             await store.readDataFromApi(fuel_sold_id)
             store.fuels = []
