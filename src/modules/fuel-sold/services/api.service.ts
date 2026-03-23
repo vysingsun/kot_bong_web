@@ -23,4 +23,10 @@ export const fuel_soldService = {
         const param = { ...params, stationId: stationId }
         return axios.get(`fuel_sold/download`, { params: param, responseType: 'blob' })
     },
+    createByNozzle: async (payload: object) => {
+        return axios.post('fuel_sold/createByNozzle', payload)
+    },
+    editByNozzle: async (id: string, payload: object) => {
+        return axios.post(`fuel_sold/updateByNozzle/${id}`, payload)
+    },
 }

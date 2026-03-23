@@ -2,22 +2,28 @@
     "fuel_sold": {
         "title": "Fuel Sales",
         "fuel_sold_management": "Fuel Sales Management",
-        "records": "records",
+        "fuel_type_placeholder": "Select a fuel type",
+        "records": "Records",
         "add_sale": "Create Sale",
         "filters": "Filters",
         "search": "Search",
         "search_placeholder": "Search For Items...",
         "fuel_type": "Fuel Type",
+        "nozzle_start": "NO. Nozzle Start",
+        "nozzle_end": "NO. Nozzle End",
         "quantity_as_liter": "Quantity as Liter ( L )",
         "amount_per_lite": "Amount per Liter ( $ )",
-        "exchange_rate": "Exchange Rate ( KHR )",
+        "exchange_rate": "Exchange Rate",
         "all_fuels": "All Fuels",
         "date_range": "Date Range",
         "reset_filters": "Reset",
         "sold_by": "Sold by",
         "riel_per_liter": "៛/L",
-        "total_usd": "Total (USD)",
-        "total_khr": "Total (KHR)",
+        "usd_per_liter": "$/L",
+        "local_currency_per_liter": "{currency}/L",
+        "total_usd": "Total as (USD)",
+        "total_khr": "Total as",
+        "local_currency": "Currency in Country",
         "edit": "Edit",
         "delete": "Delete",
         "unknown": "Unknown",
@@ -39,7 +45,12 @@
         "total_summary": "Total Summary",
         "filtered_summary": "Filtered Summary",
         "showing_all_data": "Showing all sales data from the beginning and for all fuel types",
-        "download_report": "Download Sales Report"
+        "download_report": "Download Sales Report",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "time_placeholder": "Select time",
+        "description": "Description",
+        "description_placeholder": "Enter notes or remarks ..."
     },
     "fuel_sales_chart": {
         "title": "Fuel Sales Overview",
@@ -66,5 +77,16 @@
         "revenue_share": "Revenue Share",
         "liters": "Liters",
         "khr": "KHR"
+    },
+    "time_picker": {
+        "select_time": "Select Time",
+        "hour": "Hour",
+        "minute": "Minute",
+        "period": "Period",
+        "am": "AM",
+        "pm": "PM",
+        "confirm": "Confirm",
+        "placeholder": "Select time",
+        "cancel": "Cancel"
     }
 }
