@@ -153,6 +153,22 @@
                     class="field-input resize-none"
                 />
             </div>
+
+            <!-- ④ Sale by or Created by -->
+            <div v-if="mode === 'view'">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_sold.sold_by') }}
+                </label>
+                <input :value="createdByName" disabled class="field-input" />
+            </div>
+
+            <!-- ④ Edit by or Updated by -->
+            <div v-if="mode === 'view' && store.formData.updatedBy">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_sold.updated_by') }}
+                </label>
+                <input :value="updatedByName" disabled class="field-input" />
+            </div>
         </div>
     </BaseForm>
 
@@ -207,6 +223,9 @@
     import { createWorker, type Worker } from 'tesseract.js'
     import TimePicker from '@/components/app/TimePicker.vue'
 
+    const props = defineProps<{
+        fuels: any[]
+    }>()
     const { t } = useI18n()
 
     // ── Camera / OCR ──────────────────────────────────────────────────
@@ -254,21 +273,23 @@
         loadingFrom.value = isLoading
     }
 
-    // ── Load fuels ────────────────────────────────────────────────────
-    const getFuelService = async () => {
-        if (store.fuels.length === 0) {
-            loading.value = true
-            const response = await lookupService.getFuelByStationId(stationId.value)
-            store.fuels = response?.data?.data ?? []
-            loading.value = false
-        }
-    }
-
     // ── OCR ───────────────────────────────────────────────────────────
     const initializeOCR = async () => {
         ocrWorker = await createWorker('eng')
         await ocrWorker.setParameters({ tessedit_char_whitelist: '0123456789.' })
     }
+
+    const createdByName = computed(() => {
+        const user = store.formData.createdBy
+        if (!user) return '—'
+        return `${user.firstName} ${user.lastName}`.trim()
+    })
+
+    const updatedByName = computed(() => {
+        const user = store.formData.updatedBy
+        if (!user) return '—'
+        return `${user.firstName} ${user.lastName}`.trim()
+    })
 
     const openScanner = async () => {
         showScanner.value = true
@@ -337,7 +358,7 @@
         if (mode.value === 'create') {
             store.formData.createdAt = new Date()
             store.fuels = []
-            await getFuelService()
+            store.fuels = props.fuels
 
             // Pre-fill start/end time from cache — user can override.
             // If cache has no values, fields stay empty (required → user must enter).
@@ -346,7 +367,7 @@
         } else if (mode.value === 'edit') {
             await store.readDataFromApi(fuel_sold_id)
             store.fuels = []
-            await getFuelService()
+            store.fuels = props.fuels
         } else if (mode.value === 'view') {
             await store.readDataFromApi(fuel_sold_id)
         }
@@ -354,12 +375,14 @@
         loadingFrom.value = false
     })
 
-    watch(mode, async newMode => {
-        if (newMode === 'edit' || newMode === 'create') {
-            store.fuels = []
-            await getFuelService()
-        }
-    })
+    // Re-sync fuels if parent updates the prop (e.g. after refresh)
+    watch(
+        () => props.fuels,
+        fuels => {
+            store.fuels = fuels
+        },
+        { immediate: false },
+    )
 
     onBeforeUnmount(() => {
         closeScanner()

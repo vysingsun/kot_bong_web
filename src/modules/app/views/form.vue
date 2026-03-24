@@ -1172,6 +1172,7 @@
             Object.assign(user, data.data ?? data)
             basicForm.firstName = user.firstName
             basicForm.lastName = user.lastName
+            setCache('app_data', user)
         } catch (e) {
             console.error('Failed to fetch user', e)
         } finally {

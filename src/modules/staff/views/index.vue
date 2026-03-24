@@ -177,7 +177,7 @@
                                 d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
                             />
                         </svg>
-                        <span>{{ staff.startTime }} - {{ staff.endTime }}</span>
+                        <span>{{ displayValue(staff.startTime) }} - {{ displayValue(staff.endTime) }}</span>
                     </div>
                 </div>
 
@@ -371,5 +371,25 @@
             // errorModal.show = true
             // errorModal.message = err.response?.data?.error || err.message
         }
+    }
+
+    // ── Display ───────────────────────────────────────────────────────
+    const periodLabel = (p: 'AM' | 'PM') => (p === 'AM' ? t('time_picker.am') : t('time_picker.pm'))
+
+    // ── Parse 24h string → 12h state ─────────────────────────────────
+    const parse24 = (v?: string) => {
+        if (!v) return { h12: 12, m: 0, p: 'AM' as 'AM' | 'PM' }
+        const [hh, mm] = v.split(':').map(Number)
+        const h = isNaN(hh) ? 0 : hh
+        const m = isNaN(mm) ? 0 : mm
+        const p: 'AM' | 'PM' = h >= 12 ? 'PM' : 'AM'
+        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+        return { h12, m, p }
+    }
+
+    const displayValue = (time: string) => {
+        if (!time) return ''
+        const { h12, m, p } = parse24(time)
+        return `${String(h12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${periodLabel(p)}`
     }
 </script>

@@ -25,6 +25,16 @@ class FormData {
     description?: string | null = ''
     startTime?: string = ''
     endTime?: string = ''
+    createdBy?: {
+        _id: string
+        firstName: string
+        lastName: string
+    }
+    updatedBy?: {
+        _id: string
+        firstName: string
+        lastName: string
+    }
 }
 
 class ReportFilters {
@@ -218,6 +228,8 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
         description = '',
         startTime = '',
         endTime = '',
+        createdBy = undefined,
+        updatedBy = undefined,
     }: Partial<FormData> = {}) => {
         formData.value = {
             fuel,
@@ -232,6 +244,8 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
             description,
             startTime,
             endTime,
+            createdBy,
+            updatedBy,
         }
     }
 

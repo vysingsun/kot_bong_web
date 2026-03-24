@@ -18,6 +18,7 @@
         "date_range": "ចន្លោះកាលបរិច្ឆេទ",
         "reset_filters": "កំណត់ឡើងវិញ",
         "sold_by": "លក់ដោយ",
+        "updated_by": "បានកែប្រែដោយ",
         "riel_per_liter": "៛/L",
         "usd_per_liter": "$/L",
         "local_currency_per_liter": "{currency}/L",
