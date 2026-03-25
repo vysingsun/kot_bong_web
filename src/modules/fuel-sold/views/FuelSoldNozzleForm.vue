@@ -163,6 +163,22 @@
                     class="field-input resize-none"
                 />
             </div>
+
+            <!-- ④ Sale by or Created by -->
+            <div v-if="mode === 'view'">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_sold.sold_by') }}
+                </label>
+                <input :value="createdByName" disabled class="field-input" />
+            </div>
+
+            <!-- ④ Edit by or Updated by -->
+            <div v-if="mode === 'view' && store.formData.updatedBy">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ t('fuel_sold.updated_by') }}
+                </label>
+                <input :value="updatedByName" disabled class="field-input" />
+            </div>
         </div>
     </BaseForm>
 </template>
@@ -173,13 +189,15 @@
     import { useI18n } from 'vue-i18n'
     import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
-    import { lookupService } from '@/atoms/lookup/lookup.services'
     import { getFromCache } from '@/composables/useCache'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import { initFlowbite } from 'flowbite'
     import TimePicker from '@/components/app/TimePicker.vue'
 
+    const props = defineProps<{
+        fuels: any[]
+    }>()
     const { t } = useI18n()
     const store = useFuelSoldStore()
     const route = useRoute()
@@ -201,6 +219,10 @@
     const calculatedQty = computed(() => {
         const start = parseFloat(String(store.formData.nozzle_start ?? ''))
         const end = parseFloat(String(store.formData.nozzle_end ?? ''))
+
+        if (isNaN(start) && isNaN(end)) {
+            return store.formData.quantity_sold_liter
+        }
         if (isNaN(start) || isNaN(end) || end < start) return 0
         return +(end - start).toFixed(4)
     })
@@ -228,12 +250,17 @@
         loadingForm.value = isLoading
     }
 
-    const getFuelService = async () => {
-        if (store.fuels.length === 0) {
-            const response = await lookupService.getFuelByStationId(stationId.value)
-            store.fuels = response?.data?.data ?? []
-        }
-    }
+    const createdByName = computed(() => {
+        const user = store.formData.createdBy
+        if (!user) return '—'
+        return `${user.firstName} ${user.lastName}`.trim()
+    })
+
+    const updatedByName = computed(() => {
+        const user = store.formData.updatedBy
+        if (!user) return '—'
+        return `${user.firstName} ${user.lastName}`.trim()
+    })
 
     // ── Lifecycle ─────────────────────────────────────────────────────────
     onMounted(async () => {
@@ -243,14 +270,14 @@
 
         if (mode.value === 'create') {
             store.fuels = []
-            await getFuelService()
+            store.fuels = props.fuels
             store.formData.createdAt = new Date()
-            store.formData.startTime = appData.value?.timeStart ?? ''
-            store.formData.endTime = appData.value?.timeEnd ?? ''
+            store.formData.startTime = appData.value?.startTime ?? ''
+            store.formData.endTime = appData.value?.endTime ?? ''
         } else if (mode.value === 'edit') {
             await store.readDataFromApi(fuel_sold_id)
             store.fuels = []
-            await getFuelService()
+            store.fuels = props.fuels
         } else if (mode.value === 'view') {
             await store.readDataFromApi(fuel_sold_id)
         }
@@ -258,12 +285,14 @@
         loadingForm.value = false
     })
 
-    watch(mode, async newMode => {
-        if (newMode === 'edit' || newMode === 'create') {
-            store.fuels = []
-            await getFuelService()
-        }
-    })
+    // Re-sync fuels if parent updates the prop (e.g. after refresh)
+    watch(
+        () => props.fuels,
+        fuels => {
+            store.fuels = fuels
+        },
+        { immediate: false },
+    )
 
     onBeforeUnmount(() => {
         store.resetData()
