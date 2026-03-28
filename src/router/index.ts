@@ -10,6 +10,7 @@ import i18n from '@/plugins/i18n'
 import { getFromCache, setCache } from '@/composables/useCache'
 import { useThemeStore } from '@/stores/theme'
 import { appService } from '@/modules/app/services/api.service'
+import { getRoleName } from '@/composables/useAuth'
 
 // Routes that skip all guards
 const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword']
@@ -71,6 +72,10 @@ const router = createRouter({
             name: 'payment',
             path: '/payment',
             beforeEnter: isAuthenticated,
+            meta: {
+                title: 'payment',
+                roles: ['Admin'],
+            },
             component: () => import('@/modules/payment/views/form.vue'),
         },
         // ── No isAuthenticated — avoids infinite redirect loop ──
@@ -78,6 +83,12 @@ const router = createRouter({
             name: 'suspended',
             path: '/suspended',
             component: () => import('@/components/home/SuspendedAccount.vue'),
+        },
+        {
+            path: '/unauthorized',
+            name: 'Unauthorized',
+            component: () => import('@/components/home/Unauthorized.vue'),
+            meta: { title: 'Unauthorized' },
         },
     ],
 })
@@ -130,6 +141,15 @@ router.beforeEach(async (to, from, next) => {
     // ── Non-suspended user manually visits /suspended ──────
     if (to.name === 'suspended') {
         return next({ name: 'home' })
+    }
+
+    const allowedRoles = to.meta.roles as string[] | undefined
+
+    if (allowedRoles && allowedRoles.length > 0) {
+        const role = getRoleName()
+        if (!allowedRoles.includes(role)) {
+            return next('/unauthorized') // or next('/') or next(false)
+        }
     }
 
     appStore.loading = true

@@ -73,13 +73,13 @@
                 <!-- Dropdown menu -->
                 <div
                     id="dropdown"
-                    class="hidden z-50 my-4 w-56 text-base list-none bg-white divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
+                    class="glass-card hidden z-50 my-4 w-56 text-base list-none divide-y divide-gray-100 shadow dark:divide-gray-600 rounded-xl"
                 >
                     <div class="py-3 px-4">
                         <span class="block text-sm font-semibold text-gray-900 dark:text-white">{{ userName }}</span>
                         <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ userEmail }}</span>
                     </div>
-                    <ul class="py-1 text-gray-700 dark:text-gray-300">
+                    <!-- <ul class="py-1 text-gray-700 dark:text-gray-300">
                         <li>
                             <a
                                 href="#"
@@ -96,7 +96,7 @@
                                 {{ t('home.account_settings') }}
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
                     <ul class="py-1 text-gray-700 dark:text-gray-300">
                         <li class="px-4">
                             <LanguageSwitcher />
@@ -167,3 +167,16 @@
         </div>
     </nav>
 </template>
+
+<style lang="scss" scoped>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.36);
+        backdrop-filter: blur(8px) saturate(200%) brightness(1.02);
+        -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.02);
+        border: 1px solid rgba(255, 255, 255, 0.95);
+        box-shadow:
+            0 0 0 0.5px rgba(255, 255, 255, 0.5) inset,
+            0 24px 56px rgba(0, 0, 0, 0.18),
+            0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+</style>
