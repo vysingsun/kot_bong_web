@@ -9,6 +9,7 @@ export const routes = [
         path: MODULE_PATH,
         meta: {
             title: MODULE_NAME,
+            roles: ['Admin'],
         },
         component: () => import('@/modules/setting/views/index.vue'),
     },

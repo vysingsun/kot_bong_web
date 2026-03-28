@@ -18,6 +18,7 @@ export const routes = [
         path: `${MODULE_PATH}/:mode/:id?`,
         meta: {
             title: MODULE_NAME,
+            roles: ['Admin'],
         },
         component: () => import('@/modules/fuel/views/form.vue'),
     },

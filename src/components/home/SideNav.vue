@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
+    <div class="overflow-y-auto py-5 px-3 h-full glass-card">
         <ul class="space-y-2">
             <li>
                 <RouterLink
@@ -147,3 +147,11 @@
         </ul> -->
     </div>
 </template>
+<style lang="scss" scoped>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(8px) saturate(200%) brightness(1.02);
+        -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.02);
+        border: 1px solid rgba(255, 255, 255, 0.95);
+    }
+</style>

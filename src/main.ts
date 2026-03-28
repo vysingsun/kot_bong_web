@@ -24,7 +24,8 @@ import AppFuel from '@/components/app/AppFuel.vue'
 import { getFromCache, removeCaches, removeAll } from '@/composables/useCache'
 import { showErrorModal } from '@/composables/useErrorModal'
 import { COMPANY_THEMES } from './configs/themes'
-import { useFormatDate } from './composables/useFormatDate'
+import { useFormatDate } from '@/composables/useFormatDate'
+import { useAuth, AuthKey } from '@/composables/useAuth'
 
 const t = i18n.global.t
 
@@ -100,6 +101,9 @@ axios.interceptors.response.use(
 
 initFlowbite()
 const app = createApp(App)
+const auth = useAuth()
+
+app.provide(AuthKey, auth)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
