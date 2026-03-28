@@ -11,6 +11,8 @@ class FormData {
     stations?: string | null = null
     language: string = 'kh'
     password?: string = ''
+    startTime?: string = ''
+    endTime?: string = ''
 }
 
 export interface IRole {
@@ -34,6 +36,10 @@ export interface IStaff {
     registerBy: string
     createdAt: string
     updatedAt: string
+    isSuspended: boolean
+    suspendedAt: string | null
+    startTime: string
+    endTime: string
 }
 
 export const useStaffStore = defineStore('staffStore', () => {
@@ -83,6 +89,8 @@ export const useStaffStore = defineStore('staffStore', () => {
         role = null,
         stations = null,
         language = 'kh',
+        startTime = '',
+        endTime = '',
     }: Partial<FormData> = {}) => {
         formData.value = {
             firstName,
@@ -92,6 +100,8 @@ export const useStaffStore = defineStore('staffStore', () => {
             role,
             stations,
             language,
+            startTime,
+            endTime,
         }
     }
 

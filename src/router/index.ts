@@ -7,6 +7,12 @@ import { isAuthenticated } from '@/middlewares/auth'
 import { ONBOARDINGVIEW } from '@/modules/OnboardingView/router'
 import { useAppStore } from '@/modules/app/store'
 import i18n from '@/plugins/i18n'
+import { getFromCache, setCache } from '@/composables/useCache'
+import { useThemeStore } from '@/stores/theme'
+import { appService } from '@/modules/app/services/api.service'
+
+// Routes that skip all guards
+const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword']
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,25 +73,74 @@ const router = createRouter({
             beforeEnter: isAuthenticated,
             component: () => import('@/modules/payment/views/form.vue'),
         },
+        // ── No isAuthenticated — avoids infinite redirect loop ──
+        {
+            name: 'suspended',
+            path: '/suspended',
+            component: () => import('@/components/home/SuspendedAccount.vue'),
+        },
     ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const appStore = useAppStore()
 
-    // Show loading when navigating
-    appStore.loading = true
+    // Skip all checks for public routes
+    if (PUBLIC_ROUTES.includes(to.name as string)) {
+        appStore.loading = false
+        return next()
+    }
 
+    // ── Fetch user if not in cache ─────────────────────────
+    let appData = getFromCache('app_data')
+
+    if (!appData?.value) {
+        try {
+            const res = await appService.init()
+            const result = res.data
+            setCache('app_data', result.data)
+            const themeStore = useThemeStore()
+            themeStore.initializeTheme()
+            appData = getFromCache('app_data')
+        } catch {
+            return next({ name: 'Login' })
+        }
+    }
+
+    // ── Still no data → go to login ────────────────────────
+    if (!appData?.value) {
+        return next({ name: 'Login' })
+    }
+
+    const user = appData.value
+    const isSuspended = user?.isSuspended === true
+    const isUserRole = user?.role?.role_name === 'User'
+
+    // ── Suspended staff ────────────────────────────────────
+    if (isSuspended && isUserRole) {
+        // Already on /suspended — allow, stop redirect loop
+        if (to.name === 'suspended') {
+            appStore.loading = false
+            return next()
+        }
+        // Any other route → force to /suspended
+        return next({ name: 'suspended' })
+    }
+
+    // ── Non-suspended user manually visits /suspended ──────
+    if (to.name === 'suspended') {
+        return next({ name: 'home' })
+    }
+
+    appStore.loading = true
     next()
 })
 
 router.afterEach(() => {
     const appStore = useAppStore()
-
-    // Hide loading after navigation completes
     setTimeout(() => {
         appStore.loading = false
-    }, 200) // Small delay for smooth transition
+    }, 200)
 })
 
 export default router

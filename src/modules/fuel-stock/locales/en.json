@@ -32,6 +32,7 @@
         "amount_per_liter_us": "Amount per Liter ( USD )",
         "amount_per_liter_khr": "Amount per Liter ( KHR )",
         "date": "Date",
-        "download_report": "Download Stock Report"
+        "download_report": "Download Stock Report",
+        "showing_all_data": "Showing all Stock Income data from the beginning and for all fuel types"
     }
 }

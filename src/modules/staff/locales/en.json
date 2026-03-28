@@ -20,6 +20,8 @@
         "search": "Search Staff",
         "Admin": "Owner",
         "User": "Staff",
-        "me": "Me"
+        "me": "Me",
+        "suspend": "Suspend",
+        "activate": "Activate"
     }
 }
