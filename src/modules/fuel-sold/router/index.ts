@@ -19,7 +19,7 @@ export const routes = [
         meta: {
             title: MODULE_NAME,
         },
-        component: () => import('@/modules/fuel-sold/views/form.vue'),
+        component: () => import('@/modules/fuel-sold/views/routePage.vue'),
     },
     {
         module: MODULE_NAME,

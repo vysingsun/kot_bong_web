@@ -14,9 +14,9 @@
     import { staffService } from '@/modules/staff/services/api.service'
 
     const { formatDate } = useFormatDate()
-
+    const appData = getFromCache('app_data')
+    const currency = computed<string>(() => appData.value?.stations?.[0]?.currency ?? 'USD')
     const appStore = useAppStore()
-
     const router = useRouter()
     const { t } = useI18n()
     const store = useFuelSoldStore()
@@ -435,9 +435,19 @@
                                             </div>
                                             <div class="text-xs text-blue-500 dark:text-blue-400">
                                                 <span class="font-bold">{{
-                                                    formatCurrency(sale.amount_per_liter_khr)
+                                                    currency !== 'USD'
+                                                        ? formatCurrency(sale.amount_per_liter_khr)
+                                                        : formatCurrency(sale.amount_per_liter_us)
                                                 }}</span>
-                                                {{ t('fuel_sold.riel_per_liter') }}
+                                                {{
+                                                    currency === 'USD'
+                                                        ? t('fuel_sold.usd_per_liter')
+                                                        : currency === 'KHR'
+                                                          ? t('fuel_sold.riel_per_liter')
+                                                          : t('fuel_sold.local_currency_per_liter', {
+                                                                currency: currency,
+                                                            })
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -458,9 +468,15 @@
                                             <div>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">
                                                     {{ t('fuel_sold.total_khr') }}
+                                                    {{
+                                                        currency !== 'KHR' && currency !== 'USD'
+                                                            ? t('fuel_sold.local_currency')
+                                                            : '៛'
+                                                    }}
                                                 </p>
                                                 <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                                    ៛{{ formatCurrency(sale.total_amount_khr) }}
+                                                    {{ currency !== 'KHR' && currency !== 'USD' ? '' : '៛' }}
+                                                    {{ formatCurrency(sale.total_amount_khr) }}
                                                 </p>
                                             </div>
                                         </div>
