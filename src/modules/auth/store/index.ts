@@ -77,7 +77,7 @@ export const useAuthStore = defineStore('authStore', () => {
             if (res.data.success) {
                 removeAll()
                 const themeStore = useThemeStore()
-                themeStore.applyTheme(COMPANY_THEMES.lim_long)
+                themeStore.applyTheme(COMPANY_THEMES.kot_preng)
                 router.push('/auth/login')
             }
         })
