@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, inject } from 'vue'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { useFuelStore } from '@/modules/fuel/store'
@@ -7,7 +7,9 @@
     import type { IFuel } from '@/modules/fuel/store'
     import DeleteModal from '@/components/app/DeleteModal.vue'
     import { useAppStore } from '@/modules/app/store/index'
+    import { AuthKey } from '@/composables/useAuth'
 
+    const { isAdmin } = inject(AuthKey)!
     const appStore = useAppStore()
     const router = useRouter()
     const { t } = useI18n()
@@ -100,6 +102,7 @@
                 </p>
             </div>
             <button
+                v-if="isAdmin"
                 @click="handleCreate"
                 class="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg transition-colors shadow-md"
             >
@@ -147,7 +150,7 @@
                 </div>
 
                 <!-- Tank Capacity -->
-                <div class="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">
                             {{ t('fuel.tank_capacity') }}
@@ -160,7 +163,7 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="flex gap-2">
+                <div v-if="isAdmin" class="flex gap-2 mt-4">
                     <button
                         @click="handleEdit(fuel)"
                         class="flex-1 px-4 py-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"

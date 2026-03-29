@@ -564,7 +564,10 @@
             </div>
 
             <!-- Station / Change Company -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div
+                v-if="isAdmin"
+                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700"
+            >
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ t('profile.stations') }}</h3>
                 </div>
@@ -808,7 +811,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, reactive, computed, onMounted, onBeforeUnmount, inject } from 'vue'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import BottomNavigation from '@/components/home/BottomNavigation.vue'
@@ -821,7 +824,9 @@
     import { useFormatDate } from '@/composables/useFormatDate'
     import BaseLoading from '@/components/app/BaseLoading.vue'
     import DeleteModal from '@/components/app/DeleteModal.vue'
+    import { AuthKey } from '@/composables/useAuth'
 
+    const { isAdmin } = inject(AuthKey)!
     const { formatDate } = useFormatDate()
     const authStore = useAuthStore()
     const { t } = useI18n()
