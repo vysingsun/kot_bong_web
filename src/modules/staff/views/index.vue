@@ -9,6 +9,7 @@
                 </p>
             </div>
             <router-link
+                v-if="isAdmin"
                 :to="`${basePath}/create`"
                 class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 focus:ring-4 focus:ring-secondary/30 transition-colors"
             >
@@ -269,7 +270,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, inject } from 'vue'
     import { useRouter, useRoute } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import _ from 'lodash'
@@ -281,7 +282,9 @@
     import type { IStaff } from '@/modules/staff/store/index'
     import { useFormatDate } from '@/composables/useFormatDate'
     import DeleteModal from '@/components/app/DeleteModal.vue'
+    import { AuthKey } from '@/composables/useAuth'
 
+    const { isAdmin } = inject(AuthKey)!
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
     const router = useRouter()

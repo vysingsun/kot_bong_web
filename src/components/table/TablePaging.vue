@@ -39,7 +39,7 @@
         </div>
 
         <!-- Export button -->
-        <div v-if="exportable" class="flex justify-end mb-3">
+        <div v-if="exportable && isAdmin" class="flex justify-end mb-3">
             <button
                 class="flex items-center gap-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 transition-colors"
                 @click="openDownloadModal()"
@@ -370,7 +370,7 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, reactive, computed } from 'vue'
+    import { onMounted, ref, reactive, computed, inject } from 'vue'
     import _ from 'lodash'
     import { initFlowbite } from 'flowbite'
     import { useRoute, useRouter } from 'vue-router'
@@ -383,7 +383,9 @@
         type ExcelColumn,
         type ExcelTotal,
     } from '@/utils/excel_generator'
+    import { AuthKey } from '@/composables/useAuth'
 
+    const { isAdmin } = inject(AuthKey)!
     const appStore = useAppStore()
     const { t } = useI18n()
     const { isVisible, showModal, closeModal } = useModal()
