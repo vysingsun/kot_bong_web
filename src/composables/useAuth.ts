@@ -14,9 +14,9 @@ export function getRoleName(): string {
 export function useAuth() {
     const appData = getFromCache('app_data')
 
-    const userRole = computed(() => appData.value?.role?.role_name ?? '')
-    const isAdmin = computed(() => userRole.value === 'Admin')
-    const isUser = computed(() => userRole.value === 'User')
+    const userRole = computed(() => appData?.value?.role?.role_name ?? '')
+    const isAdmin = computed(() => userRole?.value === 'Admin')
+    const isUser = computed(() => userRole?.value === 'User')
 
     function hasRole(roles: string | string[]): boolean {
         const allowed = Array.isArray(roles) ? roles : [roles]

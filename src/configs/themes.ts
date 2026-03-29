@@ -77,6 +77,17 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
         secondaryColor: '#2563eb',
         logo: new URL('../assets/images/lim_long_logo.jpg', import.meta.url).href,
     },
+    kot_preng: {
+        id: 'kot_preng',
+        name: 'Kot_Preng',
+        primaryColor: '#2563eb', // Tailwind blue-600
+        primaryHover: '#1d4ed8', // blue-700
+        primaryDark: '#1e40af', // blue-800
+        primaryLight: '#3b82f6', // blue-500
+        textOnPrimary: '#ffffff',
+        secondaryColor: '#2563eb',
+        logo: new URL('../assets/images/kotpreng.svg', import.meta.url).href,
+    },
     sokimex: {
         id: 'sokimex',
         name: 'Sokimex',
@@ -103,7 +114,7 @@ export const COMPANY_THEMES: Record<string, CompanyTheme> = {
 
 // Get theme by company ID
 export const getThemeByCompany = (companyId: string): CompanyTheme => {
-    return COMPANY_THEMES[companyId.toLowerCase()] || COMPANY_THEMES.lim_long
+    return COMPANY_THEMES[companyId.toLowerCase()] || COMPANY_THEMES.kot_preng
 }
 
 // Get theme from station name
@@ -122,6 +133,6 @@ export const getThemeByStationName = (stationName: string): CompanyTheme => {
         }
     }
 
-    // Default to lim_long theme
-    return COMPANY_THEMES.lim_long
+    // Default to kot_preng theme
+    return COMPANY_THEMES.kot_preng
 }
