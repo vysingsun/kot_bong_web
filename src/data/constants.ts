@@ -27,6 +27,12 @@ export interface Company {
 
 export const COMPANIES: Company[] = [
     {
+        _id: 'kot_preng',
+        name: 'Kot_Preng',
+        image: new URL('@/assets/images/kotpreng.svg', import.meta.url).href,
+        needsUpdate: true,
+    },
+    {
         _id: 'tela',
         name: 'Tela',
         image: new URL('@/assets/images/tela_logo.png', import.meta.url).href,

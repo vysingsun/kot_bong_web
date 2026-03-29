@@ -71,7 +71,7 @@ axios.interceptors.response.use(
             sessionStorage.removeItem('has-show-fireworks')
             removeAll()
             const themeStore = useThemeStore()
-            themeStore.applyTheme(COMPANY_THEMES.lim_long)
+            themeStore.applyTheme(COMPANY_THEMES.kot_preng)
             router.push({ name: 'Login' })
             if (error?.response?.data?.error?.errors?.detail) {
                 const message = error?.response?.data?.error?.errors?.detail

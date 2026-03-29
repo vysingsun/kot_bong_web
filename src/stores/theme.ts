@@ -4,7 +4,7 @@ import { getThemeByStationName, type CompanyTheme, COMPANY_THEMES } from '@/conf
 import { getFromCache, setCache } from '@/composables/useCache'
 
 export const useThemeStore = defineStore('theme', () => {
-    const currentTheme = ref<CompanyTheme>(COMPANY_THEMES.lim_long)
+    const currentTheme = ref<CompanyTheme>(COMPANY_THEMES.kot_preng)
 
     // Apply theme to document
     const applyTheme = (theme: CompanyTheme) => {
@@ -36,18 +36,18 @@ export const useThemeStore = defineStore('theme', () => {
             // Try to get from cache
             const cachedThemeId = getFromCache('theme')
             if (cachedThemeId && cachedThemeId.value) {
-                const theme = COMPANY_THEMES[cachedThemeId.value] || COMPANY_THEMES.lim_long
+                const theme = COMPANY_THEMES[cachedThemeId.value] || COMPANY_THEMES.kot_preng
                 applyTheme(theme)
             } else {
                 // Default theme
-                applyTheme(COMPANY_THEMES.lim_long)
+                applyTheme(COMPANY_THEMES.kot_preng)
             }
         }
     }
 
     // Set theme by company ID
     const setTheme = (companyId: string) => {
-        const theme = COMPANY_THEMES[companyId] || COMPANY_THEMES.lim_long
+        const theme = COMPANY_THEMES[companyId] || COMPANY_THEMES.kot_preng
         applyTheme(theme)
     }
 

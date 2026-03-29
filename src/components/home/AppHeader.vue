@@ -65,6 +65,7 @@
 
                 <!-- Dynamic Company Logo -->
                 <img :src="companyLogo" class="h-9 object-contain" :alt="`${themeStore.currentTheme.name} Logo`" />
+                <div v-if="themeStore.currentTheme.name === 'Kot_Preng'" class="font-bold text-lg ml-2">Kot Preng</div>
             </div>
 
             <div class="flex items-center lg:order-2 gap-2">
