@@ -1,6 +1,6 @@
 <template>
     <BaseLoading v-if="loading" />
-    <div class="w-full bg-gray-50 dark:bg-gray-900 p-4">
+    <div class="w-full dark:bg-gray-900 p-4">
         <!-- Header -->
         <div class="max-w-4xl mx-auto">
             <div class="flex items-center justify-between mb-4">
@@ -13,6 +13,7 @@
                     </p>
                 </div>
                 <button
+                    v-if="isAdmin"
                     @click="handleCreate"
                     class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg transition-colors shadow-md"
                 >
@@ -47,7 +48,7 @@
         </div>
     </div>
 
-    <div class="md:mx-auto min-h-screen bg-gray-50 dark:bg-gray-900 pb-4 px-4">
+    <div v-if="isAdmin" class="md:mx-auto min-h-screen dark:bg-gray-900 pb-4 px-4">
         <div class="flex-1 border-t border-gray-300 dark:border-gray-600 mb-3"></div>
 
         <div class="max-w-4xl mx-auto">
@@ -363,7 +364,7 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, nextTick, computed, onUnmounted } from 'vue'
+    import { onMounted, ref, nextTick, computed, onUnmounted, inject } from 'vue'
     import { initFlowbite } from 'flowbite'
     import ApexCharts from 'apexcharts'
     import type { ApexOptions } from 'apexcharts'
@@ -377,6 +378,7 @@
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import { useFormatDate } from '@/composables/useFormatDate'
+    import { AuthKey } from '@/composables/useAuth'
 
     const { formatDate } = useFormatDate()
     const storeCurrentStock = useCurrentStockStore()
@@ -390,6 +392,7 @@
     const showFilters = ref(false)
     const date_range = ref([])
     const chartInstances = ref<ApexCharts[]>([])
+    const { isAdmin } = inject(AuthKey)!
 
     // ── Chart options (moved from store into component) ───────────────────────
     const getChartOptions = (percent: number, fuelName: string, color: string): ApexOptions => {

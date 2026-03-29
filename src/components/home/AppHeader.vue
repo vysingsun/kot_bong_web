@@ -1,8 +1,11 @@
 <script setup lang="ts">
-    import { computed } from 'vue'
+    import { computed, inject } from 'vue'
     import { useThemeStore } from '@/stores/theme'
     import { useI18n } from 'vue-i18n'
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+    import { AuthKey } from '@/composables/useAuth'
+
+    const { isAdmin } = inject(AuthKey)!
 
     interface User {
         _id: string
@@ -101,7 +104,7 @@
                         <li class="px-4">
                             <LanguageSwitcher />
                         </li>
-                        <li>
+                        <li v-if="isAdmin">
                             <RouterLink
                                 to="/subscription"
                                 class="flex justify-between items-center py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"

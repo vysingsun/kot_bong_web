@@ -46,7 +46,7 @@
                     </li>
                 </ul>
             </li> -->
-            <li>
+            <li v-if="isAdmin">
                 <RouterLink
                     to="/fuel-stock"
                     data-drawer-target="drawer-navigation"
@@ -58,7 +58,7 @@
                 </RouterLink>
             </li>
 
-            <li>
+            <li v-if="isAdmin">
                 <RouterLink
                     to="/comingsoon"
                     data-drawer-target="drawer-navigation"
@@ -147,6 +147,14 @@
         </ul> -->
     </div>
 </template>
+
+<script setup lang="ts">
+    import { inject } from 'vue'
+    import { AuthKey } from '@/composables/useAuth'
+
+    const { isAdmin } = inject(AuthKey)!
+</script>
+
 <style lang="scss" scoped>
     .glass-card {
         background: rgba(255, 255, 255, 0.72);
