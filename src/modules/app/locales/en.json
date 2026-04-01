@@ -168,5 +168,25 @@
         "goBack": "Go Back",
         "goHome": "Go Home",
         "roleHint": "Your current role: {role}"
+    },
+    "accountDeleted": {
+        "title": "Account Deactivated",
+        "deletedOn": "Deactivated on {date}",
+        "deletionProgress": "Deletion progress",
+        "daysLeft": "days left",
+        "elapsed": "elapsed",
+        "expired": "The 30-day recovery window has expired. This account can no longer be restored.",
+        "adminDescription": "This account has been deactivated. As an Admin, you can restore it within 30 days of deactivation. After that, it will be permanently deleted.",
+        "restoreButton": "Restore Account",
+        "restoring": "Restoring...",
+        "restoreSuccess": "Account Restored Successfully!",
+        "restoreError": "Failed to restore account. Please try again.",
+        "redirecting": "Redirecting you to the dashboard...",
+        "userContactTitle": "Your account has been deactivated",
+        "userContactDescription": "Please contact your station owner to request account restoration. They can restore your account within 30 days of deactivation.",
+        "yourStation": "Your Station",
+        "owner": "Owner",
+        "logout": "Sign Out",
+        "footerNote": "This account will be permanently deleted in {days} days if not restored."
     }
 }

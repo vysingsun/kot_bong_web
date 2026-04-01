@@ -85,14 +85,14 @@
                             <span
                                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
                                 :class="
-                                    staff.isSuspended
+                                    staff.isSuspended || staff.isDeleted
                                         ? 'bg-red-50 text-[#f00317] dark:bg-red-900/30 dark:text-red-400'
                                         : 'bg-green-50 text-[#19b23e] dark:bg-green-900/30 dark:text-green-400'
                                 "
                             >
                                 <span
                                     class="w-1.5 h-1.5 rounded-full"
-                                    :class="staff.isSuspended ? 'bg-[#f00317]' : 'bg-[#19b23e]'"
+                                    :class="staff.isSuspended || staff.isDeleted ? 'bg-[#f00317]' : 'bg-[#19b23e]'"
                                 />
                                 {{ staff.isSuspended ? t('staff.inactive') : t('staff.active') }}
                             </span>
@@ -190,7 +190,8 @@
                     <!-- Suspend Toggle -->
                     <button
                         v-if="staff._id !== currentUserId"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                        :disabled="staff.isDeleted"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         :class="
                             staff.isSuspended
                                 ? 'text-[#19b23e] bg-green-50 hover:bg-green-100 dark:text-green-400 dark:bg-green-900/20 dark:hover:bg-green-900/40'
@@ -216,7 +217,7 @@
                     </span>
                     <button
                         v-if="staff._id !== currentUserId"
-                        :disabled="staff.isSuspended"
+                        :disabled="staff.isSuspended || staff.isDeleted"
                         class="text-blue-600 disabled:opacity-40 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
                         @click.stop="onEdit(staff)"
                     >
@@ -231,8 +232,7 @@
                     </button>
                     <span v-if="staff._id !== currentUserId" class="text-gray-300 dark:text-gray-600">|</span>
                     <button
-                        v-if="staff._id !== currentUserId"
-                        :disabled="staff.isSuspended"
+                        v-if="staff._id !== currentUserId && !staff.isDeleted"
                         class="text-xs font-medium text-[#f00317] hover:text-[#f00317] dark:text-gray-400 dark:hover:text-red-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-[#f00317] dark:disabled:hover:text-gray-400"
                         @click.stop="onDelete(staff)"
                     >
@@ -242,6 +242,21 @@
                                 stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                        </svg>
+                    </button>
+                    <!-- Restore button — only show if deleted -->
+                    <button
+                        v-if="staff._id !== currentUserId && staff.isDeleted"
+                        class="text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        @click.stop="onRestore(staff)"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                             />
                         </svg>
                     </button>
@@ -338,9 +353,8 @@
     }
 
     const onDelete = (staff: IStaff) => {
-        router.push('/comingsoon')
-        // deleteId.value = staff._id
-        // showModal()
+        deleteId.value = staff._id
+        showModal()
     }
 
     const handleConfirmDelete = async () => {
@@ -348,8 +362,10 @@
             appStore.loading = true
             const success = await store.deleteStaff(deleteId.value)
             if (success) {
-                staffList.value = staffList.value.filter(s => s._id !== deleteId.value)
-                totalRecords.value -= 1
+                const target = staffList.value.find(s => s._id === deleteId.value)
+                if (target) {
+                    target.isDeleted = true
+                }
             } else {
                 alert(t('staff.delete_failed'))
             }
@@ -358,6 +374,26 @@
         } finally {
             appStore.loading = false
             closeModal()
+        }
+    }
+
+    const onRestore = async (staff: IStaff) => {
+        try {
+            appStore.loading = true
+            await staffService.edit(staff._id, {
+                isDeleted: false,
+                deletedAt: null,
+            })
+            const target = staffList.value.find(s => s._id === staff._id)
+            if (target) {
+                target.isDeleted = false
+                target.deletedAt = null
+            }
+        } catch (err) {
+            console.error('Failed to restore staff:', err)
+            appStore.loading = true
+        } finally {
+            appStore.loading = false
         }
     }
 

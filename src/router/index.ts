@@ -90,6 +90,12 @@ const router = createRouter({
             component: () => import('@/components/home/Unauthorized.vue'),
             meta: { title: 'Unauthorized' },
         },
+        {
+            path: '/account-deleted',
+            name: 'AccountDeleted',
+            component: () => import('@/components/home/AccountDeleted.vue'),
+            meta: { title: 'Account Deactivated' },
+        },
     ],
 })
 
@@ -127,6 +133,11 @@ router.beforeEach(async (to, from, next) => {
     const isSuspended = user?.isSuspended === true
     const isUserRole = user?.role?.role_name === 'User'
 
+    // Soft Delected Acc
+    const isDeleted = user?.isDeleted
+    if (isDeleted && to.path !== '/account-deleted') {
+        return next('/account-deleted')
+    }
     // ── Suspended staff ────────────────────────────────────
     if (isSuspended && isUserRole) {
         // Already on /suspended — allow, stop redirect loop
