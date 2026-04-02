@@ -22,6 +22,11 @@
         "User": "Staff",
         "me": "Me",
         "suspend": "Suspend",
-        "activate": "Activate"
+        "activate": "Activate",
+        "staff.delete_success_title": "Deleted",
+        "staff.delete_success_desc": "Staff member has been deleted successfully.",
+        "staff.restore_success_title": "Restored",
+        "staff.restore_success_desc": "Staff member has been restored successfully.",
+        "staff.restore_failed": "Failed to restore staff member."
     }
 }

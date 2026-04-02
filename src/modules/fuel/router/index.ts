@@ -1,5 +1,4 @@
-import i18n from '@/plugins/i18n'
-const MODULE_NAME = i18n.global.t('fuel.fuel')
+const MODULE_NAME = 'fuel.fuel'
 const MODULE_PATH = '/fuel'
 
 export const routes = [
@@ -14,7 +13,7 @@ export const routes = [
     },
     {
         module: MODULE_NAME,
-        name: i18n.global.t('fuel.fuel_management'),
+        name: 'fuel.fuel_management',
         path: `${MODULE_PATH}/:mode/:id?`,
         meta: {
             title: MODULE_NAME,

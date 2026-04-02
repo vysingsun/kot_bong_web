@@ -2,7 +2,7 @@
     "app": "App",
     "home": {
         "welcome": "Welcome",
-        "fuel_station": "Fuel Station & Gas Services",
+        "fuel_station": "Gas Station Management",
         "sales": "Sales",
         "staff": "Staff",
         "stocks": "Stocks",

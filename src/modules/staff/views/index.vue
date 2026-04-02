@@ -265,15 +265,21 @@
         </div>
     </div>
 
-    <!-- Delete Confirm Modal -->
-    <!-- <BaseModal
-        :is-visible="isVisible"
-        type="error"
-        :title="t('staff.delete_confirm')"
-        :confirm-label="t('form.confirm')"
-        @close="closeModal"
-        @confirm="handleConfirmDelete"
-    /> -->
+    <SuccessModal
+        :show="successModal.show"
+        :type="successModal.type"
+        :title="successModal.title"
+        :description="successModal.description"
+        @close="successModal.show = false"
+        @confirm="successModal.show = false"
+    />
+
+    <ErrorModal
+        :show="errorModal.show"
+        :description="errorModal.description"
+        :error-message="errorModal.message"
+        @confirm="handleErrorModalConfirm"
+    />
     <!-- Delete Confirmation Modal -->
     <DeleteModal
         :show="isVisible"
@@ -320,6 +326,24 @@
     const currentUserId = appData.value?._id
     const currentUserRole = appData.value?.role?.role_name
 
+    // ── Modals ────────────────────────────────────────────────────────
+    const successModal = ref({
+        show: false,
+        type: 'success' as 'success' | 'warning',
+        title: '',
+        description: '',
+    })
+
+    const errorModal = ref({
+        show: false,
+        description: '',
+        message: '',
+    })
+
+    const handleErrorModalConfirm = () => {
+        errorModal.value.show = false
+    }
+
     const getData = async () => {
         isLoading.value = true
         try {
@@ -363,14 +387,27 @@
             const success = await store.deleteStaff(deleteId.value)
             if (success) {
                 const target = staffList.value.find(s => s._id === deleteId.value)
-                if (target) {
-                    target.isDeleted = true
+                if (target) target.isDeleted = true
+
+                successModal.value = {
+                    show: true,
+                    type: 'success',
+                    title: t('staff.delete_success_title'),
+                    description: t('staff.delete_success_desc'),
                 }
             } else {
-                alert(t('staff.delete_failed'))
+                errorModal.value = {
+                    show: true,
+                    description: t('staff.delete_failed'),
+                    message: '',
+                }
             }
-        } catch {
-            alert(t('staff.delete_failed'))
+        } catch (err: any) {
+            errorModal.value = {
+                show: true,
+                description: t('staff.delete_failed'),
+                message: err?.response?.data?.error || err?.message || '',
+            }
         } finally {
             appStore.loading = false
             closeModal()
@@ -389,9 +426,18 @@
                 target.isDeleted = false
                 target.deletedAt = null
             }
-        } catch (err) {
-            console.error('Failed to restore staff:', err)
-            appStore.loading = true
+            successModal.value = {
+                show: true,
+                type: 'success',
+                title: t('staff.restore_success_title'),
+                description: t('staff.restore_success_desc'),
+            }
+        } catch (err: any) {
+            errorModal.value = {
+                show: true,
+                description: t('staff.restore_failed'),
+                message: err?.response?.data?.error || err?.message || '',
+            }
         } finally {
             appStore.loading = false
         }
