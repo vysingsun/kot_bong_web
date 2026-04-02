@@ -6,7 +6,6 @@ import { AUTH } from '@/modules/auth/router/index'
 import { isAuthenticated } from '@/middlewares/auth'
 import { ONBOARDINGVIEW } from '@/modules/OnboardingView/router'
 import { useAppStore } from '@/modules/app/store'
-import i18n from '@/plugins/i18n'
 import { getFromCache, setCache } from '@/composables/useCache'
 import { useThemeStore } from '@/stores/theme'
 import { appService } from '@/modules/app/services/api.service'
@@ -57,13 +56,13 @@ const router = createRouter({
         },
         {
             path: '/fuelsalesgraph',
-            name: i18n.global.t('menu.salesGraph'),
+            name: 'menu.salesGraph',
             beforeEnter: isAuthenticated,
             component: Default_header,
             children: [
                 {
                     path: '',
-                    name: i18n.global.t('menu.salesGraph'),
+                    name: 'menu.salesGraph',
                     component: () => import('@/components/home/SideNavs/FuelSalesGraph.vue'),
                 },
             ],
@@ -89,6 +88,12 @@ const router = createRouter({
             name: 'Unauthorized',
             component: () => import('@/components/home/Unauthorized.vue'),
             meta: { title: 'Unauthorized' },
+        },
+        {
+            path: '/account-deleted',
+            name: 'AccountDeleted',
+            component: () => import('@/components/home/AccountDeleted.vue'),
+            meta: { title: 'Account Deactivated' },
         },
     ],
 })
@@ -127,6 +132,11 @@ router.beforeEach(async (to, from, next) => {
     const isSuspended = user?.isSuspended === true
     const isUserRole = user?.role?.role_name === 'User'
 
+    // Soft Delected Acc
+    const isDeleted = user?.isDeleted
+    if (isDeleted && to.path !== '/account-deleted') {
+        return next('/account-deleted')
+    }
     // ── Suspended staff ────────────────────────────────────
     if (isSuspended && isUserRole) {
         // Already on /suspended — allow, stop redirect loop
