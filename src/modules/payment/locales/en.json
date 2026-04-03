@@ -18,7 +18,15 @@
             "failed": "Failed",
             "expired": "Expired",
             "pending": "Pending"
-        }
+        },
+        "modal_title": "Upgrade to Pro",
+        "modal_subtitle": "Unlock everything your station needs",
+        "pill_staff": "Unlimited staff",
+        "pill_reports": "Full reports",
+        "pill_support": "Priority support",
+        "month": "month",
+        "upgrade_now": "Upgrade to Pro",
+        "maybe_later": "Maybe later"
     },
     "plans": {
         "trial": {
