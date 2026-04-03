@@ -40,19 +40,39 @@
 
         <!-- Export button -->
         <div v-if="exportable && isAdmin" class="flex justify-end mb-3">
-            <button
-                class="flex items-center gap-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 transition-colors"
-                @click="openDownloadModal()"
-            >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                </svg>
-                {{ t('common.export_excel') }}
-            </button>
+            <div class="relative inline-flex">
+                <button
+                    class="inline-flex items-center gap-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-lg px-4 py-2 transition-colors"
+                    @click="openDownloadModal()"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                        />
+                    </svg>
+                    {{ t('common.export_excel') }} {{ subscription?.hasProAccess }}
+                </button>
+
+                <span
+                    v-if="!subscription?.hasProAccess"
+                    class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
+                >
+                    <svg
+                        aria-hidden="true"
+                        class="w-4 h-4 text-blue-600 dark:text-blue-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+            </div>
         </div>
 
         <div class="w-full overflow-x-auto rounded-lg">
@@ -367,6 +387,7 @@
             </div>
         </Transition>
     </Teleport>
+    <ProUpgradeModal :show="warningModal.show" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -384,6 +405,10 @@
         type ExcelTotal,
     } from '@/utils/excel_generator'
     import { AuthKey } from '@/composables/useAuth'
+    import { lookupService } from '@/atoms/lookup/lookup.services'
+    import type { Subscription } from '@/modules/payment/services/api.service'
+    import { getFromCache } from '@/composables/useCache'
+    import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
     const { isAdmin } = inject(AuthKey)!
     const appStore = useAppStore()
@@ -443,10 +468,30 @@
     const showDownloadModal = ref(false)
     const downloadOption = ref<'current' | 'all'>('current')
     const isDownloading = ref(false)
+    const subscription = ref<Subscription | null>(null)
+    const appData = getFromCache('app_data')
+    const warningModal = ref({
+        show: false,
+        title: '',
+        description: '',
+    })
 
     const openDownloadModal = () => {
+        if (props.exportable && !subscription.value?.hasProAccess) {
+            warningModal.value = {
+                show: true,
+                title: t('subscription.pro_required_title'),
+                description: t('subscription.pro_required_desc'),
+            }
+            return
+        }
         downloadOption.value = 'current'
         showDownloadModal.value = true
+    }
+
+    const handleSuccessConfirm = () => {
+        warningModal.value.show = false
+        router.push('/payment')
     }
 
     // ── Current data: generate Excel in-browser, zero API call ─
@@ -652,11 +697,21 @@
         getData()
     }
 
-    onMounted(() => {
+    onMounted(async () => {
         initFlowbite()
         extraParams.value = { ...props.params }
+        await fetchStation(appData.value.stations[0]._id)
         if (props.loadDataOnMount) getData()
     })
+
+    async function fetchStation(stationId: string) {
+        try {
+            const res = await lookupService.getStationById(stationId)
+            subscription.value = res.data.data.subscription
+        } catch (err: any) {
+            alert(err?.response?.data?.message ?? 'Failed to load station')
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
