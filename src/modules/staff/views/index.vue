@@ -525,7 +525,7 @@
     const onToggleSuspend = async (staff: IStaff) => {
         try {
             staff.isSuspended = !staff.isSuspended
-            await staffService.edit(staff._id, { isSuspended: !staff.isSuspended })
+            await staffService.edit(staff._id, { isSuspended: staff.isSuspended })
         } catch (err: any) {
             staff.isSuspended = !staff.isSuspended
             // errorModal.show = true

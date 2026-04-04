@@ -259,6 +259,12 @@
     }
 
     const handleErrorModalConfirm = () => {
+        const pathSegments = route.path.split('/')
+        if (pathSegments[1] === 'current-stock') {
+            router.push('/fuel')
+        } else if (pathSegments[1] === 'fuel-sold') {
+            router.push('/current-stock')
+        }
         errorModal.value.show = false
     }
 
@@ -304,12 +310,13 @@
                     }
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             errorModal.value = {
                 show: true,
                 title: '',
-                description: isSaving.value ? t('form.create_error') : t('form.update_error'),
-                message: error instanceof Error ? error.message : String(error),
+                // description: isSaving.value ? t('form.create_error') : t('form.update_error'),
+                description: error?.response?.data?.error,
+                message: error?.response?.data?.suggestion || error.message,
             }
         } finally {
             isSaving.value = false
