@@ -68,6 +68,19 @@ const router = createRouter({
             ],
         },
         {
+            path: '/fuelstockgraph',
+            name: 'menu.stockGraph',
+            beforeEnter: isAuthenticated,
+            component: Default_header,
+            children: [
+                {
+                    path: '',
+                    name: 'menu.stockGraph',
+                    component: () => import('@/components/home/SideNavs/FuelStocksGraph.vue'),
+                },
+            ],
+        },
+        {
             name: 'payment',
             path: '/payment',
             beforeEnter: isAuthenticated,

@@ -34,5 +34,32 @@
         "date": "Date",
         "download_report": "Download Stock Report",
         "showing_all_data": "Showing all Stock Income data from the beginning and for all fuel types"
+    },
+    "fuel_stock_chart": {
+        "title": "Fuel Stock",
+        "period": "Period",
+        "amount": "Amount",
+        "custom_range": "Custom Range",
+        "date_range_placeholder": "Select date range...",
+        "apply": "Apply",
+        "reset": "Reset",
+        "loading": "Loading...",
+        "no_data": "No data available",
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year",
+        "total_liters": "Total Liters",
+        "total_amount_us": "Total Amount",
+        "volume_stocked": "Volume Stocked",
+        "quantity_liters": "Quantity (Liters)",
+        "amount_spent": "Amount Spent",
+        "amount_usd": "Amount (USD)",
+        "distribution": "Distribution",
+        "liter_share": "Liter Share",
+        "amount_share": "Amount Share",
+        "liters": "Liters",
+        "usd": "USD",
+        "records": "Records"
     }
 }
