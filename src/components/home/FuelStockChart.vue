@@ -24,7 +24,7 @@
                         {{ t('fuel_stock_chart.total_amount_us') }}
                     </p>
                     <p class="text-lg font-extrabold text-blue-700 tabular-nums">
-                        {{ formatUSD(data.grand_totals.total_amount_us) }}
+                        {{ formatAmount(data.grand_totals.total_amount_us) }}
                     </p>
                 </div>
             </div>
@@ -231,7 +231,6 @@
                     v-for="fuel in data.stocks_by_fuel"
                     :key="fuel.fuel_id"
                     class="bg-white border border-gray-200 rounded-xl overflow-hidden flex hover:shadow-md transition-shadow"
-                    :style="{ '--fuel-color': fuel.fuel_color }"
                 >
                     <div class="w-1.5 shrink-0" :style="{ backgroundColor: fuel.fuel_color }"></div>
                     <div class="p-4 flex-1">
@@ -251,15 +250,8 @@
                                     {{ t('fuel_stock_chart.usd') }}
                                 </p>
                                 <p class="font-bold text-gray-700 tabular-nums">
-                                    {{ formatUSD(fuel.total_amount_us) }}
+                                    {{ formatAmount(fuel.total_amount_us) }}
                                 </p>
-                            </div>
-                            <div class="w-px h-7 bg-gray-100"></div>
-                            <div>
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                                    {{ t('fuel_stock_chart.records') }}
-                                </p>
-                                <p class="font-bold text-gray-700 tabular-nums">{{ fuel.record_count }}</p>
                             </div>
                         </div>
                     </div>
@@ -357,7 +349,7 @@
 
     const resetFilter = () => {
         filter.mode = 'none'
-        filter.period = 'day'
+        filter.period = 'week'
         filter.amount = 1
         dateRange.value = null
         emit('fetch', {})
@@ -370,19 +362,58 @@
     const fuelColors = computed(() => fuels.value.map(f => f.fuel_color))
 
     // ── Formatters ────────────────────────────────────────────────────────────────
-    const formatLiter = (v: number) => `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })} L`
-    const formatUSD = (v: number) =>
-        `$${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000)
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        if (amount >= 1_000_000)
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
+
+    const formatAmount = (usd: number) => {
+        if (usd >= 1_000_000_000)
+            return `$ ${(usd / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        if (usd >= 1_000_000) return `$ ${(usd / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        return `$ ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd)}`
+    }
+
+    // compact for bar/donut labels — short enough to fit inside bar
+    const compactLiter = (v: number) => {
+        if (v >= 1_000_000_000) {
+            return `L ${(v / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 4 })}B`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)}`
+    }
+
+    const compactUsd = (v: number) => {
+        if (v >= 1_000_000_000) {
+            return `${(v / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)
+    }
 
     // ── Charts ────────────────────────────────────────────────────────────────────
-    const baseBar = (colors: string[], yFormatter: (v: number) => string) => ({
+    const baseBar = (colors: string[], yFormatter: (v: number) => string, labelFormatter?: (v: number) => string) => ({
         chart: { toolbar: { show: false }, background: 'transparent', fontFamily: 'Kantumruy Pro, sans-serif' },
-        plotOptions: { bar: { borderRadius: 6, columnWidth: '52%', distributed: true } },
+        plotOptions: {
+            bar: {
+                borderRadius: 6,
+                columnWidth: '52%',
+                distributed: true,
+                dataLabels: {
+                    position: 'center' as const,
+                    orientation: 'vertical' as const,
+                },
+            },
+        },
         dataLabels: {
             enabled: true,
-            formatter: yFormatter,
-            style: { fontSize: '11px', fontWeight: '700', colors: ['#fff'] },
-            offsetY: -2,
+            formatter: labelFormatter ?? yFormatter,
+            style: {
+                fontSize: '10px',
+                fontWeight: '700',
+                colors: Array(fuelNames.value.length).fill('#ffffff'),
+            },
             background: { enabled: false },
         },
         colors,
@@ -398,17 +429,21 @@
         tooltip: { theme: 'light', y: { formatter: yFormatter } },
     })
 
-    const literChartOptions = computed(() => baseBar(fuelColors.value, (v: number) => `${v.toLocaleString()} L`))
+    const literChartOptions = computed(() => baseBar(fuelColors.value, formatLiter, compactLiter))
     const literSeries = computed(() => [
         { name: t('fuel_stock_chart.quantity_liters'), data: fuels.value.map(f => f.total_quantity_liter) },
     ])
 
-    const usdChartOptions = computed(() => baseBar(fuelColors.value, (v: number) => `$${(v / 1000).toFixed(1)}K`))
+    const usdChartOptions = computed(() => baseBar(fuelColors.value, formatAmount, compactUsd))
     const usdSeries = computed(() => [
         { name: t('fuel_stock_chart.amount_usd'), data: fuels.value.map(f => f.total_amount_us) },
     ])
 
-    const baseDonut = (colors: string[], formatter: (v: number) => string) => ({
+    const baseDonut = (
+        colors: string[],
+        formatter: (v: number) => string,
+        compactFormatter?: (v: number) => string,
+    ) => ({
         chart: { background: 'transparent', fontFamily: 'Kantumruy Pro, sans-serif' },
         colors,
         labels: fuelNames.value,
@@ -426,7 +461,7 @@
                             color: '#9ca3af',
                             fontSize: '13px',
                             formatter: (w: { globals: { seriesTotals: number[] } }) =>
-                                formatter(w.globals.seriesTotals.reduce((a, b) => a + b, 0)),
+                                (compactFormatter ?? formatter)(w.globals.seriesTotals.reduce((a, b) => a + b, 0)),
                         },
                     },
                 },
@@ -436,9 +471,9 @@
         tooltip: { theme: 'light', y: { formatter } },
     })
 
-    const donutLiterOptions = computed(() => baseDonut(fuelColors.value, (v: number) => `${v.toLocaleString()} L`))
+    const donutLiterOptions = computed(() => baseDonut(fuelColors.value, formatLiter, compactLiter))
     const donutLiterSeries = computed(() => fuels.value.map(f => f.total_quantity_liter))
-    const donutUsdOptions = computed(() => baseDonut(fuelColors.value, (v: number) => `$${(v / 1000).toFixed(1)}K`))
+    const donutUsdOptions = computed(() => baseDonut(fuelColors.value, formatAmount, compactUsd))
     const donutUsdSeries = computed(() => fuels.value.map(f => f.total_amount_us))
 </script>
 

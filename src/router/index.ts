@@ -81,6 +81,19 @@ const router = createRouter({
             ],
         },
         {
+            path: '/overview',
+            name: 'menu.overview',
+            beforeEnter: isAuthenticated,
+            component: Default_header,
+            children: [
+                {
+                    path: '',
+                    name: 'menu.overview',
+                    component: () => import('@/components/home/SideNavs/OverView.vue'),
+                },
+            ],
+        },
+        {
             name: 'payment',
             path: '/payment',
             beforeEnter: isAuthenticated,

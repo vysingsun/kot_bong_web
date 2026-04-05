@@ -18,7 +18,7 @@
         "start_date": "Start Date",
         "end_date": "End Date",
         "reset_filters": "Reset",
-        "tdollar_ton": "Dollar/Ton",
+        "dollar_ton": "$/Ton",
         "no_records": "No Stock Records",
         "no_records_desc": "Start adding fuel stock records",
         "load_more": "Load More",
