@@ -222,21 +222,21 @@
                 <div class="flex items-center gap-1">
                     <span>{{ t('fuel_sold.total_quantity_liter') }}:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">
-                        {{ totals.quantity_liter.toLocaleString() }} L</span
+                        {{ formatLiter(totals.quantity_liter) }}</span
                     >
                 </div>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
                 <div class="flex items-center gap-1">
                     <span>{{ t('fuel_sold.total_amount_khr') }}:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">
-                        {{ totals.amount_khr.toLocaleString() }} ៛
+                        ៛ {{ formatCurrency(totals.amount_khr) }}
                     </span>
                 </div>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
                 <div class="flex items-center gap-1">
                     <span>{{ t('fuel_sold.total_amount_us') }}:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">
-                        $ {{ totals.total_amount_us.toLocaleString() }}
+                        $ {{ formatCurrency(totals.total_amount_us) }}
                     </span>
                 </div>
             </div>
@@ -251,7 +251,6 @@
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
     import { lookupService } from '@/atoms/lookup/lookup.services'
     import { getFromCache } from '@/composables/useCache'
-    import { useRouter } from 'vue-router'
 
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
@@ -272,8 +271,23 @@
     const loading = ref(false)
     const totals = ref(null)
     const users = ref<any[]>([])
-    const { locale } = useI18n()
-    const lang = locale.value === 'km' || locale.value === 'kh' ? 'kh' : 'en'
+
+    const formatCurrency = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
+    }
+
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        if (amount >= 1_000_000) {
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
 
     const onRetrieveResult = (result: any) => {
         totals.value = result.allData?.totals ?? null

@@ -24,7 +24,7 @@
                         {{ t('fuel_sales_chart.total_revenue') }}
                     </p>
                     <p class="text-lg font-extrabold text-blue-700 tabular-nums">
-                        {{ formatKHR(data.grand_totals.total_amount_khr) }}
+                        {{ formatAmount(data.grand_totals.total_amount_khr, data.grand_totals.total_amount_us) }}
                     </p>
                 </div>
             </div>
@@ -98,7 +98,7 @@
             <div class="flex gap-2 ml-auto">
                 <button
                     @click="resetFilter"
-                    class="px-4 py-2 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                    class="px-4 py2 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors"
                 >
                     {{ t('fuel_sales_chart.reset') }}
                 </button>
@@ -156,7 +156,7 @@
                     <apexchart type="bar" height="260" :options="literChartOptions" :series="literSeries" />
                 </div>
 
-                <!-- KHR Bar -->
+                <!-- Amount Bar -->
                 <div
                     class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
                 >
@@ -173,10 +173,12 @@
                             <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                 {{ t('fuel_sales_chart.revenue_earned') }}
                             </p>
-                            <h3 class="font-extrabold text-gray-900">{{ t('fuel_sales_chart.amount_khr') }}</h3>
+                            <h3 class="font-extrabold text-gray-900">
+                                {{ isUSD ? t('fuel_sales_chart.amount_usd') : t('fuel_sales_chart.amount_khr') }}
+                            </h3>
                         </div>
                     </div>
-                    <apexchart type="bar" height="260" :options="khrChartOptions" :series="khrSeries" />
+                    <apexchart type="bar" height="260" :options="amountChartOptions" :series="amountSeries" />
                 </div>
 
                 <!-- Donut Liter -->
@@ -202,7 +204,7 @@
                     <apexchart type="donut" height="240" :options="donutLiterOptions" :series="donutLiterSeries" />
                 </div>
 
-                <!-- Donut KHR -->
+                <!-- Donut Amount -->
                 <div
                     class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
                 >
@@ -222,7 +224,7 @@
                             <h3 class="font-extrabold text-gray-900">{{ t('fuel_sales_chart.revenue_share') }}</h3>
                         </div>
                     </div>
-                    <apexchart type="donut" height="240" :options="donutKhrOptions" :series="donutKhrSeries" />
+                    <apexchart type="donut" height="240" :options="donutAmountOptions" :series="donutAmountSeries" />
                 </div>
             </div>
 
@@ -232,7 +234,6 @@
                     v-for="fuel in data.sales_by_fuel"
                     :key="fuel.fuel_id"
                     class="bg-white border border-gray-200 rounded-xl overflow-hidden flex hover:shadow-md transition-shadow"
-                    :style="{ '--fuel-color': fuel.fuel_color }"
                 >
                     <div class="w-1.5 shrink-0" :style="{ backgroundColor: fuel.fuel_color }"></div>
                     <div class="p-4 flex-1">
@@ -249,10 +250,10 @@
                             <div class="w-px h-7 bg-gray-100"></div>
                             <div>
                                 <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                                    {{ t('fuel_sales_chart.khr') }}
+                                    {{ isUSD ? 'USD' : t('fuel_sales_chart.khr') }}
                                 </p>
                                 <p class="font-bold text-gray-700 tabular-nums">
-                                    {{ formatKHR(fuel.total_amount_khr) }}
+                                    {{ formatAmount(fuel.total_amount_khr, fuel.total_amount_us) }}
                                 </p>
                             </div>
                         </div>
@@ -269,9 +270,15 @@
     import VueApexCharts from 'vue3-apexcharts'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
+    import { getFromCache } from '@/composables/useCache'
 
     const apexchart = VueApexCharts
     const { t } = useI18n()
+
+    // ── Currency ──────────────────────────────────────────────────────────────────
+    const appData = computed(() => getFromCache('app_data')?.value)
+    const currency = computed<string>(() => appData.value?.stations?.[0]?.currency ?? 'KHR')
+    const isUSD = computed(() => currency.value === 'USD')
 
     // ── Types ─────────────────────────────────────────────────────────────────────
     interface FuelSale {
@@ -329,9 +336,7 @@
     }
 
     const onChangeDateRange = (val: Date[] | null) => {
-        if (val && val.length === 2) {
-            filter.mode = 'range'
-        }
+        if (val && val.length === 2) filter.mode = 'range'
     }
 
     const applyFilter = () => {
@@ -361,18 +366,56 @@
     const fuelColors = computed(() => fuels.value.map(f => f.fuel_color))
 
     // ── Formatters ────────────────────────────────────────────────────────────────
-    const formatLiter = (v: number) => `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })} L`
-    const formatKHR = (v: number) => `${(v / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 })}K ៛`
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000)
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        if (amount >= 1_000_000)
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
+
+    const getSymbol = () => (currency.value === 'USD' ? '$' : currency.value === 'KHR' ? '៛' : currency.value)
+
+    const formatAmount = (khr: number, usd: number) => {
+        const v = isUSD.value ? usd : khr
+        const symbol = getSymbol()
+        if (v >= 1_000_000_000)
+            return `${symbol} ${(v / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        if (v >= 1_000_000) return `${symbol} ${(v / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        return `${symbol} ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)}`
+    }
+
+    const amountBarFormatter = (v: number) => {
+        const symbol = isUSD.value ? '$' : '៛'
+        if (v >= 1_000_000_000) return `${symbol}${(v / 1_000_000_000).toFixed(2)}B`
+        if (v >= 1_000_000) return `${symbol}${(v / 1_000_000).toFixed(2)}M`
+        return `${symbol}${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(v)}`
+    }
+
+    const amountDonutFormatter = (v: number) => amountBarFormatter(v)
 
     // ── Charts ────────────────────────────────────────────────────────────────────
-    const baseBar = (colors: string[], yFormatter: (v: number) => string) => ({
+    const baseBar = (colors: string[], yFormatter: (v: number) => string, labelFormatter?: (v: number) => string) => ({
         chart: { toolbar: { show: false }, background: 'transparent', fontFamily: 'Kantumruy Pro, sans-serif' },
-        plotOptions: { bar: { borderRadius: 6, columnWidth: '52%', distributed: true } },
+        plotOptions: {
+            bar: {
+                borderRadius: 6,
+                columnWidth: '52%',
+                distributed: true,
+                dataLabels: {
+                    position: 'center' as const,
+                    orientation: 'vertical' as const,
+                },
+            },
+        },
         dataLabels: {
             enabled: true,
-            formatter: yFormatter,
-            style: { fontSize: '11px', fontWeight: '700', colors: ['#fff'] },
-            offsetY: -2,
+            formatter: labelFormatter ?? yFormatter,
+            style: {
+                fontSize: '10px',
+                fontWeight: '700',
+                colors: Array(fuelNames.value.length).fill('#ffffff'),
+            },
             background: { enabled: false },
         },
         colors,
@@ -393,9 +436,12 @@
         { name: t('fuel_sales_chart.quantity_liters'), data: fuels.value.map(f => f.total_quantity_sold_liter) },
     ])
 
-    const khrChartOptions = computed(() => baseBar(fuelColors.value, (v: number) => `${(v / 1000).toFixed(0)}K`))
-    const khrSeries = computed(() => [
-        { name: t('fuel_sales_chart.amount_khr'), data: fuels.value.map(f => f.total_amount_khr) },
+    const amountChartOptions = computed(() => baseBar(fuelColors.value, amountBarFormatter))
+    const amountSeries = computed(() => [
+        {
+            name: isUSD.value ? t('fuel_sales_chart.amount_usd') : t('fuel_sales_chart.amount_khr'),
+            data: fuels.value.map(f => (isUSD.value ? f.total_amount_us : f.total_amount_khr)),
+        },
     ])
 
     const baseDonut = (colors: string[], formatter: (v: number) => string) => ({
@@ -428,8 +474,11 @@
 
     const donutLiterOptions = computed(() => baseDonut(fuelColors.value, (v: number) => `${v.toLocaleString()} L`))
     const donutLiterSeries = computed(() => fuels.value.map(f => f.total_quantity_sold_liter))
-    const donutKhrOptions = computed(() => baseDonut(fuelColors.value, (v: number) => `${(v / 1000).toFixed(0)}K ៛`))
-    const donutKhrSeries = computed(() => fuels.value.map(f => f.total_amount_khr))
+
+    const donutAmountOptions = computed(() => baseDonut(fuelColors.value, amountDonutFormatter))
+    const donutAmountSeries = computed(() =>
+        fuels.value.map(f => (isUSD.value ? f.total_amount_us : f.total_amount_khr)),
+    )
 </script>
 
 <style lang="scss" scoped>
@@ -438,7 +487,6 @@
             border-radius: 8px;
         }
     }
-
     :deep(.dp__input::placeholder) {
         font-family: 'Kantumruy Pro', sans-serif;
     }

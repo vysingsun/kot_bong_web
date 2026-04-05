@@ -30,6 +30,11 @@
         if (currentLanguage.value.code === lang.code || isLoading.value) return
 
         isLoading.value = true
+
+        localStorage.setItem('locale', lang.locale)
+        locale.value = lang.locale
+        currentLanguage.value = lang
+
         try {
             const appData = getFromCache('app_data')?.value
             const userId = appData?._id || appData?.data?._id
@@ -42,14 +47,9 @@
             const raw = localStorage.getItem('app_data')
             if (raw) {
                 const parsed = JSON.parse(raw)
-                if (parsed?.value) {
-                    parsed.value.language = lang.locale
-                }
+                if (parsed?.value) parsed.value.language = lang.locale
                 localStorage.setItem('app_data', JSON.stringify(parsed))
             }
-            locale.value = lang.locale
-            currentLanguage.value = lang
-            localStorage.setItem('locale', lang.locale)
             isOpen.value = false
         } catch (error) {
             console.error('Failed to update language:', error)
@@ -65,9 +65,12 @@
     }
 
     onMounted(() => {
+        const savedLocale = localStorage.getItem('locale')
         const appData = getFromCache('app_data')?.value
-        const savedLanguage = appData?.language || appData?.data?.language || localStorage.getItem('locale')
-        const matched = languages.find(lang => lang.locale === savedLanguage)
+        const appLocale = appData?.language || appData?.data?.language
+
+        const resolvedLocale = savedLocale || appLocale || 'en'
+        const matched = languages.find(lang => lang.locale === resolvedLocale)
         currentLanguage.value = matched || languages[0]
         locale.value = currentLanguage.value.locale
         document.addEventListener('click', handleClickOutside)

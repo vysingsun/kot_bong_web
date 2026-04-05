@@ -220,10 +220,20 @@
     }
 
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(amount)
+        if (amount >= 1_000_000_000) {
+            return `${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
+    }
+
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        if (amount >= 1_000_000) {
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
     }
 
     const getCreatorName = (sale: any) => {
@@ -617,8 +627,7 @@
                                 {{ t('fuel_sold.total_quantity_liter') }}
                             </p>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ store.totals.quantity_liter.toLocaleString() }}
-                                <span class="text-base font-normal text-gray-500 ml-1">L</span>
+                                {{ formatLiter(store.totals.quantity_liter) }}
                             </p>
                         </div>
                         <div
@@ -662,6 +671,32 @@
                                     clip-rule="evenodd"
                                 />
                             </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Amount Local - change to amber/orange -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 border-l-4 border-[#149c49]">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                {{
+                                    t('fuel_sold.total_amount_local', {
+                                        currency: currency !== 'KHR' && currency !== 'USD' ? currency : '៛',
+                                    })
+                                }}
+                            </p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                                {{ currency !== 'KHR' && currency !== 'USD' ? currency : '៛' }}
+                                {{ formatCurrency(store.totals.amount_khr) }}
+                            </p>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-green-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center"
+                        >
+                            <span class="text-lg font-bold text-[#149c49]">
+                                {{ currency !== 'KHR' && currency !== 'USD' ? currency : 'KHR' }}
+                            </span>
                         </div>
                     </div>
                 </div>
