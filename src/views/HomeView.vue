@@ -1,11 +1,10 @@
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue'
+    import { onMounted, ref, computed } from 'vue'
     import { initFlowbite } from 'flowbite'
     import { useAuthStore } from '@/modules/auth/store/index'
     import { useModal } from '@/composables/useModal'
     import { getFromCache } from '@/composables/useCache'
     import type { IUser } from '@/data/constants'
-    import BaseLoading from '@/components/app/BaseLoading.vue'
     import BaseModal from '@/components/app/BaseModal.vue'
     import ShapeBgAnimate from '@/components/app/ShapeBgAnimate.vue'
     import AppHeader from '@/components/home/AppHeader.vue'
@@ -22,6 +21,8 @@
     const authStore = useAuthStore()
     const user = ref<IUser>()
     const { t } = useI18n()
+    const appData = getFromCache('app_data')
+    const currency = computed<string>(() => appData?.value?.stations?.[0]?.currency ?? 'USD')
 
     // Optional: Custom banner image (can be stored in user data or company config)
     const customBannerImage = ref<string | undefined>(undefined)
@@ -93,7 +94,7 @@
                 <QuickActions :onLogout="showModal" />
 
                 <div class="pb-24">
-                    <FuelLiterBarChart :response="apiResponse" :loading="loading" />
+                    <FuelLiterBarChart :response="apiResponse" :loading="loading" :currency="currency" />
                 </div>
             </div>
         </main>

@@ -60,7 +60,7 @@
                         {{ t('fuel_sales_chart.total_revenue') }}
                     </span>
                     <span class="font-extrabold text-blue-600 tabular-nums text-lg leading-tight">
-                        {{ formatKHR(data.grand_totals.total_amount_khr) }}
+                        {{ formatAmount(data.grand_totals.total_amount_khr, data.grand_totals.total_amount_us) }}
                     </span>
                 </div>
             </div>
@@ -75,7 +75,26 @@
 
     const apexchart = VueApexCharts
     const { t } = useI18n()
-    const formatKHR = (v: number) => `${(v / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 })}K ៛`
+
+    const currencySymbol = computed(() => {
+        const cur = props.currency ?? 'KHR'
+        if (cur === 'USD') return '$'
+        if (cur === 'KHR') return '៛'
+        return cur // VND, CNY, etc. use currency code as symbol
+    })
+
+    const formatAmount = (khr: number, usd: number) => {
+        const cur = props.currency ?? 'KHR'
+        const isUSD = cur === 'USD'
+        const v = isUSD ? usd : khr
+        const sym = currencySymbol.value
+
+        if (v >= 1_000_000_000) {
+            return `${sym} ${(v / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        // normal number below 1,000,000,000
+        return `${sym} ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)}`
+    }
 
     // ── Types ─────────────────────────────────────────────────────────────────────
     interface FuelSale {
@@ -84,6 +103,7 @@
         fuel_color: string
         total_quantity_sold_liter: number
         total_amount_khr: number
+        total_amount_us: number
         [key: string]: any
     }
 
@@ -95,6 +115,7 @@
             grand_totals: {
                 total_quantity_sold_liter: number
                 total_amount_khr: number
+                total_amount_us: number
                 [key: string]: any
             }
         }
@@ -104,6 +125,7 @@
     const props = defineProps<{
         response: ApiResponse | null
         loading?: boolean
+        currency?: string
     }>()
 
     // ── Data ──────────────────────────────────────────────────────────────────────
@@ -111,7 +133,15 @@
     const fuels = computed(() => data.value?.sales_by_fuel ?? [])
 
     // ── Formatter ─────────────────────────────────────────────────────────────────
-    const formatLiter = (v: number) => `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })} L`
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        if (amount >= 1_000_000) {
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
 
     // ── Chart ─────────────────────────────────────────────────────────────────────
     const chartOptions = computed(() => ({
@@ -121,7 +151,15 @@
             fontFamily: 'Kantumruy Pro, sans-serif',
         },
         plotOptions: {
-            bar: { borderRadius: 6, columnWidth: '52%', distributed: true },
+            bar: {
+                borderRadius: 6,
+                columnWidth: '52%',
+                distributed: true,
+                dataLabels: {
+                    position: 'center' as const,
+                    orientation: 'vertical' as const,
+                },
+            },
         },
         dataLabels: {
             enabled: true,

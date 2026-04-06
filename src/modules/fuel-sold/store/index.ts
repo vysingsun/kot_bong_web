@@ -93,6 +93,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
 
     const totalCount = ref(0)
     const totals = ref({
+        amount_khr: 0,
         quantity_liter: 0,
         total_amount_us: 0,
         total_amount_khr: 0,

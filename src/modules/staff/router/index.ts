@@ -1,5 +1,4 @@
-import i18n from '@/plugins/i18n'
-const MODULE_NAME = i18n.global.t('staff.title')
+const MODULE_NAME = 'staff.title'
 const MODULE_PATH = '/staff'
 
 export const routes = [
@@ -14,7 +13,7 @@ export const routes = [
     },
     {
         module: MODULE_NAME,
-        name: i18n.global.t('staff.staff_management'),
+        name: 'staff.staff_management',
         path: `${MODULE_PATH}/:mode/:id?`,
         meta: {
             title: MODULE_NAME,

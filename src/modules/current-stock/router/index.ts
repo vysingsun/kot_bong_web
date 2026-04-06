@@ -1,6 +1,5 @@
 // import prefetchResources from '@/middlewares/prefetch-resources'
-import i18n from '@/plugins/i18n' // Ensure you import the i18n instance
-const MODULE_NAME = i18n.global.t('current_stock')
+const MODULE_NAME = 'current_stock'
 const MODULE_PATH = '/current-stock'
 // const { t } = useI18n()
 export const routes = [
@@ -15,7 +14,7 @@ export const routes = [
     },
     {
         module: MODULE_NAME,
-        name: i18n.global.t('fuel_stock.fuel_stock_management'),
+        name: 'fuel_stock.fuel_stock_management',
         path: `${MODULE_PATH}/:mode/:id?`,
         meta: {
             title: MODULE_NAME,

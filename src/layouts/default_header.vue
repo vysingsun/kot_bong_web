@@ -25,7 +25,7 @@
                     </svg>
                 </button>
                 <h3 class="text-white font-semibold flex justify-center text-xl tracking-tight">
-                    {{ router.currentRoute.value.name }}
+                    {{ t(routeName) }}
                 </h3>
             </div>
         </header>
@@ -37,9 +37,13 @@
 
 <script setup lang="ts">
     import { useRoute, useRouter } from 'vue-router'
+    import { useI18n } from 'vue-i18n'
 
+    const { t } = useI18n()
     const router = useRouter()
     const route = useRoute()
+
+    const routeName = route.name as string
 
     const goBack = () => {
         const pathSegments = route.path.split('/').filter(segment => segment !== '')
