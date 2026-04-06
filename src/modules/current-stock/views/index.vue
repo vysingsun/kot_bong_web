@@ -311,7 +311,7 @@
                                 {{ t('fuel_stock.total_quantity_liter') }}
                             </p>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ store.totals.quantity_liter.toLocaleString() }} L
+                                {{ formatLiter(store.totals.quantity_liter) }}
                             </p>
                         </div>
                         <div
@@ -531,9 +531,22 @@
 
     const hasMoreRecords = computed(() => store.fuelStocks.length < store.totalCount)
 
-    const formatCurrency = (amount: number) =>
-        new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
+    const formatCurrency = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
+    }
 
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        if (amount >= 1_000_000) {
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
     // Computed property for summary title
     const summaryTitle = computed(() => {
         if (hasActiveFilters.value) {

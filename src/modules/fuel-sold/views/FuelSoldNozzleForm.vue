@@ -84,20 +84,7 @@
                 />
             </div>
 
-            <!-- ⑥ Exchange Rate — hidden when USD -->
-            <div v-if="!isUSD">
-                <label class="field-label">{{ t('fuel_sold.exchange_rate') }}</label>
-                <input
-                    v-model="store.formData.exchange_rate"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    :disabled="mode === 'view'"
-                    class="field-input"
-                />
-            </div>
-
-            <!-- ④ Exchange Rate — label dynamic, hidden when USD -->
+            <!-- ⑥ Exchange Rate-->
             <div>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                     t('fuel_sold.exchange_rate')

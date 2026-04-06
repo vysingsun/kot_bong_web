@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { staffService } from '@/modules/staff/services/api.service'
+import { lookupService } from '@/atoms/lookup/lookup.services'
+import type { Subscription } from '@/modules/payment/services/api.service'
 
 class FormData {
     firstName: string = ''
@@ -46,6 +48,8 @@ export const useStaffStore = defineStore('staffStore', () => {
     const formData = ref(new FormData())
     const roles = ref<IRole[]>([])
 
+    const subscription = ref<Subscription | null>(null)
+
     const headers = ref([
         { text: 'staff.first_name', value: 'firstName' },
         { text: 'staff.last_name', value: 'lastName' },
@@ -72,6 +76,15 @@ export const useStaffStore = defineStore('staffStore', () => {
         } catch (error) {
             console.error('Error deleting staff:', error)
             return false
+        }
+    }
+
+    async function fetchStation(stationId: string) {
+        try {
+            const res = await lookupService.getStationById(stationId)
+            subscription.value = res.data.data.subscription
+        } catch (err: any) {
+            alert(err?.response?.data?.message ?? 'Failed to load station')
         }
     }
 
@@ -117,6 +130,8 @@ export const useStaffStore = defineStore('staffStore', () => {
         saveStaff,
         updateStaff,
         deleteStaff,
+        fetchStation,
+        subscription,
         readDataFromApi,
         resetData,
     }

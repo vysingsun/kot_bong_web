@@ -21,7 +21,7 @@
         <!-- Content -->
         <div class="relative z-10 font-semibold text-on-primary text-sm absolute top-2 left-3">
             <div class="text-lg">{{ t('home.welcome') }} {{ owner }}</div>
-            <div class="pt-1 text-sm opacity-90">ស្ថានីយ៍រួមប្រេង និងឧស្ម័នឥន្ធនៈ</div>
+            <div class="pt-1 text-sm opacity-90">{{ t('home.fuel_station') }}</div>
         </div>
 
         <!-- Banner Image or Icon -->

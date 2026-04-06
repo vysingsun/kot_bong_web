@@ -21,7 +21,13 @@ export const lookupService = {
     getFuelSales: async (stationId: string, params?: any) => {
         return axios.get(`/fuel_sold/station/${stationId}/sales`, { params })
     },
+    getFuelStock: async (stationId: string, params?: any) => {
+        return axios.get(`/fuel_stock/station/${stationId}/stocks`, { params })
+    },
     getStationById: async (id: string) => {
         return axios.get<{ success: boolean; data: Station }>(`/station/${id}`)
+    },
+    getFuelSoldsAreaChart: async (stationId: string, params?: any) => {
+        return axios.get(`/fuel_sold/station/${stationId}/chart`, { params })
     },
 }

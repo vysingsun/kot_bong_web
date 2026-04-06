@@ -1238,11 +1238,11 @@
 
     const deactivateAccount = async () => {
         try {
-            // await userService.delete(user._id)
-            // deleteModal.show = false
-            // showSuccess(t('profile.deactivated_title'), t('profile.deactivated_desc'))
-            // setTimeout(() => router.push('/auth/login'), 3000)
-            router.push('/comingsoon')
+            await userService.delete(user._id)
+            deleteModal.show = false
+            showSuccess(t('profile.deactivated_title'), t('profile.deactivated_desc'))
+            setTimeout(() => router.push('/auth/login'), 3000)
+            // router.push('/comingsoon')
         } catch (err: any) {
             deleteModal.show = false
             errorModal.show = true

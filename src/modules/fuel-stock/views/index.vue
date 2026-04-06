@@ -203,14 +203,14 @@
                 <div class="flex items-center gap-1">
                     <span>{{ t('fuel_sold.total_quantity_liter') }}:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">
-                        {{ totals.quantity_liter.toLocaleString() }} L
+                        {{ formatLiter(totals.quantity_liter) }}
                     </span>
                 </div>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
                 <div class="flex items-center gap-1">
                     <span>{{ t('fuel_sold.total_amount_us') }}:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">
-                        $ {{ totals.total_amount_us.toLocaleString() }}
+                        $ {{ formatCurrency(totals.total_amount_us) }}
                     </span>
                 </div>
             </div>
@@ -244,6 +244,23 @@
     const params = ref<any>({})
     const filterParams = computed(() => params.value)
     const totals = ref(null)
+
+    const formatCurrency = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
+    }
+
+    const formatLiter = (amount: number) => {
+        if (amount >= 1_000_000_000) {
+            return `L ${(amount / 1_000_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`
+        }
+        if (amount >= 1_000_000) {
+            return `L ${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M`
+        }
+        return `L ${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)}`
+    }
 
     const onRetrieveResult = (result: any) => {
         totals.value = result.allData?.totals ?? null

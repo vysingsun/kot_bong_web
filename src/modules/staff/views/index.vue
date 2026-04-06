@@ -8,7 +8,7 @@
                     {{ t('staff.total_staff', { count: totalRecords }) }}
                 </p>
             </div>
-            <router-link
+            <!-- <router-link
                 v-if="isAdmin"
                 :to="`${basePath}/create`"
                 class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 focus:ring-4 focus:ring-secondary/30 transition-colors"
@@ -17,7 +17,70 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 {{ t('form.create') }}
-            </router-link>
+            </router-link> -->
+            <!-- <div class="relative inline-flex">
+                <router-link
+                    v-if="isAdmin"
+                    :to="`${basePath}/create`"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 focus:ring-4 focus:ring-secondary/30 transition-colors"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    {{ t('form.create') }}
+                </router-link>
+
+                <span
+                    v-if="store.subscription?.hasProAccess"
+                    class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
+                >
+                    <svg
+                        aria-hidden="true"
+                        class="w-4 h-4 text-blue-600 dark:text-blue-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+            </div> -->
+            <div class="relative inline-flex">
+                <button
+                    v-if="isAdmin"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-secondary rounded-lg hover:bg-secondary/90 focus:ring-4 focus:ring-secondary/30 transition-colors"
+                    @click="onClickCreate"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    {{ t('form.create') }}
+                </button>
+
+                <!-- Pro badge -->
+                <span
+                    v-if="!store.subscription?.hasProAccess"
+                    class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
+                >
+                    <svg
+                        aria-hidden="true"
+                        class="w-4 h-4 text-blue-600 dark:text-blue-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+            </div>
         </div>
 
         <!-- Loading Skeleton -->
@@ -85,14 +148,14 @@
                             <span
                                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
                                 :class="
-                                    staff.isSuspended
+                                    staff.isSuspended || staff.isDeleted
                                         ? 'bg-red-50 text-[#f00317] dark:bg-red-900/30 dark:text-red-400'
                                         : 'bg-green-50 text-[#19b23e] dark:bg-green-900/30 dark:text-green-400'
                                 "
                             >
                                 <span
                                     class="w-1.5 h-1.5 rounded-full"
-                                    :class="staff.isSuspended ? 'bg-[#f00317]' : 'bg-[#19b23e]'"
+                                    :class="staff.isSuspended || staff.isDeleted ? 'bg-[#f00317]' : 'bg-[#19b23e]'"
                                 />
                                 {{ staff.isSuspended ? t('staff.inactive') : t('staff.active') }}
                             </span>
@@ -190,7 +253,8 @@
                     <!-- Suspend Toggle -->
                     <button
                         v-if="staff._id !== currentUserId"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                        :disabled="staff.isDeleted"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         :class="
                             staff.isSuspended
                                 ? 'text-[#19b23e] bg-green-50 hover:bg-green-100 dark:text-green-400 dark:bg-green-900/20 dark:hover:bg-green-900/40'
@@ -216,7 +280,7 @@
                     </span>
                     <button
                         v-if="staff._id !== currentUserId"
-                        :disabled="staff.isSuspended"
+                        :disabled="staff.isSuspended || staff.isDeleted"
                         class="text-blue-600 disabled:opacity-40 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
                         @click.stop="onEdit(staff)"
                     >
@@ -231,8 +295,7 @@
                     </button>
                     <span v-if="staff._id !== currentUserId" class="text-gray-300 dark:text-gray-600">|</span>
                     <button
-                        v-if="staff._id !== currentUserId"
-                        :disabled="staff.isSuspended"
+                        v-if="staff._id !== currentUserId && !staff.isDeleted"
                         class="text-xs font-medium text-[#f00317] hover:text-[#f00317] dark:text-gray-400 dark:hover:text-red-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-[#f00317] dark:disabled:hover:text-gray-400"
                         @click.stop="onDelete(staff)"
                     >
@@ -245,20 +308,41 @@
                             />
                         </svg>
                     </button>
+                    <!-- Restore button — only show if deleted -->
+                    <button
+                        v-if="staff._id !== currentUserId && staff.isDeleted"
+                        class="text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        @click.stop="onRestore(staff)"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirm Modal -->
-    <!-- <BaseModal
-        :is-visible="isVisible"
-        type="error"
-        :title="t('staff.delete_confirm')"
-        :confirm-label="t('form.confirm')"
-        @close="closeModal"
-        @confirm="handleConfirmDelete"
-    /> -->
+    <SuccessModal
+        :show="successModal.show"
+        :type="successModal.type"
+        :title="successModal.title"
+        :description="successModal.description"
+        @close="successModal.show = false"
+        @confirm="successModal.show = false"
+    />
+
+    <ErrorModal
+        :show="errorModal.show"
+        :description="errorModal.description"
+        :error-message="errorModal.message"
+        @confirm="handleErrorModalConfirm"
+    />
     <!-- Delete Confirmation Modal -->
     <DeleteModal
         :show="isVisible"
@@ -267,6 +351,17 @@
         @close="closeModal"
         @confirm="handleConfirmDelete"
     />
+
+    <!-- Pro Access Warning Modal -->
+    <!-- <SuccessModal
+        :show="warningModal.show"
+        type="warning"
+        :title="warningModal.title"
+        :description="warningModal.description"
+        @close="warningModal.show = false"
+        @confirm="handleSuccessConfirm"
+    /> -->
+    <ProUpgradeModal :show="warningModal.show" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -283,6 +378,7 @@
     import { useFormatDate } from '@/composables/useFormatDate'
     import DeleteModal from '@/components/app/DeleteModal.vue'
     import { AuthKey } from '@/composables/useAuth'
+    import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
     const { isAdmin } = inject(AuthKey)!
     const { formatDate } = useFormatDate()
@@ -304,6 +400,24 @@
     const stationId = appData.value.stations[0]._id
     const currentUserId = appData.value?._id
     const currentUserRole = appData.value?.role?.role_name
+
+    // ── Modals ────────────────────────────────────────────────────────
+    const successModal = ref({
+        show: false,
+        type: 'success' as 'success' | 'warning',
+        title: '',
+        description: '',
+    })
+
+    const errorModal = ref({
+        show: false,
+        description: '',
+        message: '',
+    })
+
+    const handleErrorModalConfirm = () => {
+        errorModal.value.show = false
+    }
 
     const getData = async () => {
         isLoading.value = true
@@ -338,9 +452,8 @@
     }
 
     const onDelete = (staff: IStaff) => {
-        router.push('/comingsoon')
-        // deleteId.value = staff._id
-        // showModal()
+        deleteId.value = staff._id
+        showModal()
     }
 
     const handleConfirmDelete = async () => {
@@ -348,27 +461,71 @@
             appStore.loading = true
             const success = await store.deleteStaff(deleteId.value)
             if (success) {
-                staffList.value = staffList.value.filter(s => s._id !== deleteId.value)
-                totalRecords.value -= 1
+                const target = staffList.value.find(s => s._id === deleteId.value)
+                if (target) target.isDeleted = true
+
+                successModal.value = {
+                    show: true,
+                    type: 'success',
+                    title: t('staff.delete_success_title'),
+                    description: t('staff.delete_success_desc'),
+                }
             } else {
-                alert(t('staff.delete_failed'))
+                errorModal.value = {
+                    show: true,
+                    description: t('staff.delete_failed'),
+                    message: '',
+                }
             }
-        } catch {
-            alert(t('staff.delete_failed'))
+        } catch (err: any) {
+            errorModal.value = {
+                show: true,
+                description: t('staff.delete_failed'),
+                message: err?.response?.data?.error || err?.message || '',
+            }
         } finally {
             appStore.loading = false
             closeModal()
         }
     }
 
-    onMounted(() => {
-        getData()
+    const onRestore = async (staff: IStaff) => {
+        try {
+            appStore.loading = true
+            await staffService.edit(staff._id, {
+                isDeleted: false,
+                deletedAt: null,
+            })
+            const target = staffList.value.find(s => s._id === staff._id)
+            if (target) {
+                target.isDeleted = false
+                target.deletedAt = null
+            }
+            successModal.value = {
+                show: true,
+                type: 'success',
+                title: t('staff.restore_success_title'),
+                description: t('staff.restore_success_desc'),
+            }
+        } catch (err: any) {
+            errorModal.value = {
+                show: true,
+                description: t('staff.restore_failed'),
+                message: err?.response?.data?.error || err?.message || '',
+            }
+        } finally {
+            appStore.loading = false
+        }
+    }
+
+    onMounted(async () => {
+        await Promise.all([getData(), store.fetchStation(stationId)])
     })
 
     const onToggleSuspend = async (staff: IStaff) => {
         try {
             staff.isSuspended = !staff.isSuspended
-            await staffService.edit(staff._id, { isSuspended: !staff.isSuspended })
+            await staffService.edit(staff._id, { isSuspended: staff.isSuspended })
         } catch (err: any) {
             staff.isSuspended = !staff.isSuspended
             // errorModal.show = true
@@ -394,5 +551,29 @@
         if (!time) return ''
         const { h12, m, p } = parse24(time)
         return `${String(h12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${periodLabel(p)}`
+    }
+
+    // ── Pro access modal ──────────────────────────────────────────────
+    const warningModal = ref({
+        show: false,
+        title: '',
+        description: '',
+    })
+
+    const onClickCreate = () => {
+        if (!store.subscription?.hasProAccess) {
+            warningModal.value = {
+                show: true,
+                title: t('subscription.pro_required_title'),
+                description: t('subscription.pro_required_desc'),
+            }
+            return
+        }
+        router.push(`${basePath}/create`)
+    }
+
+    const handleSuccessConfirm = () => {
+        warningModal.value.show = false
+        router.push('/payment')
     }
 </script>

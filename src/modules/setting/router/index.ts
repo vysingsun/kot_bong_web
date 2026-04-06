@@ -1,5 +1,4 @@
-import i18n from '@/plugins/i18n'
-const MODULE_NAME = i18n.global.t('Setting')
+const MODULE_NAME = 'Setting'
 const MODULE_PATH = '/setting'
 
 export const routes = [
