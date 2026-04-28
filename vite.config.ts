@@ -6,7 +6,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    // base: '/app/',
+    base: '/app/',
     server: {
         proxy: {
             '/api': {
