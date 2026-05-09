@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kot-preng
+    env: static
+    buildCommand: npm install --legacy-peer-deps && npm run build-only
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /app
+        destination: /index.html
+      - type: rewrite
+        source: /app/*
+        destination: /index.html
