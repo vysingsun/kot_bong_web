@@ -15,7 +15,7 @@ import { getRoleName } from '@/composables/useAuth'
 const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword']
 
 const router = createRouter({
-    history: createWebHistory('/app/'),
+    history: createWebHistory(import.meta.env.VITE_APP_MODE === 'development' ? '/' : '/app/'),
     routes: [
         {
             path: '/',

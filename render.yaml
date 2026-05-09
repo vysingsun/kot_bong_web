@@ -6,8 +6,8 @@ services:
     staticPublishPath: ./dist
     routes:
       - type: rewrite
-        source: /app
+        source: /
         destination: /index.html
       - type: rewrite
-        source: /app/*
+        source: /*
         destination: /index.html
