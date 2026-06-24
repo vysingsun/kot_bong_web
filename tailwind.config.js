@@ -22,7 +22,27 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
           950: '#172554'
-        }
+        },
+        // Landing page indigo palette (separate from app primary)
+        'landing-primary': {
+          50:  '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#3864ed',
+          700: '#2d50c1',
+          800: '#1e3a8a',
+          900: '#1e2f6b',
+          950: '#0f1a40',
+        },
+        fuel: {
+          orange: '#f97316',
+          green:  '#22c55e',
+          blue:   '#3b82f6',
+          yellow: '#eab308',
+        },
       },
       textColor: {
         primary: 'var(--color-primary)',
@@ -81,7 +101,20 @@ export default {
         'Segoe UI Symbol',
         'Noto Color Emoji',
         'Kantumruy Pro',
-      ]
+      ],
+      kantumruy: ['Kantumruy Pro', 'sans-serif'],
+    },
+    animation: {
+      'landing-float':      'landingFloat 6s ease-in-out infinite',
+      'landing-fade-up':    'landingFadeUp 0.6s ease-out forwards',
+      'landing-fade-in':    'landingFadeIn 0.4s ease-out forwards',
+      'landing-slide-in':   'landingSlideIn 0.5s ease-out forwards',
+      'landing-blob':       'landingBlob 7s infinite',
+      'landing-pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      'landing-gradient':   'landingGradient 8s ease infinite',
+    },
+    backgroundSize: {
+      '300': '300% 300%',
     }
   },
   plugins: [flowbite],

@@ -52,7 +52,7 @@
             router.push(`/${pathSegments[0]}`)
         } else {
             const newPath = pathSegments.slice(0, -1).join('/')
-            router.push(`/${newPath}`)
+            router.push(`/home/${newPath}`)
         }
     }
 </script>

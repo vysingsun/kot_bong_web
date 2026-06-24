@@ -11,7 +11,7 @@
         <!-- Back to Home button -->
         <button
             class="absolute top-5 left-5 z-10 rounded-full group flex items-center gap-2.5 p-3 font-semibold text-white bg-primary hover:bg-primary/90 active:scale-95 transition-all duration-200 shadow-lg shadow-primary/25"
-            @click="router.push('/')"
+            @click="router.push('/home')"
         >
             <svg
                 class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1"

@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('authStore', () => {
             .then(res => {
                 if (res.data.success) {
                     setCache('token', res.data.data.token)
-                    router.push('/')
+                    router.push('/home')
                 } else {
                     alert(res.data.error)
                 }

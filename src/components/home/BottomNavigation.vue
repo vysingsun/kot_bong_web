@@ -6,15 +6,15 @@
             <div class="grid h-full grid-cols-5">
                 <!-- Home -->
                 <RouterLink
-                    to="/"
+                    to="/home"
                     class="inline-flex flex-col items-center justify-center rounded-full transition-colors group"
                     :class="
-                        isActive('/') && route.path === '/' ? 'text-primary' : 'text-gray-500/80 dark:text-gray-400/80'
+                        isActive('/home') && route.path === '/home' ? 'text-primary' : 'text-gray-500/80 dark:text-gray-400/80'
                     "
                 >
                     <svg
                         class="w-5 h-5 transition-transform group-active:scale-90"
-                        :class="isActive('/') && route.path === '/' ? 'text-primary' : 'group-hover:text-primary'"
+                        :class="isActive('/home') && route.path === '/home' ? 'text-primary' : 'group-hover:text-primary'"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -22,7 +22,7 @@
                             d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"
                         />
                     </svg>
-                    <span v-if="isActive('/') && route.path === '/'" class="mt-0.5 w-1 h-1 rounded-full bg-primary" />
+                    <span v-if="isActive('/home') && route.path === '/home'" class="mt-0.5 w-1 h-1 rounded-full bg-primary" />
                 </RouterLink>
 
                 <!-- Wallet -->
