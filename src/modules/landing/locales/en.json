@@ -1,0 +1,158 @@
+{
+  "landing": {
+    "nav": {
+      "home": "Home",
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "policy": "Policy",
+      "download": "Download",
+      "language": "Language"
+    },
+    "hero": {
+      "badge": "Fuel Inventory Management System",
+      "title": "Manage Your",
+      "titleHighlight": "Fuel Inventory",
+      "titleEnd": "Smarter",
+      "subtitle": "A complete Fuel Inventory Management System for gas stations — from stock tracking to sales reports, everything in your hands.",
+      "cta": "Get Started Free",
+      "ctaFree": "3 Months Free",
+      "watchDemo": "Watch Demo",
+      "trustedBy": "Trusted by gas stations"
+    },
+    "stats": {
+      "stations": "Stations",
+      "fuelTypes": "Fuel Types",
+      "uptime": "Uptime",
+      "support": "Support"
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Powerful Tools for Your Station",
+      "subtitle": "Everything you need to run a gas station efficiently and profitably.",
+      "inventory": {
+        "title": "Inventory Management",
+        "desc": "Track fuel stock in real-time — Regular, Super, Diesel, and Gas types."
+      },
+      "sales": {
+        "title": "Sales Records",
+        "desc": "Log each sale and know exactly who sold how much — clear and smart."
+      },
+      "reports": {
+        "title": "Stock Reports",
+        "desc": "Crystal-clear income, expense, and stock reports to power your decisions."
+      },
+      "staff": {
+        "title": "Staff Management",
+        "desc": "Grant staff access and monitor their sales and activity."
+      },
+      "multiAuth": {
+        "title": "Multiple Sign-in Methods",
+        "desc": "Register/login with Google, Facebook, phone number, or email + OTP."
+      },
+      "mobile": {
+        "title": "Mobile & Web",
+        "desc": "Use on Android/iOS or desktop — one unified system, always in sync."
+      }
+    },
+    "fuelTypes": {
+      "badge": "Fuel Types",
+      "title": "Manage Any Fuel Type",
+      "subtitle": "System creates default fuel types on registration, and you can add more.",
+      "regular": "Regular",
+      "super": "Super",
+      "diesel": "Diesel",
+      "gas": "Gas (LPG)",
+      "custom": "Custom Types"
+    },
+    "howItWorks": {
+      "badge": "How It Works",
+      "title": "Get Started in 3 Steps",
+      "step1Title": "Register",
+      "step1Desc": "Sign up with Google, Facebook, phone, or email — default fuel types created automatically.",
+      "step2Title": "Add Stock & Sales",
+      "step2Desc": "Manage incoming stock, log sales records, and add staff members.",
+      "step3Title": "View Reports",
+      "step3Desc": "Monitor your station's performance — export Excel reports (Pro plan)."
+    },
+    "roles": {
+      "badge": "Roles",
+      "title": "Owner & Staff",
+      "ownerTitle": "Owner",
+      "ownerDesc": "Full control",
+      "ownerFeatures": [
+        "Create account & add staff",
+        "Create fuel types",
+        "Add stock income & sales records",
+        "View stock & sales reports",
+        "Export Excel (Pro)"
+      ],
+      "staffTitle": "Staff",
+      "staffDesc": "Assigned access",
+      "staffFeatures": [
+        "View current stock",
+        "View fuel quantities",
+        "Create sales records",
+        "Edit/Delete own sales",
+        "View reports"
+      ]
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Plans for Every Station",
+      "subtitle": "Start free today — 3 months full access, then just $10/mo.",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "period": "/month",
+        "badge": "3 Months",
+        "features": [
+          "Add fuel types",
+          "Sales records",
+          "Stock income",
+          "View reports"
+        ],
+        "limits": [
+          "No staff management",
+          "No Excel export"
+        ],
+        "cta": "Get Started"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$10",
+        "period": "/month",
+        "badge": "Popular",
+        "features": [
+          "Fuel types, sales & stock",
+          "Add & manage staff",
+          "Full station reports",
+          "Excel export",
+          "All features unlocked"
+        ],
+        "limits": [],
+        "cta": "Get Pro"
+      }
+    },
+    "download": {
+      "badge": "Download",
+      "title": "Download Kot Preng Now",
+      "subtitle": "Available on Android, iOS, and Web — completely free to start.",
+      "android": "Google Play",
+      "ios": "App Store",
+      "web": "Use on Web",
+      "comingSoon": "Coming Soon"
+    },
+    "policy": {
+      "title": "Policy",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "footer": {
+      "tagline": "Fuel Inventory Management System",
+      "links": "Links",
+      "contact": "Contact",
+      "rights": "© 2025 Kot Preng. All rights reserved."
+    }
+  }
+}

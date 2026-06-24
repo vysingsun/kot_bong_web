@@ -10,15 +10,18 @@ import { getFromCache, setCache } from '@/composables/useCache'
 import { useThemeStore } from '@/stores/theme'
 import { appService } from '@/modules/app/services/api.service'
 import { getRoleName } from '@/composables/useAuth'
+import { LANDING_ROUTES } from '@/modules/landing/router'
 
 // Routes that skip all guards
-const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword']
+const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword', 'LandingHome', 'LandingPolicy']
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.VITE_APP_MODE === 'development' ? '/' : '/app/'),
+    history: createWebHistory('/'),
     routes: [
+        // ── Landing page routes (no auth) ──────────────────────
+        ...LANDING_ROUTES,
         {
-            path: '/',
+            path: '/home',
             name: 'home',
             beforeEnter: isAuthenticated,
             component: HomeView,

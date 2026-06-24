@@ -67,7 +67,7 @@
             }
 
             isRestored.value = true
-            setTimeout(() => router.push('/'), 2000)
+            setTimeout(() => router.push('/home'), 2000)
         } catch (err) {
             errorMessage.value = t('accountDeleted.restoreError')
         } finally {

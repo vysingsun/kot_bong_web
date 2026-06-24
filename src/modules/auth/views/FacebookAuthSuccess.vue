@@ -32,7 +32,7 @@
                 router.push('/onboarding')
             } else {
                 // Existing user - go to home
-                router.push('/')
+                router.push('/home')
             }
         } catch (err: any) {
             console.error('Facebook auth callback error:', err)
