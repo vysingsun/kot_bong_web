@@ -54,7 +54,7 @@
                 <h1 class="title">{{ displayNumber }}</h1>
                 <p class="typing">{{ typedText }}<span class="cursor">|</span></p>
                 <p class="subtitle">{{ t('notFound.subtitle') }}</p>
-                <button class="btn-home" @click="router.push('/')">← {{ t('notFound.button') }}</button>
+                <button class="btn-home" @click="router.push('/home')">← {{ t('notFound.button') }}</button>
             </div>
         </div>
     </div>

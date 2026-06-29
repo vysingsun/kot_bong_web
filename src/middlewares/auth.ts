@@ -16,7 +16,7 @@ export function isUnauthenticated(to: any, from: any, next: any) {
     appStore
         .init()
         .then(() => {
-            next({ path: '/' })
+            next({ path: '/home' })
         })
         .catch(error => {
             if (error.response.status === 401) {

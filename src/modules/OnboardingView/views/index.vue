@@ -343,7 +343,7 @@
             }
 
             // Redirect to home
-            router.push('/')
+            router.push('/home')
         } catch (err: any) {
             console.error('Error saving onboarding data:', err)
             errorModal.value.show = true
@@ -630,7 +630,7 @@
                 <!-- Submit Button -->
                 <div class="flex justify-end gap-3">
                     <button
-                        @click="router.push('/')"
+                        @click="router.push('/home')"
                         class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors"
                     >
                         {{ t('onboarding.skip') }}

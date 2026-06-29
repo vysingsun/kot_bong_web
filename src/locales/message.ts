@@ -18,6 +18,8 @@ import kh_payment from '@/modules/payment/locales/kh.json'
 import en_payment from '@/modules/payment/locales/en.json'
 import kh_setting from '@/modules/setting/locales/kh.json'
 import en_setting from '@/modules/setting/locales/en.json'
+import kh_landing from '@/modules/landing/locales/kh.json'
+import en_landing from '@/modules/landing/locales/en.json'
 
 const kh = {
     ...kh_auth,
@@ -30,6 +32,7 @@ const kh = {
     ...kh_staff,
     ...kh_payment,
     ...kh_setting,
+    ...kh_landing,
 }
 
 const en = {
@@ -43,6 +46,7 @@ const en = {
     ...en_staff,
     ...en_payment,
     ...en_setting,
+    ...en_landing,
 }
 
 export { kh, en }
