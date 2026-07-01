@@ -20,16 +20,17 @@ const router = createRouter({
     routes: [
         // ── Landing page routes (no auth) ──────────────────────
         ...LANDING_ROUTES,
+        ...AUTH.AUTH_ROUTES,
+        // ── App dashboard ──────────────────────────────────────
         {
             path: '/home',
             name: 'home',
             beforeEnter: isAuthenticated,
             component: HomeView,
         },
-        ...AUTH.AUTH_ROUTES,
+        // ── App module pages (staff, fuel, fuel-stock, etc.) ────
         {
-            path: '/',
-            name: 'Product',
+            path: '/home',
             beforeEnter: isAuthenticated,
             component: Default_header,
             children: [...MODULE_APP_ROUTES],

@@ -48,7 +48,7 @@ const { t, locale } = useI18n()
 const fuels = computed(() => [
   { key: 'regular', icon: Fuel,  name: t('landing.fuelTypes.regular'), gradient: 'from-blue-500 to-blue-700',     border: 'border-blue-400/50' },
   { key: 'super',   icon: Flame, name: t('landing.fuelTypes.super'),   gradient: 'from-orange-500 to-orange-700', border: 'border-orange-400/50' },
-  { key: 'diesel',  icon: Truck, name: t('landing.fuelTypes.diesel'),  gradient: 'from-green-500 to-green-700',   border: 'border-green-400/50' },
+  { key: 'diesel',  icon: Truck, name: t('landing.fuelTypes.diesel'),  gradient: 'from-landing-green-400 to-landing-green-600',   border: 'border-landing-green-300/50' },
   { key: 'gas',     icon: Wind,  name: t('landing.fuelTypes.gas'),     gradient: 'from-cyan-500 to-cyan-700',     border: 'border-cyan-400/50' },
 ])
 </script>

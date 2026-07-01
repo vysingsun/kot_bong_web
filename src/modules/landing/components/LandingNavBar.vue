@@ -131,6 +131,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Languages } from 'lucide-vue-next'
+import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
 
 defineProps<{ isDark: boolean }>()
 defineEmits(['toggle-dark'])
@@ -141,12 +142,11 @@ const langOpen = ref(false)
 const mobileOpen = ref(false)
 const langDropdownRef = ref<HTMLElement | null>(null)
 
+const { scrollTo: _scrollTo } = useLandingScroll()
+
 function scrollTo(id: string) {
   mobileOpen.value = false
-  const el = document.getElementById(id)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  _scrollTo(id)
 }
 
 function handleScroll() {
