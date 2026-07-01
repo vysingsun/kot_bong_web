@@ -39,7 +39,7 @@ const { t } = useI18n()
 
 const features = computed(() => [
   { key: 'inventory', icon: Package,     title: t('landing.features.inventory.title'), desc: t('landing.features.inventory.desc'), bg: 'bg-blue-50 dark:bg-blue-900/20',   color: 'text-blue-600 dark:text-blue-400' },
-  { key: 'sales',     icon: Receipt,     title: t('landing.features.sales.title'),     desc: t('landing.features.sales.desc'),     bg: 'bg-green-50 dark:bg-green-900/20',  color: 'text-green-600 dark:text-green-400' },
+  { key: 'sales',     icon: Receipt,     title: t('landing.features.sales.title'),     desc: t('landing.features.sales.desc'),     bg: 'bg-landing-green-50 dark:bg-landing-green-900/20',  color: 'text-landing-green-600 dark:text-landing-green-400' },
   { key: 'reports',   icon: BarChart2,   title: t('landing.features.reports.title'),   desc: t('landing.features.reports.desc'),   bg: 'bg-purple-50 dark:bg-purple-900/20', color: 'text-purple-600 dark:text-purple-400' },
   { key: 'staff',     icon: Users,       title: t('landing.features.staff.title'),     desc: t('landing.features.staff.desc'),     bg: 'bg-orange-50 dark:bg-orange-900/20', color: 'text-orange-600 dark:text-orange-400' },
   { key: 'multiAuth', icon: ShieldCheck, title: t('landing.features.multiAuth.title'), desc: t('landing.features.multiAuth.desc'), bg: 'bg-pink-50 dark:bg-pink-900/20',    color: 'text-pink-600 dark:text-pink-400' },
