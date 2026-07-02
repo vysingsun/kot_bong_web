@@ -1,22 +1,34 @@
 import { computed } from 'vue'
-import { getFromCache } from '@/composables/useCache'
 import type { InjectionKey } from 'vue'
 
 export type AuthReturn = ReturnType<typeof useAuth>
 export const AuthKey: InjectionKey<AuthReturn> = Symbol('auth')
 
-// ✅ Standalone function - usable OUTSIDE components (router guards, route files)
+// ✅ Always reads fresh from localStorage - works in router guards too
 export function getRoleName(): string {
-    const appData = getFromCache('app_data')
-    return appData.value?.role?.role_name ?? ''
+    const item = localStorage.getItem('app_data')
+    if (!item) return ''
+    try {
+        return JSON.parse(item)?.value?.role?.role_name ?? ''
+    } catch {
+        return ''
+    }
 }
 
 export function useAuth() {
-    const appData = getFromCache('app_data')
+    // Each computed re-reads localStorage on every access — stays reactive after login
+    const userRole = computed<string>(() => {
+        const item = localStorage.getItem('app_data')
+        if (!item) return ''
+        try {
+            return JSON.parse(item)?.value?.role?.role_name ?? ''
+        } catch {
+            return ''
+        }
+    })
 
-    const userRole = computed(() => appData?.value?.role?.role_name ?? '')
-    const isAdmin = computed(() => userRole?.value === 'Admin')
-    const isUser = computed(() => userRole?.value === 'User')
+    const isAdmin = computed(() => userRole.value === 'Admin')
+    const isUser = computed(() => userRole.value === 'User')
 
     function hasRole(roles: string | string[]): boolean {
         const allowed = Array.isArray(roles) ? roles : [roles]

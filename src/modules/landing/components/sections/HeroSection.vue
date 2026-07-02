@@ -33,13 +33,13 @@
 
           <!-- CTA Buttons -->
           <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-landing-fade-up landing-animate-delay-300">
-            <a href="#download" class="landing-btn-primary text-base px-8 py-4">
+            <a href="#download" @click.prevent="scrollTo('download')" class="landing-btn-primary text-base px-8 py-4">
               <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
               </svg>
               {{ t('landing.hero.cta') }}
             </a>
-            <a href="#features"
+            <a href="#features" @click.prevent="scrollTo('features')"
               class="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-landing-primary-300 dark:border-white/20 text-landing-primary-700 dark:text-white font-semibold text-base hover:bg-landing-primary-50 dark:hover:bg-white/10 active:scale-95 transition-all">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -50,10 +50,10 @@
 
           <!-- Free trial badge -->
           <div class="mt-6 flex items-center justify-center lg:justify-start gap-2 animate-landing-fade-up landing-animate-delay-400">
-            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-5 h-5 text-landing-green-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            <span class="text-sm text-green-600 dark:text-green-400 font-medium">{{ t('landing.hero.ctaFree') }}</span>
+            <span class="text-sm text-landing-green-600 dark:text-landing-green-400 font-medium">{{ t('landing.hero.ctaFree') }}</span>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
                   </div>
                   <span class="text-gray-900 dark:text-white font-bold text-sm">Kot Preng</span>
                 </div>
-                <span class="text-xs text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-400/10 px-2 py-1 rounded-full font-semibold">● Live</span>
+                <span class="text-xs text-landing-green-600 bg-landing-green-100 dark:text-landing-green-400 dark:bg-landing-green-400/10 px-2 py-1 rounded-full font-semibold">● Live</span>
               </div>
 
               <!-- Fuel stock list -->
@@ -100,16 +100,16 @@
                   <div class="text-xl font-bold text-landing-primary-700 dark:text-white">$1,240</div>
                   <div class="text-xs text-landing-primary-500 dark:text-landing-primary-300 mt-0.5">{{ locale === 'kh' ? 'ការលក់ថ្ងៃនេះ' : 'Today Sales' }}</div>
                 </div>
-                <div class="p-3 rounded-xl bg-green-50 dark:bg-green-500/20 text-center">
-                  <div class="text-xl font-bold text-green-700 dark:text-white">+12%</div>
-                  <div class="text-xs text-green-600 dark:text-green-300 mt-0.5">{{ locale === 'kh' ? 'ធៀបម្សិលមិញ' : 'vs Yesterday' }}</div>
+                <div class="p-3 rounded-xl bg-landing-green-50 dark:bg-landing-green-500/10 text-center">
+                  <div class="text-xl font-bold text-landing-green-600 dark:text-white">+12%</div>
+                  <div class="text-xs text-landing-green-500 dark:text-landing-green-300 mt-0.5">{{ locale === 'kh' ? 'ធៀបម្សិលមិញ' : 'vs Yesterday' }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Floating badges -->
             <div class="absolute -top-4 -right-4 animate-landing-float">
-              <div class="bg-green-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-green-500/40 flex items-center gap-1.5">
+              <div class="bg-landing-green-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-landing-green-500/40 flex items-center gap-1.5">
                 <Check class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'ស្តុកធម្មតា' : 'Stock OK' }}
               </div>
             </div>
@@ -136,12 +136,14 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { Fuel, Flame, Truck, Wind, Check, BarChart2 } from 'lucide-vue-next'
+import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
 const { t, locale } = useI18n()
+const { scrollTo } = useLandingScroll()
 
 const fuelItems = [
   { name: 'Regular', icon: Fuel,  stock: '2,450 L', pct: 72, color: 'bg-blue-500',   iconBg: 'bg-blue-100 dark:bg-blue-900/30',    iconColor: 'text-blue-600 dark:text-blue-400' },
   { name: 'Super',   icon: Flame, stock: '1,820 L', pct: 54, color: 'bg-orange-500', iconBg: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600 dark:text-orange-400' },
-  { name: 'Diesel',  icon: Truck, stock: '3,100 L', pct: 85, color: 'bg-green-500',  iconBg: 'bg-green-100 dark:bg-green-900/30',   iconColor: 'text-green-600 dark:text-green-400' },
+  { name: 'Diesel',  icon: Truck, stock: '3,100 L', pct: 85, color: 'bg-landing-green-500',  iconBg: 'bg-landing-green-100 dark:bg-landing-green-900/30',   iconColor: 'text-landing-green-600 dark:text-landing-green-400' },
   { name: 'Gas',     icon: Wind,  stock: '950 L',   pct: 28, color: 'bg-yellow-500', iconBg: 'bg-yellow-100 dark:bg-yellow-900/30', iconColor: 'text-yellow-600 dark:text-yellow-400' },
 ]
 </script>

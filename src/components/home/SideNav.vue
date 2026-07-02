@@ -1,150 +1,93 @@
 <template>
-    <div class="overflow-y-auto py-5 px-3 h-full glass-card">
-        <ul class="space-y-2">
+    <div class="sidenav overflow-y-auto py-6 px-3 h-full">
+        <ul class="nav-list">
+
+            <!-- Overview -->
             <li>
                 <RouterLink
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-toggle="drawer-navigation"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     to="/overview"
+                    class="nav-item"
+                    active-class="nav-item--active"
                 >
-                    <AppIcon name="icon-overview" size="24" />
-                    <span class="ml-3">{{ $t('menu.overview') }}</span>
+                    <span class="nav-icon icon-green">
+                        <!-- Dashboard / Overview -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 3h8v8H3V3zm0 10h8v8H3v-8zm10-10h8v8h-8V3zm0 10h8v8h-8v-8z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">{{ $t('menu.overview') }}</span>
                 </RouterLink>
             </li>
-            <!-- <li>
-                <button
-                    type="button"
-                    class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    aria-controls="dropdown-sales"
-                    data-collapse-toggle="dropdown-sales"
-                >
-                    <AppIcon name="icon-sales" size="24" />
-                    <span class="flex-1 ml-3 text-left whitespace-nowrap">Sales</span>
-                    <svg
-                        aria-hidden="true"
-                        class="w-6 h-6"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                        ></path>
-                        s
-                    </svg>
-                </button>
-                <ul id="dropdown-sales" class="hidden py-2 space-y-2">
-                    <li>
-                        <a
-                            href="#"
-                            class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                            >Products</a
-                        >
-                    </li>
-                </ul>
-            </li> -->
+
+            <!-- Stock Report (Admin only) -->
             <li v-if="isAdmin">
                 <RouterLink
                     to="/fuel-stock"
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-toggle="drawer-navigation"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                    class="nav-item"
+                    active-class="nav-item--active"
                 >
-                    <AppIcon name="icon-document" size="24" />
-                    <span class="ml-3">{{ $t('menu.stocksReport') }}</span>
+                    <span class="nav-icon icon-blue">
+                        <!-- Document / Report -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5a2.5 2.5 0 0 1-5 0V6h2v6.5a.5.5 0 0 0 1 0V7h5v3h-2V7zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">{{ $t('menu.stocksReport') }}</span>
                 </RouterLink>
             </li>
 
+            <!-- Stock Graph (Admin only) -->
             <li v-if="isAdmin">
                 <RouterLink
                     to="/fuelstockgraph"
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-toggle="drawer-navigation"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                    class="nav-item"
+                    active-class="nav-item--active"
                 >
-                    <AppIcon name="icon-graph-stock" size="24" />
-                    <span class="ml-3">{{ $t('menu.stockGraph') }}</span>
+                    <span class="nav-icon icon-purple">
+                        <!-- Area chart / Stock graph -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 13.5L8.5 8l4 4L18 6.5V5h1v2.5L13.5 14l-4-4L3 15.5V19h18v2H3a1 1 0 0 1-1-1V4h2v9.5z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">{{ $t('menu.stockGraph') }}</span>
                 </RouterLink>
             </li>
 
+            <!-- Sales Report -->
             <li>
                 <RouterLink
                     to="/fuel-sold-report"
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-toggle="drawer-navigation"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                    class="nav-item"
+                    active-class="nav-item--active"
                 >
-                    <AppIcon name="icon-sales" size="24" />
-                    <span class="ml-3">{{ $t('menu.salesReport') }}</span>
+                    <span class="nav-icon icon-amber">
+                        <!-- Receipt / Sales report -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">{{ $t('menu.salesReport') }}</span>
                 </RouterLink>
             </li>
 
+            <!-- Sales Graph -->
             <li>
                 <RouterLink
                     to="/fuelsalesgraph"
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-toggle="drawer-navigation"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                    class="nav-item"
+                    active-class="nav-item--active"
                 >
-                    <AppIcon name="icon-graph-sales" size="24" />
-                    <span class="ml-3">{{ $t('menu.salesGraph') }}</span>
+                    <span class="nav-icon icon-red">
+                        <!-- Bar chart / Sales graph -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">{{ $t('menu.salesGraph') }}</span>
                 </RouterLink>
             </li>
-            <!-- <li>
-                <a
-                    href="#"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                    <svg
-                        aria-hidden="true"
-                        class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"
-                        ></path>
-                        <path
-                            d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"
-                        ></path>
-                    </svg>
-                    <span class="flex-1 ml-3 whitespace-nowrap">Messages</span>
-                    <span
-                        class="inline-flex justify-center items-center w-5 h-5 text-xs font-semibold rounded-full text-primary-800 bg-primary-100 dark:bg-primary-200 dark:text-primary-800"
-                    >
-                        4
-                    </span>
-                </a>
-            </li> -->
+
         </ul>
-        <!-- <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
-            <li>
-                <a
-                    href="#"
-                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-                >
-                    <svg
-                        aria-hidden="true"
-                        class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                        <path
-                            fill-rule="evenodd"
-                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                            clip-rule="evenodd"
-                        ></path>
-                    </svg>
-                    <span class="ml-3">Docs</span>
-                </a>
-            </li>
-        </ul> -->
     </div>
 </template>
 
@@ -156,10 +99,86 @@
 </script>
 
 <style lang="scss" scoped>
-    .glass-card {
-        background: rgba(255, 255, 255, 0.72);
-        backdrop-filter: blur(8px) saturate(200%) brightness(1.02);
-        -webkit-backdrop-filter: blur(48px) saturate(200%) brightness(1.02);
-        border: 1px solid rgba(255, 255, 255, 0.95);
+.sidenav {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.18s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+
+        .nav-label {
+            color: #111827;
+        }
+
+        .nav-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
     }
+
+    &.nav-item--active {
+        background: rgba(0, 0, 0, 0.06);
+
+        .nav-label {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            opacity: 1;
+        }
+    }
+}
+
+/* Icon container — small, circular, transparent tinted */
+.nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    background: transparent;
+
+    /* Tinted backgrounds per color */
+    &.icon-green  { background: rgba(16, 185, 129, 0.12); color: #059669; }
+    &.icon-blue   { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+    &.icon-purple { background: rgba(139, 92, 246, 0.12); color: #7c3aed; }
+    &.icon-amber  { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+    &.icon-red    { background: rgba(239, 68, 68, 0.12);  color: #dc2626; }
+}
+
+.nav-label {
+    font-family: 'Inter', 'Outfit', system-ui, sans-serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #4b5563;
+    transition: color 0.18s ease;
+    white-space: nowrap;
+}
 </style>
