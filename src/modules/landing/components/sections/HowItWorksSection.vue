@@ -58,8 +58,8 @@
           </div>
 
           <!-- Phone -->
-          <div class="flex flex-col items-center gap-3 p-5 rounded-xl bg-gray-50 dark:bg-gray-700 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors group">
-            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
+          <div class="flex flex-col items-center gap-3 p-5 rounded-xl bg-gray-50 dark:bg-gray-700 hover:bg-landing-green-50 dark:hover:bg-landing-green-900/10 transition-colors group">
+            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-landing-green-500 shadow-lg shadow-landing-green-500/30 group-hover:scale-110 transition-transform">
               <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
               </svg>

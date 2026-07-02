@@ -34,7 +34,7 @@
                 <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
               </li>
             </ul>
-            <a href="#download" class="landing-btn-white w-full text-center text-orange-600">{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a>
+            <a href="#download" @click.prevent="scrollTo('download')" class="landing-btn-white w-full text-center text-orange-600">{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a>
           </div>
         </div>
 
@@ -55,13 +55,13 @@
             </div>
             <ul class="space-y-2.5 flex-1 mb-8">
               <li v-for="feat in proFeatures" :key="feat.en" class="flex items-center gap-2.5">
-                <svg class="w-4 h-4 text-green-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-landing-green-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
                 <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
               </li>
             </ul>
-            <a href="#download" class="landing-btn-white w-full text-center text-landing-primary-700">{{ locale === 'kh' ? 'ទទួល Pro' : 'Get Pro' }}</a>
+            <a href="#download" @click.prevent="scrollTo('download')" class="landing-btn-white w-full text-center text-landing-primary-700">{{ locale === 'kh' ? 'ទទួល Pro' : 'Get Pro' }}</a>
           </div>
         </div>
 
@@ -80,7 +80,7 @@
             <ul class="space-y-2.5 flex-1 mb-8">
               <li v-for="feat in freeFeatures" :key="feat.en" class="flex items-start gap-2.5">
                 <svg class="w-4 h-4 mt-0.5 flex-shrink-0"
-                  :class="feat.available ? 'text-green-500' : 'text-gray-300 dark:text-gray-600'"
+                  :class="feat.available ? 'text-landing-green-500' : 'text-gray-300 dark:text-gray-600'"
                   fill="currentColor" viewBox="0 0 20 20">
                   <path v-if="feat.available" fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                   <path v-else fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
@@ -90,7 +90,7 @@
                 </span>
               </li>
             </ul>
-            <a href="#download" class="landing-btn-outline w-full text-center">{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a>
+            <a href="#download" @click.prevent="scrollTo('download')" class="landing-btn-outline w-full text-center">{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a>
           </div>
         </div>
 
@@ -98,7 +98,7 @@
 
       <!-- Note -->
       <p class="mt-10 text-center text-gray-500 dark:text-gray-400 text-sm flex items-center justify-center gap-2">
-        <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-4 h-4 text-landing-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
         {{ locale === 'kh'
@@ -113,7 +113,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { CreditCard, Gift, Star } from 'lucide-vue-next'
+import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
 const { t, locale } = useI18n()
+const { scrollTo } = useLandingScroll()
 
 const trialFeatures = [
   { en: 'Create fuel types',           km: 'បង្កើតប្រភេទឥន្ធនៈ' },

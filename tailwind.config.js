@@ -37,6 +37,19 @@ export default {
           900: '#1e2f6b',
           950: '#0f1a40',
         },
+        // Landing page green accent (#1fc600)
+        'landing-green': {
+          50:  '#f0fce9',
+          100: '#dcf8cc',
+          200: '#b8f09b',
+          300: '#87e462',
+          400: '#55d42e',
+          500: '#1fc600',
+          600: '#18a300',
+          700: '#138000',
+          800: '#0e5c00',
+          900: '#083800',
+        },
         fuel: {
           orange: '#f97316',
           green:  '#22c55e',
