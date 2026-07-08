@@ -2,6 +2,8 @@
     "staff": {
         "title": "Staff",
         "staff_management": "Staff Management",
+        "total_staff": "Total {count} staff",
+        "no_staff": "No staff found",
         "first_name": "First Name",
         "last_name": "Last Name",
         "phone": "Phone Number",
@@ -23,10 +25,16 @@
         "me": "Me",
         "suspend": "Suspend",
         "activate": "Activate",
-        "staff.delete_success_title": "Deleted",
-        "staff.delete_success_desc": "Staff member has been deleted successfully.",
-        "staff.restore_success_title": "Restored",
-        "staff.restore_success_desc": "Staff member has been restored successfully.",
-        "staff.restore_failed": "Failed to restore staff member."
+        "active": "Active",
+        "inactive": "Inactive",
+        "delete_confirm": "Are you sure you want to delete this staff member?",
+        "delete_failed": "Failed to delete staff member.",
+        "delete_success_title": "Deleted",
+        "delete_success_desc": "Staff member has been deleted successfully.",
+        "restore_success_title": "Restored",
+        "restore_success_desc": "Staff member has been restored successfully.",
+        "restore_failed": "Failed to restore staff member.",
+        "staff_limit_reached": "Staff Limit Reached",
+        "staff_limit_reached_desc": "Your Pro plan allows a maximum of {limit} staff accounts. Upgrade to Pro Max for unlimited staff."
     }
 }

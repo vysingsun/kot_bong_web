@@ -21,44 +21,73 @@
         },
         "modal_title": "Upgrade to Pro",
         "modal_subtitle": "Unlock everything your station needs",
-        "pill_staff": "Unlimited staff",
+        "modal_pro_max_title": "Upgrade to Pro Max",
+        "modal_pro_max_subtitle": "Unlock unlimited staff & oil price estimation",
+        "pill_staff": "Up to 6 staff",
+        "pill_staff_unlimited": "Unlimited staff",
         "pill_reports": "Full reports",
         "pill_support": "Priority support",
+        "pill_oil": "Oil estimation",
         "month": "month",
         "upgrade_now": "Upgrade to Pro",
-        "maybe_later": "Maybe later"
+        "upgrade_to_pro_max": "Upgrade to Pro Max",
+        "maybe_later": "Maybe later",
+        "staff_slots": "{current} / {max} staff",
+        "staff_unlimited": "Unlimited staff",
+        "staff_limit_reached": "Staff limit reached",
+        "staff_limit_reached_desc": "Your Pro plan allows a maximum of {limit} staff accounts. Upgrade to Pro Max for unlimited staff.",
+        "pro_required_title": "Pro Plan Required",
+        "pro_required_desc": "Staff management requires a Pro or Pro Max subscription.",
+        "pro_max_required_title": "Pro Max Required",
+        "pro_max_required_desc": "Oil price estimation is only available on the Pro Max plan.",
+        "renewBadge": "Renew"
     },
     "plans": {
         "trial": {
             "name": "Free Trial",
             "price": "Free",
             "period": "3 months",
-            "desc": "Full Pro access for 3 months — no payment needed.",
-            "features": ["All Pro features", "Unlimited staff", "Excel export", "Priority support"],
+            "desc": "Full Pro Max access for the trial period — no payment needed.",
+            "features": ["All Pro Max features", "Unlimited staff", "Oil price estimation", "Excel export"],
             "cta": "Your Current Plan"
         },
         "pro": {
             "name": "Pro",
             "price": "$10",
             "period": "/ month",
-            "desc": "Everything your business needs at full speed.",
+            "desc": "All the essentials for running your fuel station.",
             "features": [
-                "All features unlocked",
-                "Unlimited staff accounts",
+                "Up to 6 staff accounts",
                 "Excel export",
                 "Priority support",
                 "Early feature access"
             ],
             "cta": "Upgrade to Pro",
-            "ctaRenew": "Renew Subscription"
+            "ctaRenew": "Renew Subscription",
+            "ctaUpgrade": "Upgrade to Pro Max"
+        },
+        "pro_max": {
+            "name": "Pro Max",
+            "price": "$15",
+            "period": "/ month",
+            "desc": "Unlimited everything — staff, features, and oil price estimation.",
+            "features": [
+                "Unlimited staff accounts",
+                "Oil price estimation",
+                "Excel export",
+                "Priority support",
+                "Early feature access"
+            ],
+            "cta": "Upgrade to Pro Max",
+            "ctaRenew": "Renew Pro Max"
         },
         "free": {
             "name": "Free",
             "price": "$0",
             "period": "/ month",
             "desc": "Limited access after trial ends.",
-            "features": ["Max 1 staff account", "No Excel export", "Standard support"],
-            "cta": "Upgrade to Pro"
+            "features": ["No staff management", "No Excel export", "Standard support"],
+            "cta": "Subscribe to Pro"
         }
     },
     "payment": {
@@ -73,7 +102,7 @@
         "closeBtn": "Back to Plans",
         "success": {
             "title": "Payment Successful!",
-            "desc": "Your Pro plan has been activated. Thank you!"
+            "desc": "Your plan has been activated. Thank you!"
         },
         "failed": {
             "title": "Payment Failed",

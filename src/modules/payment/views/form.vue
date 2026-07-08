@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-    import { useRouter } from 'vue-router'
+    import { useRouter, useRoute } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { storeToRefs } from 'pinia'
     import { usePaymentStore } from '../store/index'
@@ -11,8 +11,12 @@
 
     const { t } = useI18n()
     const router = useRouter()
+    const route = useRoute()
     const store = usePaymentStore()
-    const { station, subscription, currentPayment, paymentSessionStatus, isInitiatingPayment } = storeToRefs(store)
+    const { station, subscription, currentPayment, paymentSessionStatus, isInitiatingPayment, targetPlan, paymentAmount } = storeToRefs(store)
+
+    // Plan name for display
+    const planDisplayName = computed(() => targetPlan.value === 'pro_max' ? t('plans.pro_max.name') : t('plans.pro.name'))
 
     // ── Countdown ──────────────────────────────────────────────
     const countdown = ref(600)
@@ -76,6 +80,11 @@
     })
 
     onMounted(async () => {
+        // Set targetPlan from route query (?plan=pro_max)
+        const planQuery = route.query.plan as string | undefined
+        if (planQuery === 'pro_max') store.targetPlan = 'pro_max'
+        else if (planQuery === 'pro') store.targetPlan = 'pro'
+
         const appData = getFromCache('app_data')
         const stationId = appData.value?.stations?.[0]?._id
         if (stationId && !subscription.value) await store.fetchStation(stationId)
@@ -158,10 +167,14 @@
                         <span class="text-sm text-slate-400">{{ t('payment.to') }}</span>
                         <span class="text-sm font-semibold text-slate-800">Kot Preng</span>
                     </div>
+                    <div class="flex items-center justify-between anim-row-1b">
+                        <span class="text-sm text-slate-400">{{ t('payment.subscription') }}</span>
+                        <span class="text-sm font-semibold text-slate-800">{{ planDisplayName }}</span>
+                    </div>
                     <div class="flex items-center justify-between anim-row-2">
                         <span class="text-sm text-slate-400">{{ t('payment.amount') }}</span>
                         <span class="text-sm font-semibold text-slate-800">
-                            ${{ subscription?.pricePerMonth?.toFixed(2) ?? '10.00' }}
+                            ${{ paymentAmount.toFixed(2) }}
                         </span>
                     </div>
                     <div class="flex items-center justify-between anim-row-3">
@@ -191,7 +204,7 @@
                         {{ t('payment.totalPay') ?? 'Total Pay' }}
                     </p>
                     <p class="text-4xl font-black" style="color: #3aa246">
-                        ${{ subscription?.pricePerMonth?.toFixed(2) ?? '10.00' }}
+                        ${{ paymentAmount.toFixed(2) }}
                     </p>
                 </div>
 
@@ -269,11 +282,9 @@
                     </p> -->
                     <p class="text-xl font-bold text-slate-900 leading-tight mb-2">Kot Preng</p>
 
-                    <!-- <p class="text-[11px] text-slate-400 uppercase tracking-widest font-medium mt-4 mb-0.5">
-                        {{ t('payment.amount') }}
-                    </p> -->
+                    <p class="text-xs text-slate-400 mb-0.5">{{ planDisplayName }}</p>
                     <p class="text-2xl font-black text-slate-900 tracking-tight leading-none">
-                        $&thinsp;{{ subscription?.pricePerMonth?.toFixed(2) ?? '10.00' }}
+                        $&thinsp;{{ paymentAmount.toFixed(2) }}
                     </p>
                 </div>
 

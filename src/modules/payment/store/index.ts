@@ -15,6 +15,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
     // Payment flow state
     const currentPayment = ref<PaymentInitiateResponse | null>(null)
     const paymentSessionStatus = ref<'idle' | 'pending' | 'success' | 'failed' | 'expired'>('idle')
+    const targetPlan = ref<'pro' | 'pro_max'>('pro')
 
     const isLoadingStation = ref(false)
     const isInitiatingPayment = ref(false)
@@ -42,6 +43,12 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         return new Date() >= new Date(currentPayment.value.expiresAt)
     })
 
+    // Actual amount to display — comes from the backend payment session
+    const paymentAmount = computed(() => {
+        if (currentPayment.value?.amount) return currentPayment.value.amount
+        return targetPlan.value === 'pro_max' ? 15 : 10
+    })
+
     // ── Actions ────────────────────────────────────────────
     async function fetchStation(stationId: string) {
         isLoadingStation.value = true
@@ -55,6 +62,30 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         } finally {
             isLoadingStation.value = false
         }
+    }
+
+    async function fetchSubscriptionStatus() {
+        try {
+            const res = await paymentService.getSubscriptionStatus()
+            if (res.data.success && subscription.value) {
+                // Merge the fresh status fields into the existing subscription object
+                const s = res.data.data
+                subscription.value = {
+                    ...subscription.value,
+                    plan: s.plan,
+                    hasProAccess: s.hasProAccess,
+                    canManageStaff: s.canManageStaff,
+                    canExportExcel: s.canExportExcel,
+                    canViewOilEstimation: s.canViewOilEstimation,
+                    maxStaff: s.maxStaff,
+                    isTrialActive: s.isTrialActive,
+                    trialEndDate: s.trialEndDate ?? subscription.value.trialEndDate,
+                    proExpiryDate: s.proExpiryDate,
+                    proNextBillingDate: s.proNextBillingDate,
+                    pricePerMonth: s.pricePerMonth,
+                }
+            }
+        } catch {}
     }
 
     async function fetchHistory() {
@@ -71,7 +102,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         paymentSessionStatus.value = 'idle'
 
         try {
-            const res = await paymentService.initiate({ subscriptionId })
+            const res = await paymentService.initiate({ subscriptionId, targetPlan: targetPlan.value })
             currentPayment.value = res.data.data
             paymentSessionStatus.value = 'pending'
             startPolling(res.data.data.md5)
@@ -136,6 +167,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         paymentHistory,
         currentPayment,
         paymentSessionStatus,
+        targetPlan,
         isLoadingStation,
         isInitiatingPayment,
         isPolling,
@@ -144,7 +176,9 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         trialDaysLeft,
         nextBillingDate,
         isQrExpired,
+        paymentAmount,
         fetchStation,
+        fetchSubscriptionStatus,
         fetchHistory,
         initiatePayment,
         cancelPayment,

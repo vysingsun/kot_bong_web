@@ -7,6 +7,15 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ t('staff.total_staff', { count: totalRecords }) }}
                 </p>
+                <!-- Staff slot usage -->
+                <p v-if="store.subscription?.canManageStaff" class="text-xs mt-0.5" :class="store.subscription?.maxStaff === Infinity || store.subscription?.plan === 'pro_max' || store.subscription?.plan === 'trial' ? 'text-violet-500' : 'text-slate-400'">
+                    <template v-if="store.subscription?.plan === 'pro_max' || store.subscription?.plan === 'trial'">
+                        {{ t('subscription.staff_unlimited') }}
+                    </template>
+                    <template v-else>
+                        {{ t('subscription.staff_slots', { current: totalRecords, max: store.subscription?.maxStaff }) }}
+                    </template>
+                </p>
             </div>
             <!-- <router-link
                 v-if="isAdmin"
@@ -361,7 +370,7 @@
         @close="warningModal.show = false"
         @confirm="handleSuccessConfirm"
     /> -->
-    <ProUpgradeModal :show="warningModal.show" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
+    <ProUpgradeModal :show="warningModal.show" :plan="warningModal.plan" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -371,6 +380,7 @@
     import _ from 'lodash'
     import { staffService } from '@/modules/staff/services/api.service'
     import { useStaffStore } from '@/modules/staff/store/index'
+    import { usePaymentStore } from '@/modules/payment/store/index'
     import { useModal } from '@/composables/useModal'
     import { useAppStore } from '@/modules/app/store/index'
     import { getFromCache } from '@/composables/useCache'
@@ -386,6 +396,7 @@
     const router = useRouter()
     const route = useRoute()
     const store = useStaffStore()
+    const paymentStore = usePaymentStore()
     const appStore = useAppStore()
     const { isVisible, showModal, closeModal } = useModal()
 
@@ -558,14 +569,16 @@
         show: false,
         title: '',
         description: '',
+        plan: 'pro' as 'pro' | 'pro_max',
     })
 
     const onClickCreate = () => {
-        if (!store.subscription?.hasProAccess) {
+        if (!store.subscription?.canManageStaff) {
             warningModal.value = {
                 show: true,
                 title: t('subscription.pro_required_title'),
                 description: t('subscription.pro_required_desc'),
+                plan: 'pro',
             }
             return
         }
@@ -574,6 +587,9 @@
 
     const handleSuccessConfirm = () => {
         warningModal.value.show = false
+        if (warningModal.value.plan === 'pro_max') {
+            paymentStore.targetPlan = 'pro_max'
+        }
         router.push('/payment')
     }
 </script>

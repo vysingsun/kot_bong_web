@@ -18,6 +18,18 @@
         return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
     }
 
+    function getPlanName(plan: string) {
+        if (plan === 'pro_max') return t('plans.pro_max.name')
+        if (plan === 'pro') return t('plans.pro.name')
+        if (plan === 'trial') return t('plans.trial.name')
+        return t('plans.free.name')
+    }
+
+    function navigateToPayment(plan: 'pro' | 'pro_max') {
+        store.targetPlan = plan
+        router.push({ name: 'payment' })
+    }
+
     onMounted(async () => {
         const appData = getFromCache('app_data')
         const stationId = appData.value?.stations?.[0]?._id
@@ -46,7 +58,7 @@
         <div class="max-w-md mx-auto px-4 py-5 space-y-3">
             <!-- Skeleton -->
             <template v-if="isLoadingStation">
-                <div v-for="i in 3" :key="i" class="h-56 rounded-2xl bg-slate-200 animate-pulse" />
+                <div v-for="i in 4" :key="i" class="h-56 rounded-2xl bg-slate-200 animate-pulse" />
             </template>
 
             <template v-else-if="subscription">
@@ -55,76 +67,45 @@
                     <div
                         class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                         :class="
-                            subscription.plan === 'pro'
-                                ? 'bg-emerald-100'
-                                : subscription.plan === 'trial'
-                                  ? 'bg-sky-100'
-                                  : 'bg-slate-100'
+                            subscription.plan === 'pro_max'
+                                ? 'bg-violet-100'
+                                : subscription.plan === 'pro'
+                                  ? 'bg-emerald-100'
+                                  : subscription.plan === 'trial'
+                                    ? 'bg-sky-100'
+                                    : 'bg-slate-100'
                         "
                     >
-                        <svg
-                            v-if="subscription.plan === 'pro'"
-                            class="w-5 h-5 text-emerald-600"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
+                        <!-- Pro Max icon -->
+                        <svg v-if="subscription.plan === 'pro_max'" class="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                         </svg>
-                        <svg
-                            v-else-if="subscription.plan === 'trial'"
-                            class="w-5 h-5 text-sky-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
+                        <!-- Pro icon -->
+                        <svg v-else-if="subscription.plan === 'pro'" class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <svg
-                            v-else
-                            class="w-5 h-5 text-slate-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                            />
+                        <!-- Trial icon -->
+                        <svg v-else-if="subscription.plan === 'trial'" class="w-5 h-5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <!-- Free icon -->
+                        <svg v-else class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                         </svg>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs text-slate-400">{{ t('subscription.currentPlan') }}</p>
-                        <p class="text-sm font-bold text-slate-900">
-                            {{
-                                subscription.plan === 'pro'
-                                    ? t('plans.pro.name')
-                                    : subscription.plan === 'trial'
-                                      ? t('plans.trial.name')
-                                      : t('plans.free.name')
-                            }}
-                        </p>
+                        <p class="text-sm font-bold text-slate-900">{{ getPlanName(subscription.plan) }}</p>
                         <p v-if="subscription.plan === 'trial'" class="text-xs text-sky-600 font-medium">
                             {{ trialDaysLeft }} {{ t('subscription.trialDaysLeft') }}
                         </p>
-                        <p
-                            v-if="subscription.plan === 'pro' && subscription.proNextBillingDate"
-                            class="text-xs text-slate-500"
-                        >
+                        <p v-if="(subscription.plan === 'pro' || subscription.plan === 'pro_max') && subscription.proNextBillingDate" class="text-xs text-slate-500">
                             {{ t('subscription.nextBilling') }}: {{ formatDate(subscription.proNextBillingDate) }}
                         </p>
+                        <!-- Staff slot indicator for Pro -->
+                        <!-- <p v-if="subscription.plan === 'pro' && subscription.maxStaff" class="text-xs text-slate-400 mt-0.5">
+                            {{ t('subscription.staff_slots', { current: '?', max: subscription.maxStaff }) }}
+                        </p> -->
                     </div>
                     <div class="flex items-center gap-1 flex-shrink-0">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -142,9 +123,7 @@
                     <div class="p-5">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <span
-                                    class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 mb-2"
-                                >
+                                <span class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-700 mb-2">
                                     {{ t('subscription.trialBadge') }}
                                 </span>
                                 <h3 class="font-bold text-slate-900 text-base">{{ t('plans.trial.name') }}</h3>
@@ -156,29 +135,76 @@
                         </div>
                         <p class="text-sm text-slate-500 mb-3 leading-relaxed">{{ t('plans.trial.desc') }}</p>
                         <ul class="space-y-1.5 mb-4">
-                            <li
-                                v-for="(f, i) in $tm('plans.trial.features')"
-                                :key="i"
-                                class="flex items-center gap-2 text-sm text-slate-700"
-                            >
-                                <svg
-                                    class="w-4 h-4 text-sky-500 flex-shrink-0"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
+                            <li v-for="(f, i) in $tm('plans.trial.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
+                                <svg class="w-4 h-4 text-sky-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
                                 {{ $rt(f) }}
                             </li>
                         </ul>
-                        <div
-                            v-if="subscription.plan === 'trial'"
-                            class="py-2.5 text-center rounded-xl bg-sky-50 border border-sky-200 text-sky-700 text-sm font-semibold"
-                        >
+                        <div v-if="subscription.plan === 'trial'" class="py-2.5 text-center rounded-xl bg-sky-50 border border-sky-200 text-sky-700 text-sm font-semibold">
                             ✓ {{ t('plans.trial.cta') }}
                         </div>
+                    </div>
+                </div>
+
+                <!-- Pro Max card -->
+                <div
+                    :class="[
+                        'rounded-2xl border-2 shadow-sm overflow-hidden',
+                        subscription.plan === 'pro_max'
+                            ? 'border-violet-500 bg-gradient-to-br from-violet-50 to-white'
+                            : 'bg-white border-slate-200',
+                    ]"
+                >
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <span class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 mb-2">
+                                    ✦ Pro Max
+                                </span>
+                                <h3 class="font-bold text-slate-900 text-base">{{ t('plans.pro_max.name') }}</h3>
+                            </div>
+                            <div class="text-right ml-3 flex-shrink-0">
+                                <p class="text-xl font-black text-slate-900">{{ t('plans.pro_max.price') }}</p>
+                                <p class="text-xs text-slate-400">{{ t('plans.pro_max.period') }}</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-3 leading-relaxed">{{ t('plans.pro_max.desc') }}</p>
+                        <ul class="space-y-1.5 mb-5">
+                            <li v-for="(f, i) in $tm('plans.pro_max.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
+                                <svg class="w-4 h-4 text-violet-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
+                                {{ $rt(f) }}
+                            </li>
+                        </ul>
+                        <!-- Active Pro Max -->
+                        <div v-if="subscription.plan === 'pro_max'" class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-violet-600 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ t('subscription.active') }}
+                            </span>
+                            <button @click="navigateToPayment('pro_max')" class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors">
+                                {{ t('plans.pro_max.ctaRenew') }}
+                            </button>
+                        </div>
+                        <!-- Upgrade from Pro -->
+                        <div v-else-if="subscription.plan === 'pro'" class="space-y-2">
+                            <button @click="navigateToPayment('pro_max')" class="w-full py-3 rounded-xl font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 text-white active:scale-95" style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                </svg>
+                                {{ t('plans.pro_max.cta') }}
+                            </button>
+                            <p class="text-center text-xs text-slate-400">Remaining Pro days credited toward Pro Max</p>
+                        </div>
+                        <!-- Subscribe (free/trial) -->
+                        <button v-else @click="navigateToPayment('pro_max')" class="w-full py-3 rounded-xl font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 text-white active:scale-95" style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">
+                            {{ t('plans.pro_max.cta') }}
+                        </button>
                     </div>
                 </div>
 
@@ -192,9 +218,7 @@
                     <div class="p-5">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <span
-                                    class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700 mb-2"
-                                >
+                                <span class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700 mb-2">
                                     ⭐ {{ t('subscription.popularBadge') }}
                                 </span>
                                 <h3 class="font-bold text-slate-900 text-base">{{ t('plans.pro.name') }}</h3>
@@ -206,58 +230,29 @@
                         </div>
                         <p class="text-sm text-slate-500 mb-3 leading-relaxed">{{ t('plans.pro.desc') }}</p>
                         <ul class="space-y-1.5 mb-5">
-                            <li
-                                v-for="(f, i) in $tm('plans.pro.features')"
-                                :key="i"
-                                class="flex items-center gap-2 text-sm text-slate-700"
-                            >
-                                <svg
-                                    class="w-4 h-4 text-emerald-500 flex-shrink-0"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
+                            <li v-for="(f, i) in $tm('plans.pro.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
+                                <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
                                 {{ $rt(f) }}
                             </li>
                         </ul>
+                        <!-- Active Pro -->
                         <div v-if="subscription.plan === 'pro'" class="flex items-center justify-between">
                             <span class="text-sm font-semibold text-emerald-600 flex items-center gap-1">
-                                <svg
-                                    class="w-4 h-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 {{ t('subscription.active') }}
                             </span>
-                            <button
-                                @click="router.push({ name: 'payment' })"
-                                class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
-                            >
+                            <button @click="navigateToPayment('pro')" class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors">
                                 {{ t('plans.pro.ctaRenew') }}
                             </button>
                         </div>
-                        <button
-                            v-else
-                            @click="router.push({ name: 'payment' })"
-                            class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2"
-                        >
+                        <!-- Subscribe (free/trial/pro_max) -->
+                        <button v-else @click="navigateToPayment('pro')" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
-                                />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                             </svg>
                             {{ t('plans.pro.cta') }}
                         </button>
@@ -274,9 +269,7 @@
                     <div class="p-5">
                         <div class="flex items-start justify-between mb-3">
                             <div>
-                                <span
-                                    class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 mb-2"
-                                >
+                                <span class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 mb-2">
                                     {{ t('subscription.freeBadge') }}
                                 </span>
                                 <h3 class="font-bold text-slate-600 text-base">{{ t('plans.free.name') }}</h3>
@@ -288,52 +281,24 @@
                         </div>
                         <p class="text-sm text-slate-400 mb-3 leading-relaxed">{{ t('plans.free.desc') }}</p>
                         <ul class="space-y-1.5 mb-4">
-                            <li
-                                v-for="(f, i) in $tm('plans.free.features')"
-                                :key="i"
-                                class="flex items-center gap-2 text-sm text-slate-400"
-                            >
-                                <svg
-                                    class="w-4 h-4 text-slate-300 flex-shrink-0"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
+                            <li v-for="(f, i) in $tm('plans.free.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-400">
+                                <svg class="w-4 h-4 text-slate-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                                 {{ $rt(f) }}
                             </li>
                         </ul>
-                        <button
-                            v-if="subscription.plan === 'free'"
-                            @click="router.push({ name: 'payment' })"
-                            class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm transition-colors"
-                        >
+                        <button v-if="subscription.plan === 'free'" @click="navigateToPayment('pro')" class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm transition-colors">
                             {{ t('plans.free.cta') }}
                         </button>
-                        <p v-else class="text-center text-xs text-slate-400">
-                            {{ t('subscription.appliesAfterTrial') }}
-                        </p>
+                        <p v-else class="text-center text-xs text-slate-400">{{ t('subscription.appliesAfterTrial') }}</p>
                     </div>
                 </div>
 
                 <!-- History toggle -->
-                <button
-                    @click="showHistory = !showHistory"
-                    class="w-full flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors"
-                >
+                <button @click="showHistory = !showHistory" class="w-full flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors">
                     <span class="text-sm font-semibold text-slate-700">{{ t('subscription.viewHistory') }}</span>
-                    <svg
-                        :class="[
-                            'w-4 h-4 text-slate-400 transition-transform duration-200',
-                            showHistory ? 'rotate-180' : '',
-                        ]"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
+                    <svg :class="['w-4 h-4 text-slate-400 transition-transform duration-200', showHistory ? 'rotate-180' : '']" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
@@ -347,35 +312,25 @@
                             <div
                                 v-for="(item, i) in paymentHistory"
                                 :key="item._id"
-                                :class="[
-                                    'flex items-center gap-3 px-4 py-3.5',
-                                    i < paymentHistory.length - 1 ? 'border-b border-slate-100' : '',
-                                ]"
+                                :class="['flex items-center gap-3 px-4 py-3.5', i < paymentHistory.length - 1 ? 'border-b border-slate-100' : '']"
                             >
                                 <div
                                     :class="[
                                         'w-8 h-8 rounded-lg flex items-center justify-center text-xs flex-shrink-0',
-                                        item.status === 'success'
-                                            ? 'bg-emerald-100 text-emerald-600'
-                                            : item.status === 'failed'
-                                              ? 'bg-rose-100 text-rose-600'
-                                              : 'bg-slate-100 text-slate-400',
+                                        item.status === 'success' ? 'bg-emerald-100 text-emerald-600' : item.status === 'failed' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-400',
                                     ]"
                                 >
                                     {{ item.status === 'success' ? '✓' : item.status === 'failed' ? '✕' : '○' }}
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-slate-800">Pro Plan</p>
+                                    <p class="text-sm font-medium text-slate-800">
+                                        {{ item.subscription?.plan === 'pro_max' ? t('plans.pro_max.name') : t('plans.pro.name') }}
+                                    </p>
                                     <p class="text-xs text-slate-400">{{ formatDate(item.paidAt) }}</p>
                                 </div>
                                 <div class="text-right flex-shrink-0">
                                     <p class="text-sm font-bold text-slate-900">${{ item.amount.toFixed(2) }}</p>
-                                    <span
-                                        :class="[
-                                            'text-xs',
-                                            item.status === 'success' ? 'text-emerald-600' : 'text-rose-500',
-                                        ]"
-                                    >
+                                    <span :class="['text-xs', item.status === 'success' ? 'text-emerald-600' : 'text-rose-500']">
                                         {{ t(`subscription.status.${item.status}`) }}
                                     </span>
                                 </div>
