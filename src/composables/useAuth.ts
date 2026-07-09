@@ -28,6 +28,7 @@ export function useAuth() {
     })
 
     const isAdmin = computed(() => userRole.value === 'Admin')
+    const isSuperAdmin = computed(() => userRole.value === 'Super_Admin')
     const isUser = computed(() => userRole.value === 'User')
 
     function hasRole(roles: string | string[]): boolean {
@@ -35,5 +36,5 @@ export function useAuth() {
         return allowed.includes(userRole.value)
     }
 
-    return { userRole, isAdmin, isUser, hasRole }
+    return { userRole, isAdmin, isSuperAdmin, isUser, hasRole }
 }
