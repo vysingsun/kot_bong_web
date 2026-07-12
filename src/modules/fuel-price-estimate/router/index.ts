@@ -17,7 +17,7 @@ export const routes = [
         name: `${MODULE_NAME}.detail`,
         path: `${MODULE_PATH}/:id`,
         meta: {
-            title: MODULE_NAME,
+            title: `${MODULE_NAME}.detail`,
             roles: ['Super_Admin', 'Admin'],
         },
         component: () => import('@/modules/fuel-price-estimate/views/detail.vue'),

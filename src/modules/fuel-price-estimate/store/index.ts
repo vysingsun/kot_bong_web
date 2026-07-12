@@ -14,6 +14,10 @@ export interface IEstimateAuthor {
     _id: string
     firstName: string
     lastName: string
+    role?: {
+        _id: string
+        role_name: string
+    }
 }
 
 export interface IComment {
@@ -54,6 +58,7 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
     const loading = ref(false)
     const commentLoading = ref(false)
     const submitLoading = ref(false)
+    const commentSubmitLoading = ref(false)
 
     // ── Estimates ────────────────────────────────────────────────────────
 
@@ -165,7 +170,14 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
             commentLoading.value = true
             const { data } = await fuelPriceEstimateService.getComments(estimateId, { page, limit })
             if (data.success) {
-                comments.value = data.data
+                // Backend returns newest-first (DESC). Reverse so we store oldest-first (ASC chat order).
+                const ascending = [...data.data].reverse()
+                if (page === 1) {
+                    comments.value = ascending
+                } else {
+                    // Load-more: older messages go ABOVE existing → prepend
+                    comments.value.unshift(...ascending)
+                }
                 commentPagination.value = data.pagination
             }
         } catch (error) {
@@ -176,10 +188,10 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
     }
 
     const addComment = async (estimateId: string, content: string): Promise<boolean> => {
+        const tempId = `temp_${Date.now()}`
         try {
-            commentLoading.value = true
+            commentSubmitLoading.value = true
             // Optimistic: push a placeholder bubble immediately
-            const tempId = `temp_${Date.now()}`
             const appData = getFromCache('app_data')
             const me = appData?.value
             const tempComment: IComment = {
@@ -189,6 +201,7 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
                     _id: me?._id ?? '',
                     firstName: me?.firstName ?? '',
                     lastName: me?.lastName ?? '',
+                    role: me?.role,
                 },
                 createdAt: new Date().toISOString(),
             }
@@ -210,9 +223,11 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
             return false
         } catch (error) {
             console.error('Error adding comment:', error)
+            // Rollback on throw
+            comments.value = comments.value.filter(c => c._id !== tempId)
             return false
         } finally {
-            commentLoading.value = false
+            commentSubmitLoading.value = false
         }
     }
 
@@ -287,6 +302,7 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         loading,
         commentLoading,
         submitLoading,
+        commentSubmitLoading,
         // actions
         fetchAll,
         fetchById,

@@ -34,6 +34,7 @@ const commentInput = ref('')
 const editingComment = ref<IComment | null>(null)
 const editCommentText = ref('')
 const commentListRef = ref<HTMLElement | null>(null)
+const savingCommentId = ref<string | null>(null)  // tracks which comment is syncing to server
 
 // Lightbox
 const lightboxSrc = ref('')
@@ -56,6 +57,30 @@ onMounted(async () => {
     await store.fetchComments(estimateId)
     scrollToBottom()
 })
+
+const handleScroll = async () => {
+    if (!commentListRef.value) return
+
+    // Scroll UP to top loads older comments (like Telegram: pull up to see history)
+    const { scrollTop } = commentListRef.value
+    if (
+        scrollTop < 50 &&
+        !store.commentLoading &&
+        store.commentPagination.page < store.commentPagination.totalPages
+    ) {
+        const previousScrollHeight = commentListRef.value.scrollHeight
+
+        await store.fetchComments(estimateId, store.commentPagination.page + 1)
+
+        // After prepending older messages, restore scroll position so user stays at the same spot
+        nextTick(() => {
+            if (commentListRef.value) {
+                const newScrollHeight = commentListRef.value.scrollHeight
+                commentListRef.value.scrollTop = newScrollHeight - previousScrollHeight + scrollTop
+            }
+        })
+    }
+}
 
 const startEdit = () => {
     editContent.value = store.currentEstimate?.content ?? ''
@@ -104,16 +129,44 @@ const handleDeleteEstimate = async () => {
 
 const postComment = async () => {
     if (!commentInput.value.trim()) return
-    const ok = await store.addComment(estimateId, commentInput.value.trim())
-    if (ok) { commentInput.value = ''; scrollToBottom() }
+
+    const originalCommentText = commentInput.value
+    // Clear input field immediately
+    commentInput.value = ''
+    
+    // Scroll to bottom immediately
+    scrollToBottom()
+
+    const ok = await store.addComment(estimateId, originalCommentText.trim())
+    if (ok) {
+        scrollToBottom()
+    } else {
+        // Rollback text input
+        commentInput.value = originalCommentText
+        errorModal.value = { show: true, description: t('fuel_price_estimate.error_general'), message: '' }
+    }
 }
 
 const startEditComment = (c: IComment) => { editingComment.value = c; editCommentText.value = c.content }
 const cancelEditComment = () => { editingComment.value = null }
 const saveEditComment = async () => {
     if (!editingComment.value || !editCommentText.value.trim()) return
-    await store.updateComment(editingComment.value._id, editCommentText.value.trim())
+    const id = editingComment.value._id
+    const newText = editCommentText.value.trim()
+
+    // Close the form immediately — the store already updates the bubble optimistically
     editingComment.value = null
+    savingCommentId.value = id
+
+    const ok = await store.updateComment(id, newText)
+    savingCommentId.value = null
+
+    if (!ok) {
+        // Rollback: reopen the edit form so user can try again
+        const c = store.comments.find(c => c._id === id)
+        if (c) { editingComment.value = c; editCommentText.value = newText }
+        errorModal.value = { show: true, description: t('fuel_price_estimate.error_general'), message: '' }
+    }
 }
 
 const onDeleteComment = (id: string) => { deleteCommentModal.value = { show: true, id } }
@@ -147,7 +200,7 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
                     </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-gray-900 dark:text-white text-sm truncate">{{ t('fuel_price_estimate.title') }}</p>
+                    <p class="font-semibold text-gray-900 dark:text-white text-sm truncate">{{ t('fuel_price_estimate.detail_title') }}</p>
                     <p class="text-xs text-gray-400">{{ store.comments.length }} {{ t('fuel_price_estimate.comments') }}</p>
                 </div>
                 <div v-if="isSuperAdmin && !isEditing && store.currentEstimate" class="flex items-center gap-1">
@@ -166,19 +219,33 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
         </div>
 
         <!-- ── Scrollable area ── -->
-        <div ref="commentListRef" class="flex-1 overflow-y-auto pb-24">
+        <div ref="commentListRef" class="flex-1 overflow-y-auto pb-24" @scroll="handleScroll">
             <div class="max-w-2xl mx-auto px-3 py-4 space-y-2">
 
-                <!-- Loading -->
-                <div v-if="store.loading" class="space-y-4 animate-pulse pt-2">
-                    <div class="h-40 bg-white dark:bg-gray-800 rounded-2xl shadow-sm" />
-                    <div v-for="n in 3" :key="n" class="flex gap-2">
+                <!-- Loading — shown only before the estimate card is first fetched -->
+                <div v-if="store.loading && !store.currentEstimate" class="space-y-4 animate-pulse pt-2">
+                    <!-- Channel post skeleton -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 space-y-3 border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
+                            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-28" />
+                        </div>
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+                        <div class="h-32 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                    </div>
+                    <!-- Comment skeletons -->
+                    <div v-for="n in 4" :key="n" class="flex gap-2">
                         <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
-                        <div class="flex-1 h-12 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+                        <div class="flex-1 space-y-1.5 max-w-xs">
+                            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+                            <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+                        </div>
                     </div>
                 </div>
 
-                <template v-else-if="store.currentEstimate">
+                <template v-if="store.currentEstimate">
                     <!-- ── Channel post card (Telegram channel bubble style) ── -->
                     <div class="mb-3">
                         <!-- Channel badge label -->
@@ -191,7 +258,7 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
                         </div>
 
                         <!-- Bubble card -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden border-l-4 border-primary/60">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden border-primary/60">
 
                             <!-- View mode -->
                             <template v-if="!isEditing">
@@ -278,47 +345,76 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
                         <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
                     </div>
 
-                    <!-- ── Comments loading ── -->
-                    <div v-if="store.commentLoading" class="space-y-2 pt-1 animate-pulse">
-                        <div v-for="n in 4" :key="n" class="flex gap-2">
+                    <!-- ── Comments skeleton — only when initially empty (first load) ── -->
+                    <div v-if="store.commentLoading && store.comments.length === 0" class="space-y-3 pt-1 animate-pulse">
+                        <div v-for="n in 5" :key="n" class="flex gap-2">
                             <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
-                            <div class="h-10 flex-1 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+                            <div class="flex-1 space-y-1.5 max-w-xs md:max-w-md">
+                                <div class="flex gap-2">
+                                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20" />
+                                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-14" />
+                                </div>
+                                <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-2xl" />
+                            </div>
                         </div>
                     </div>
 
                     <!-- ── No comments ── -->
-                    <div v-else-if="store.comments.length === 0" class="py-6 text-center text-sm text-gray-400">
+                    <div v-else-if="!store.commentLoading && store.comments.length === 0" class="py-6 text-center text-sm text-gray-400">
                         {{ t('fuel_price_estimate.no_comments') }}
                     </div>
 
                     <!-- ── Comment bubbles (Flowbite chat bubble) ── -->
-                    <div v-else class="space-y-4 pb-2">
+                    <div v-if="store.comments.length > 0" class="space-y-4 pb-2">
+
+                        <!-- Top spinner: loading older messages when scrolled up -->
+                        <div v-if="store.commentLoading" class="flex items-center justify-center gap-2 py-2">
+                            <svg class="w-4 h-4 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                            </svg>
+                            <span class="text-xs text-gray-400">Loading older comments…</span>
+                        </div>
+
                         <div v-for="comment in store.comments" :key="comment._id">
 
                             <!-- Edit inline mode -->
                             <div v-if="editingComment?._id === comment._id" :class="isMe(comment) ? 'flex justify-end' : 'flex'">
-                                <div class="w-full max-w-sm space-y-1.5">
-                                    <textarea v-model="editCommentText" rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <div class="w-full max-w-xs md:max-w-md space-y-1.5">
+                                    <textarea v-model="editCommentText" rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" @keydown.enter.exact.prevent="saveEditComment" />
                                     <div class="flex gap-2 justify-end">
                                         <button class="text-xs px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700" @click="cancelEditComment">{{ t('fuel_price_estimate.cancel') }}</button>
-                                        <button class="text-xs px-3 py-1.5 rounded-lg text-white bg-blue-600 hover:bg-blue-700" @click="saveEditComment">{{ t('fuel_price_estimate.save_comment') }}</button>
+                                        <button class="text-xs px-3 py-1.5 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1" @click="saveEditComment">
+                                            {{ t('fuel_price_estimate.save_comment') }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Others — left aligned -->
                             <div v-else-if="!isMe(comment)" class="flex items-start gap-2.5">
-                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0 text-xs font-bold text-gray-600 dark:text-gray-300">
+                                <div v-if="comment.postedBy?.role?.role_name === 'Super_Admin'" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shrink-0 text-xs font-bold text-white shadow-sm">
+                                    📢
+                                </div>
+                                <div v-else class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0 text-xs font-bold text-gray-600 dark:text-gray-300">
                                     {{ comment.postedBy?.firstName?.[0] }}{{ comment.postedBy?.lastName?.[0] }}
                                 </div>
-                                <div class="flex flex-col gap-1">
-                                    <div class="flex flex-col leading-1.5 p-3 border border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700 dark:border-gray-600 max-w-xs">
-                                        <div class="flex items-center space-x-2 mb-1">
+                                <div class="flex flex-col gap-1 w-full max-w-xs md:max-w-md">
+                                    <div class="flex flex-col leading-1.5 p-3 border border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700 dark:border-gray-600 w-full shadow-sm">
+                                        <div class="flex items-center space-x-2 mb-1 flex-wrap gap-y-1">
                                             <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ comment.postedBy?.firstName }} {{ comment.postedBy?.lastName }}</span>
+                                            <span v-if="comment.postedBy?.role?.role_name === 'Super_Admin'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light">
+                                                {{ t('fuel_price_estimate.channel_post') }}
+                                            </span>
                                             <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatDateTime(comment.createdAt) }}</span>
                                         </div>
                                         <p class="text-sm text-gray-900 dark:text-white whitespace-pre-line">{{ comment.content }}</p>
                                         <span v-if="comment.updatedAt && new Date(comment.updatedAt).getTime() > new Date(comment.createdAt).getTime()" class="text-xs text-gray-400 italic mt-1">✏ {{ t('fuel_price_estimate.edited') }}</span>
+                                        <!-- Saving indicator -->
+                                        <span v-if="savingCommentId === comment._id" class="flex items-center gap-1 text-xs text-gray-400 italic mt-1 animate-pulse">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            saving…
+                                        </span>
                                     </div>
                                     <div v-if="canEdit(comment) || canDelete(comment)" class="flex gap-3 ms-1">
                                         <button v-if="canEdit(comment)" class="text-xs text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" @click="startEditComment(comment)">{{ t('fuel_price_estimate.edit_comment') }}</button>
@@ -329,26 +425,40 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
 
                             <!-- Me — right aligned -->
                             <div v-else class="flex items-start gap-2.5 justify-end">
-                                <div class="flex flex-col gap-1 items-end">
-                                    <div class="flex flex-col leading-1.5 p-3 bg-blue-600 rounded-s-xl rounded-ee-xl max-w-xs">
-                                        <div class="flex items-center justify-end mb-1">
+                                <div class="flex flex-col gap-1 w-full max-w-xs md:max-w-md items-end">
+                                    <div class="flex flex-col leading-1.5 p-3 bg-blue-600 rounded-s-xl rounded-ee-xl w-full shadow-sm">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span v-if="comment.postedBy?.role?.role_name === 'Super_Admin'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/30 text-blue-100">
+                                                {{ t('fuel_price_estimate.channel_post') }}
+                                            </span>
+                                            <span v-else />
                                             <span class="text-xs text-blue-200">{{ formatDateTime(comment.createdAt) }}</span>
                                         </div>
                                         <p class="text-sm text-white whitespace-pre-line">{{ comment.content }}</p>
                                         <span v-if="comment.updatedAt && new Date(comment.updatedAt).getTime() > new Date(comment.createdAt).getTime()" class="text-xs text-blue-200 italic mt-1 text-right">✏ {{ t('fuel_price_estimate.edited') }}</span>
+                                        <!-- Saving indicator -->
+                                        <span v-if="savingCommentId === comment._id" class="flex items-center justify-end gap-1 text-xs text-blue-200 italic mt-1 animate-pulse">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            saving…
+                                        </span>
                                     </div>
                                     <div v-if="canEdit(comment) || canDelete(comment)" class="flex gap-3 me-1">
                                         <button v-if="canEdit(comment)" class="text-xs text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" @click="startEditComment(comment)">{{ t('fuel_price_estimate.edit_comment') }}</button>
                                         <button v-if="canDelete(comment)" class="text-xs text-gray-400 hover:text-red-500" @click="onDeleteComment(comment._id)">{{ t('fuel_price_estimate.delete_comment') }}</button>
                                     </div>
                                 </div>
-                                <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
+                                <div v-if="comment.postedBy?.role?.role_name === 'Super_Admin'" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shrink-0 text-xs font-bold text-white shadow-sm">
+                                    📢
+                                </div>
+                                <div v-else class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
                                     {{ comment.postedBy?.firstName?.[0] }}{{ comment.postedBy?.lastName?.[0] }}
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
+
                 </template>
             </div>
         </div>
@@ -367,15 +477,15 @@ const isMe = (c: IComment) => c.postedBy._id === currentUserId
                 />
                 <button
                     id="post-comment-btn"
-                    :disabled="store.commentLoading || !commentInput.trim()"
+                    :disabled="store.commentSubmitLoading || !commentInput.trim()"
                     class="w-10 h-10 rounded-full bg-primary hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed text-white flex items-center justify-center transition-colors shrink-0 shadow-sm"
                     @click="postComment"
                 >
-                    <svg v-if="store.commentLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <svg v-if="store.commentSubmitLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                     </svg>
-                    <svg v-else class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
                 </button>

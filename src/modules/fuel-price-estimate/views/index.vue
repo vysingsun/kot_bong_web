@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, inject, computed } from 'vue'
+import { ref, onMounted, inject, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useFuelPriceEstimateStore } from '@/modules/fuel-price-estimate/store'
@@ -48,22 +48,76 @@ const removeImage = (index: number) => {
     previews.value.splice(index, 1)
 }
 
+const scrollContainer = ref<HTMLDivElement | null>(null)
+
+const scrollToBottom = () => {
+    if (scrollContainer.value) {
+        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight
+    }
+}
+
 const handleSubmit = async () => {
     if (!canSubmit.value) {
         error.value = t('fuel_price_estimate.error_content_required')
         return
     }
     error.value = ''
+
+    // 1. Create and push a temporary optimistic estimate first
+    const tempId = `temp-${Date.now()}`
+    const tempEstimate: IEstimate = {
+        _id: tempId,
+        content: content.value.trim(),
+        images: previews.value.map(src => ({ url: src, publicId: '' })),
+        postedBy: {
+            _id: currentUserId,
+            firstName: appData?.value?.firstName || 'Me',
+            lastName: appData?.value?.lastName || '',
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+    }
+
+    // Push/unshift to local estimates array
+    store.estimates.unshift(tempEstimate)
+
+    // Scroll to bottom immediately so user sees their message
+    nextTick(() => {
+        scrollToBottom()
+    })
+
     const fd = new FormData()
     if (content.value.trim()) fd.append('content', content.value.trim())
     selectedFiles.value.forEach(f => fd.append('images', f))
 
+    const originalContent = content.value
+    const originalFiles = [...selectedFiles.value]
+    const originalPreviews = [...previews.value]
+
+    // Clear input fields immediately
+    content.value = ''
+    selectedFiles.value = []
+    previews.value = []
+
     const ok = await store.createEstimate(fd)
     if (ok) {
-        content.value = ''
-        selectedFiles.value = []
-        previews.value = []
+        // Remove temp estimate since the real one has been prepended by the store
+        const tempIndex = store.estimates.findIndex(e => e._id === tempId)
+        if (tempIndex !== -1) {
+            store.estimates.splice(tempIndex, 1)
+        }
+        nextTick(() => {
+            scrollToBottom()
+        })
     } else {
+        // Rollback
+        const tempIndex = store.estimates.findIndex(e => e._id === tempId)
+        if (tempIndex !== -1) {
+            store.estimates.splice(tempIndex, 1)
+        }
+        content.value = originalContent
+        selectedFiles.value = originalFiles
+        previews.value = originalPreviews
         error.value = t('fuel_price_estimate.error_general')
     }
 }
@@ -74,11 +128,33 @@ const lightboxSrc = ref('')
 
 onMounted(async () => {
     await store.fetchAll()
+    nextTick(() => {
+        scrollToBottom()
+    })
 })
 
-const handleLoadMore = async () => {
-    if (store.pagination.page < store.pagination.totalPages) {
+const handleScroll = async () => {
+    if (!scrollContainer.value) return
+
+    // Since the latest messages are at the bottom, scrolling UP to the top (scrollTop < 50)
+    // should trigger loading older messages (page + 1).
+    if (
+        scrollContainer.value.scrollTop < 50 &&
+        !store.loading &&
+        store.pagination.page < store.pagination.totalPages
+    ) {
+        const previousScrollHeight = scrollContainer.value.scrollHeight
+        const previousScrollTop = scrollContainer.value.scrollTop
+
         await store.fetchAll(store.pagination.page + 1)
+
+        nextTick(() => {
+            if (scrollContainer.value) {
+                const newScrollHeight = scrollContainer.value.scrollHeight
+                // Preserve user's scroll position relative to the newly added older messages
+                scrollContainer.value.scrollTop = newScrollHeight - previousScrollHeight + previousScrollTop
+            }
+        })
     }
 }
 
@@ -118,7 +194,7 @@ const handleDeleteConfirm = async () => {
                             {{ t('fuel_price_estimate.title') }}
                         </p>
                         <p class="text-xs text-gray-400 dark:text-gray-500">
-                            {{ store.pagination.total }} {{ t('fuel_price_estimate.comments') }}
+                            {{ store.pagination.total }} {{ t('fuel_price_estimate.posts') }}
                         </p>
                     </div>
                 </div>
@@ -126,26 +202,29 @@ const handleDeleteConfirm = async () => {
         </div>
 
         <!-- ── Scrollable area ── -->
-        <div class="flex-1 overflow-y-auto pb-24">
+        <div ref="scrollContainer" class="flex-1 overflow-y-auto pb-24" @scroll="handleScroll">
             <div class="max-w-2xl mx-auto w-full px-3 py-4 space-y-4">
 
-                <!-- Loading skeletons -->
-                <div v-if="store.loading" class="space-y-4 pt-2">
-                    <div v-for="n in 3" :key="n" class="animate-pulse flex items-start gap-2.5">
-                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700" />
+                <!-- Loading skeletons — only on very first load when list is empty -->
+                <div v-if="store.loading && store.estimates.length === 0" class="space-y-4 pt-2">
+                    <div v-for="n in 4" :key="n" class="animate-pulse flex items-start gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
                         <div class="flex flex-col gap-1 w-full max-w-xs md:max-w-md">
                             <div class="bg-white dark:bg-gray-800 rounded-e-xl rounded-es-xl p-4 space-y-3 shadow-sm">
-                                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-28" />
+                                <div class="flex items-center gap-2">
+                                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+                                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-14" />
+                                </div>
                                 <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
                                 <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                                <div class="h-28 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+                                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Empty state -->
-                <div v-else-if="store.estimates.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
+                <div v-else-if="!store.loading && store.estimates.length === 0" class="flex flex-col items-center justify-center py-24 text-center">
                     <div class="w-20 h-20 rounded-full bg-white dark:bg-gray-800 shadow flex items-center justify-center mb-4">
                         <svg class="w-10 h-10 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -156,7 +235,17 @@ const handleDeleteConfirm = async () => {
                 </div>
 
                 <!-- ── Channel messages (Flowbite chat bubble pattern) ── -->
-                <template v-else>
+                <template v-if="store.estimates.length > 0">
+
+                    <!-- Top spinner: loading older messages when scrolled up to top -->
+                    <div v-if="store.loading" class="flex items-center justify-center gap-2 py-3">
+                        <svg class="w-4 h-4 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                        </svg>
+                        <span class="text-xs text-gray-400">Loading older messages…</span>
+                    </div>
+
                     <div
                         v-for="est in displayEstimates"
                         :key="est._id"
@@ -164,7 +253,10 @@ const handleDeleteConfirm = async () => {
                     >
                         <!-- Others — left aligned -->
                         <div v-if="!isMe(est)" class="flex items-start gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0 text-xs font-bold text-gray-600 dark:text-gray-300">
+                            <div v-if="est.postedBy?.role?.role_name === 'Super_Admin'" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shrink-0 text-xs font-bold text-white shadow-sm">
+                                📢
+                            </div>
+                            <div v-else class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center shrink-0 text-xs font-bold text-gray-600 dark:text-gray-300">
                                 {{ est.postedBy?.firstName?.[0] ?? '?' }}{{ est.postedBy?.lastName?.[0] ?? '' }}
                             </div>
                             <div class="flex flex-col gap-1 w-full max-w-xs md:max-w-md">
@@ -173,8 +265,11 @@ const handleDeleteConfirm = async () => {
                                     class="w-full flex flex-col leading-1.5 p-3.5 border border-gray-200 bg-gray-50 rounded-e-xl rounded-es-xl dark:bg-gray-800 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors shadow-sm"
                                     @click="goDetail(est)"
                                 >
-                                    <div class="flex items-center space-x-2 mb-1">
+                                    <div class="flex items-center space-x-2 mb-1 flex-wrap gap-y-1">
                                         <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ est.postedBy?.firstName }} {{ est.postedBy?.lastName }}</span>
+                                        <span v-if="est.postedBy?.role?.role_name === 'Super_Admin'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light">
+                                            {{ t('fuel_price_estimate.channel_post') }}
+                                        </span>
                                         <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatDateTime(est.createdAt) }}</span>
                                     </div>
                                     <p class="text-sm text-gray-900 dark:text-white whitespace-pre-line line-clamp-5">{{ est.content }}</p>
@@ -241,7 +336,11 @@ const handleDeleteConfirm = async () => {
                                     class="w-full flex flex-col leading-1.5 p-3.5 bg-blue-600 rounded-s-xl rounded-ee-xl cursor-pointer hover:bg-blue-700 transition-colors shadow-sm"
                                     @click="goDetail(est)"
                                 >
-                                    <div class="flex items-center justify-end space-x-2 mb-1">
+                                    <div class="flex items-center justify-between mb-1 w-full">
+                                        <span v-if="est.postedBy?.role?.role_name === 'Super_Admin'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/30 text-blue-100">
+                                            {{ t('fuel_price_estimate.channel_post') }}
+                                        </span>
+                                        <span v-else />
                                         <span class="text-xs text-blue-200">{{ formatDateTime(est.createdAt) }}</span>
                                     </div>
                                     <p class="text-sm text-white whitespace-pre-line line-clamp-5">{{ est.content }}</p>
@@ -298,23 +397,16 @@ const handleDeleteConfirm = async () => {
                                     <button class="text-xs text-gray-400 hover:text-red-500" @click.stop="onDeleteClick(est)">{{ t('fuel_price_estimate.delete') }}</button>
                                 </div>
                             </div>
-                            <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
+                            <div v-if="est.postedBy?.role?.role_name === 'Super_Admin'" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shrink-0 text-xs font-bold text-white shadow-sm">
+                                📢
+                            </div>
+                            <div v-else class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300">
                                 {{ est.postedBy?.firstName?.[0] ?? '?' }}{{ est.postedBy?.lastName?.[0] ?? '' }}
                             </div>
                         </div>
                     </div>
                 </template>
 
-                <!-- Load more -->
-                <div v-if="store.pagination.page < store.pagination.totalPages" class="flex justify-center pt-3 pb-2">
-                    <button
-                        class="px-5 py-2 text-sm font-medium text-primary bg-white dark:bg-gray-800 border border-primary/30 rounded-xl hover:bg-primary/5 transition-colors shadow-sm"
-                        :disabled="store.loading"
-                        @click="handleLoadMore"
-                    >
-                        {{ t('fuel_price_estimate.load_more') }}
-                    </button>
-                </div>
 
             </div>
         </div>
@@ -372,7 +464,7 @@ const handleDeleteConfirm = async () => {
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                         </svg>
-                        <svg v-else class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                     </button>
