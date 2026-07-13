@@ -54,7 +54,8 @@
         "stocksReport": "Stocks Report",
         "stockGraph": "Stock Graph",
         "salesReport": "Sales Report",
-        "salesGraph": "Sales Graph"
+        "salesGraph": "Sales Graph",
+        "fuel_price_estimate": "Fuel Price Estimate"
     },
     "coming_soon": {
         "title": "Coming Soon!",

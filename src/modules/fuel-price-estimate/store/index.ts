@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { fuelPriceEstimateService } from '@/modules/fuel-price-estimate/services/api.service'
 import { getFromCache } from '@/composables/useCache'
+import { io, Socket } from 'socket.io-client'
 
 // ── Interfaces ─────────────────────────────────────────────────────────────
 
@@ -23,9 +24,11 @@ export interface IEstimateAuthor {
 export interface IComment {
     _id: string
     content: string
+    images?: IEstimateImage[]
     postedBy: IEstimateAuthor
     createdAt: string
     updatedAt?: string
+    estimate?: string | IEstimate
 }
 
 export interface IEstimate {
@@ -187,16 +190,33 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         }
     }
 
-    const addComment = async (estimateId: string, content: string): Promise<boolean> => {
+    const addComment = async (estimateId: string, formData: FormData): Promise<boolean> => {
         const tempId = `temp_${Date.now()}`
         try {
             commentSubmitLoading.value = true
             // Optimistic: push a placeholder bubble immediately
             const appData = getFromCache('app_data')
             const me = appData?.value
+            const content = (formData.get('content') as string) || ''
+
+            // Map optimistic images if any
+            const tempImages: IEstimateImage[] = []
+            const imageFiles = formData.getAll('images') as File[]
+            if (imageFiles && imageFiles.length > 0) {
+                imageFiles.forEach(file => {
+                    if (file && file.name) {
+                        tempImages.push({
+                            url: URL.createObjectURL(file),
+                            publicId: `temp_${Date.now()}_${file.name}`,
+                        })
+                    }
+                })
+            }
+
             const tempComment: IComment = {
                 _id: tempId,
                 content,
+                images: tempImages,
                 postedBy: {
                     _id: me?._id ?? '',
                     firstName: me?.firstName ?? '',
@@ -207,7 +227,7 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
             }
             comments.value.push(tempComment)
 
-            const { data } = await fuelPriceEstimateService.addComment(estimateId, content)
+            const { data } = await fuelPriceEstimateService.addComment(estimateId, formData)
             if (data.success) {
                 // Replace temp with real server record
                 const idx = comments.value.findIndex(c => c._id === tempId)
@@ -231,19 +251,49 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         }
     }
 
-    const updateComment = async (commentId: string, content: string): Promise<boolean> => {
+    const updateComment = async (commentId: string, formData: FormData): Promise<boolean> => {
         try {
             // Optimistic: update content in-place immediately so UI responds instantly
             const idx = comments.value.findIndex(c => c._id === commentId)
             const original = idx !== -1 ? { ...comments.value[idx] } : null
-            if (idx !== -1) {
+            if (idx !== -1 && original) {
+                const newContent = formData.get('content') as string | null
+
+                // Let's build updated images list optimistically:
+                let updatedImages = original.images ? [...original.images] : []
+
+                // Remove deleted images
+                const removePublicIdsStr = formData.get('removePublicIds') as string | null
+                if (removePublicIdsStr) {
+                    try {
+                        const toRemove = JSON.parse(removePublicIdsStr) as string[]
+                        updatedImages = updatedImages.filter(img => !toRemove.includes(img.publicId))
+                    } catch (e) {
+                        console.error('Error parsing removePublicIds:', e)
+                    }
+                }
+
+                // Add new files
+                const newFiles = formData.getAll('images') as File[]
+                if (newFiles && newFiles.length > 0) {
+                    newFiles.forEach(file => {
+                        if (file && file.name) {
+                            updatedImages.push({
+                                url: URL.createObjectURL(file),
+                                publicId: `temp_${Date.now()}_${file.name}`,
+                            })
+                        }
+                    })
+                }
+
                 comments.value[idx] = {
                     ...comments.value[idx],
-                    content,
+                    content: newContent !== null ? newContent : original.content,
+                    images: updatedImages,
                     updatedAt: new Date().toISOString(),
                 }
             }
-            const { data } = await fuelPriceEstimateService.updateComment(commentId, content)
+            const { data } = await fuelPriceEstimateService.updateComment(commentId, formData)
             if (data.success) {
                 // Reconcile with real server record
                 const i = comments.value.findIndex(c => c._id === commentId)
@@ -284,12 +334,130 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         }
     }
 
+    let socket: Socket | null = null
+
+    const initSocket = () => {
+        if (socket) return
+
+        const apiBase = (import.meta.env.VITE_API_BASE_URL as string) || ''
+        const getSocketUrl = () => {
+            if (!apiBase) return window.location.origin
+            if (apiBase.startsWith('http://') || apiBase.startsWith('https://')) {
+                const url = new URL(apiBase)
+                return url.origin
+            }
+            return window.location.origin
+        }
+
+        socket = io(getSocketUrl(), {
+            withCredentials: true,
+            autoConnect: false,
+        })
+
+        socket.connect()
+
+        socket.on('connect', () => {
+            console.log('Socket.IO connected to server')
+            // Re-join estimate room if we are currently viewing one
+            if (currentEstimate.value) {
+                socket?.emit('join-estimate', currentEstimate.value._id)
+            }
+        })
+
+        socket.on('estimate:created', (newEst: IEstimate) => {
+            const exists = estimates.value.some(e => e._id === newEst._id)
+            if (!exists) {
+                estimates.value.unshift(newEst)
+            }
+        })
+
+        socket.on('estimate:updated', (updatedEst: IEstimate) => {
+            const idx = estimates.value.findIndex(e => e._id === updatedEst._id)
+            if (idx !== -1) {
+                estimates.value[idx] = { ...estimates.value[idx], ...updatedEst }
+            }
+            if (currentEstimate.value?._id === updatedEst._id) {
+                currentEstimate.value = { ...currentEstimate.value, ...updatedEst }
+            }
+        })
+
+        socket.on('estimate:deleted', (deletedId: string) => {
+            estimates.value = estimates.value.filter(e => e._id !== deletedId)
+            if (currentEstimate.value?._id === deletedId) {
+                currentEstimate.value = null
+            }
+        })
+
+        socket.on('comment:created', (newComment: IComment) => {
+            const exists = comments.value.some(c => c._id === newComment._id)
+            if (!exists) {
+                const appData = getFromCache('app_data')
+                const me = appData?.value
+                const isMyComment = newComment.postedBy._id === me?._id
+
+                if (isMyComment) {
+                    const tempIdx = comments.value.findIndex(c => c._id.startsWith('temp_'))
+                    if (tempIdx !== -1) {
+                        comments.value[tempIdx] = newComment
+                        return
+                    }
+                }
+
+                comments.value.push(newComment)
+            }
+
+            // Keep comment count in sync
+            const estimateId =
+                typeof newComment.estimate === 'string' ? newComment.estimate : (newComment as any).estimate?._id
+            if (estimateId) {
+                const est = estimates.value.find(e => e._id === estimateId)
+                if (est) est.commentCount = (est.commentCount ?? 0) + 1
+            } else if (currentEstimate.value) {
+                currentEstimate.value.commentCount = (currentEstimate.value.commentCount ?? 0) + 1
+            }
+        })
+
+        socket.on('comment:updated', (updatedComment: IComment) => {
+            const idx = comments.value.findIndex(c => c._id === updatedComment._id)
+            if (idx !== -1) {
+                comments.value[idx] = updatedComment
+            }
+        })
+
+        socket.on('comment:deleted', ({ commentId, estimateId }: { commentId: string; estimateId: string }) => {
+            comments.value = comments.value.filter(c => c._id !== commentId)
+
+            const est = estimates.value.find(e => e._id === estimateId)
+            if (est) est.commentCount = Math.max(0, (est.commentCount ?? 0) - 1)
+            if (currentEstimate.value?._id === estimateId) {
+                currentEstimate.value.commentCount = Math.max(0, (currentEstimate.value.commentCount ?? 0) - 1)
+            }
+        })
+    }
+
+    const joinEstimateRoom = (estimateId: string) => {
+        if (!socket) initSocket()
+        socket?.emit('join-estimate', estimateId)
+    }
+
+    const leaveEstimateRoom = (estimateId: string) => {
+        socket?.emit('leave-estimate', estimateId)
+    }
+
+    const disconnectSocket = () => {
+        if (socket) {
+            socket.disconnect()
+            socket = null
+        }
+    }
+
     const reset = () => {
         estimates.value = []
         currentEstimate.value = null
         comments.value = []
         pagination.value = { total: 0, page: 1, limit: 20, totalPages: 1 }
         commentPagination.value = { total: 0, page: 1, limit: 50, totalPages: 1 }
+        disconnectSocket()
     }
 
     return {
@@ -313,6 +481,10 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         addComment,
         updateComment,
         deleteComment,
+        initSocket,
+        joinEstimateRoom,
+        leaveEstimateRoom,
+        disconnectSocket,
         reset,
     }
 })

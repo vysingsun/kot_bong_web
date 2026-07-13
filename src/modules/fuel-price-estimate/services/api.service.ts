@@ -39,14 +39,18 @@ export const fuelPriceEstimateService = {
         return axios.get(`/fuel_price_estimate/${estimateId}/comments`, { params })
     },
 
-    /** POST /api/fuel_price_estimate/:id/comments/create */
-    addComment: async (estimateId: string, content: string) => {
-        return axios.post(`/fuel_price_estimate/${estimateId}/comments/create`, { content })
+    /** POST /api/fuel_price_estimate/:id/comments/create (multipart/form-data) */
+    addComment: async (estimateId: string, formData: FormData) => {
+        return axios.post(`/fuel_price_estimate/${estimateId}/comments/create`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
     },
 
-    /** POST /api/fuel_price_estimate/comments/update/:commentId */
-    updateComment: async (commentId: string, content: string) => {
-        return axios.post(`/fuel_price_estimate/comments/update/${commentId}`, { content })
+    /** POST /api/fuel_price_estimate/comments/update/:commentId (multipart/form-data) */
+    updateComment: async (commentId: string, formData: FormData) => {
+        return axios.post(`/fuel_price_estimate/comments/update/${commentId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
     },
 
     /** POST /api/fuel_price_estimate/comments/delete/:commentId */
