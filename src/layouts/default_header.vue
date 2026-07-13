@@ -50,9 +50,11 @@
 
         if (pathSegments.length >= 3 && (pathSegments[1] === 'view' || pathSegments[1] === 'edit')) {
             router.push(`/${pathSegments[0]}`)
+        } else if (pathSegments.length == 1) {
+            router.push(`/home`)
         } else {
             const newPath = pathSegments.slice(0, -1).join('/')
-            router.push(`/home/${newPath}`)
+            router.push(`/${newPath}`)
         }
     }
 </script>
