@@ -56,8 +56,8 @@
                     >
                         <a
                             href="#download"
-                            @click.prevent="scrollTo('download')"
                             class="landing-btn-primary text-base px-8 py-4"
+                            @click.prevent="scrollTo('download')"
                         >
                             <svg
                                 class="w-5 h-5 mr-2 flex-shrink-0"
@@ -76,8 +76,8 @@
                         </a>
                         <a
                             href="#features"
-                            @click.prevent="scrollTo('features')"
                             class="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-landing-primary-300 dark:border-white/20 text-landing-primary-700 dark:text-white font-semibold text-base hover:bg-landing-primary-50 dark:hover:bg-white/10 active:scale-95 transition-all"
+                            @click.prevent="scrollTo('features')"
                         >
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path

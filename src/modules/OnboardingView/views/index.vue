@@ -411,11 +411,11 @@
                     <div v-if="isLoading" class="progress w-full mb-1"></div>
 
                     <!-- Custom Dropdown -->
-                    <div class="relative" ref="dropdownRef">
+                    <div ref="dropdownRef" class="relative">
                         <button
-                            @click="toggleDropdown"
                             type="button"
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                            @click="toggleDropdown"
                         >
                             <div v-if="selectedCompany" class="flex items-center gap-3">
                                 <img
@@ -463,11 +463,11 @@
                                     <li
                                         v-for="company in COMPANIES"
                                         :key="company._id"
-                                        @click="selectCompany(company)"
                                         class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors flex items-center gap-3"
                                         :class="{
                                             'bg-blue-50 dark:bg-blue-900/20': selectedCompany?._id === company._id,
                                         }"
+                                        @click="selectCompany(company)"
                                     >
                                         <img
                                             :src="company.image"
@@ -505,9 +505,9 @@
                             {{ t('onboarding.configure_tanks') }}
                         </h2>
                         <button
-                            @click="openModal"
                             type="button"
                             class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:ring-4 focus:ring-blue-300"
+                            @click="openModal"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -530,10 +530,10 @@
                             <!-- Delete Button (only for non-default fuels) -->
                             <button
                                 v-if="canDeleteFuel(index)"
-                                @click="deleteFuel(index, stock.id)"
                                 :disabled="deletingFuelIds.has(stock.id)"
                                 class="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full flex items-center justify-center transition-colors z-10 shadow-md"
                                 :title="t('onboarding.delete_fuel')"
+                                @click="deleteFuel(index, stock.id)"
                             >
                                 <svg
                                     v-if="deletingFuelIds.has(stock.id)"
@@ -610,11 +610,11 @@
                                         :id="`tank-size-${index}`"
                                         type="number"
                                         :value="stock.fuel_tank_size"
-                                        @input="updateFuelTankSize(index, ($event.target as HTMLInputElement).value)"
                                         min="0"
                                         step="100"
                                         class="w-full px-4 py-2.5 pr-16 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         :placeholder="t('onboarding.enter_capacity')"
+                                        @input="updateFuelTankSize(index, ($event.target as HTMLInputElement).value)"
                                     />
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                         <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -630,15 +630,15 @@
                 <!-- Submit Button -->
                 <div class="flex justify-end gap-3">
                     <button
-                        @click="router.push('/home')"
                         class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors"
+                        @click="router.push('/home')"
                     >
                         {{ t('onboarding.skip') }}
                     </button>
                     <button
-                        @click="handleSubmit"
                         :disabled="!selectedCompany || saving"
                         class="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors focus:ring-4 focus:ring-blue-300 flex items-center gap-2"
+                        @click="handleSubmit"
                     >
                         <svg
                             v-if="saving"
@@ -683,8 +683,8 @@
                             {{ t('onboarding.add_new_fuel') }}
                         </h3>
                         <button
-                            @click="closeModal"
                             class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                            @click="closeModal"
                         >
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -799,15 +799,15 @@
                     <!-- Modal Actions -->
                     <div class="flex gap-3 mt-6">
                         <button
-                            @click="closeModal"
                             class="flex-1 px-4 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
+                            @click="closeModal"
                         >
                             {{ t('onboarding.cancel') }}
                         </button>
                         <button
-                            @click="createFuel"
                             :disabled="isCreatingFuel"
                             class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                            @click="createFuel"
                         >
                             <svg v-if="isCreatingFuel" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                                 <circle

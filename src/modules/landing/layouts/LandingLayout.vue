@@ -1,7 +1,7 @@
 <template>
     <div :class="{ dark: isDark }">
         <div class="min-h-screen bg-white dark:bg-gray-950 font-kantumruy">
-            <LandingNavBar @toggle-dark="toggleDark" :is-dark="isDark" />
+            <LandingNavBar :is-dark="isDark" @toggle-dark="toggleDark" />
             <router-view />
             <LandingFooter />
         </div>

@@ -51,8 +51,8 @@
                         </ul>
                         <a
                             href="#download"
-                            @click.prevent="scrollTo('download')"
                             class="landing-btn-white w-full text-center text-orange-600"
+                            @click.prevent="scrollTo('download')"
                             >{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a
                         >
                     </div>
@@ -101,8 +101,8 @@
                         </ul>
                         <a
                             href="#download"
-                            @click.prevent="scrollTo('download')"
                             class="landing-btn-white w-full text-center text-landing-primary-700"
+                            @click.prevent="scrollTo('download')"
                             >{{ locale === 'kh' ? 'ទទួល Pro' : 'Get Pro' }}</a
                         >
                     </div>
@@ -166,8 +166,8 @@
                         </ul>
                         <a
                             href="#download"
-                            @click.prevent="scrollTo('download')"
                             class="landing-btn-outline w-full text-center"
+                            @click.prevent="scrollTo('download')"
                             >{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a
                         >
                     </div>

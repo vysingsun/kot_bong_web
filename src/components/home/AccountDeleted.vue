@@ -16,7 +16,7 @@
 
     const appData = getFromCache('app_data')?.value
     const userRole = computed(() => appData?.role?.role_name ?? '')
-    const isAdmin = computed(() => userRole.value === 'Admin')
+    const isAdmin = computed(() => userRole.value === 'Admin' || userRole.value === 'Super_Admin')
     const deletedAt = computed(() => (appData?.deletedAt ? new Date(appData.deletedAt) : null))
 
     // Calculate days remaining (30 day window)
@@ -197,9 +197,9 @@
                         </div>
 
                         <button
-                            @click="restoreAccount"
                             :disabled="isLoading || daysRemaining === 0"
                             class="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                            @click="restoreAccount"
                         >
                             <svg
                                 v-if="!isLoading"
@@ -304,8 +304,8 @@
 
                     <!-- Logout -->
                     <button
-                        @click="logout"
                         class="w-full mt-3 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        @click="logout"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path

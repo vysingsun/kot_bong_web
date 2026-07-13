@@ -10,7 +10,7 @@
                     {{ data?.date?.label || t('fuel_sales_chart.title') }}
                 </p>
             </div>
-            <div class="flex flex-wrap gap-2" v-if="data">
+            <div v-if="data" class="flex flex-wrap gap-2">
                 <div class="bg-white border border-gray-200 rounded-xl px-4 py-2.5 shadow-sm">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
                         {{ t('fuel_sales_chart.total_liters') }}
@@ -41,13 +41,13 @@
                     <button
                         v-for="p in periods"
                         :key="p.value"
-                        @click="selectPeriod(p.value)"
                         :class="[
                             'px-3.5 py-1.5 text-sm font-semibold transition-colors',
                             filter.mode === 'period' && filter.period === p.value
                                 ? 'bg-gray-900 text-white'
                                 : 'bg-white text-gray-500 hover:bg-gray-50',
                         ]"
+                        @click="selectPeriod(p.value)"
                     >
                         {{ t(`fuel_sales_chart.${p.value}`) }}
                     </button>
@@ -61,16 +61,16 @@
                 </label>
                 <div class="flex items-center gap-2">
                     <button
-                        @click="changeAmount(-1)"
                         :disabled="filter.amount <= 1"
                         class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-600 font-bold text-lg flex items-center justify-center hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        @click="changeAmount(-1)"
                     >
                         −
                     </button>
                     <span class="w-8 text-center font-extrabold text-gray-900 tabular-nums">{{ filter.amount }}</span>
                     <button
-                        @click="changeAmount(1)"
                         class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-600 font-bold text-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+                        @click="changeAmount(1)"
                     >
                         +
                     </button>
@@ -97,15 +97,15 @@
             <!-- Actions -->
             <div class="flex gap-2 ml-auto">
                 <button
-                    @click="resetFilter"
                     class="px-4 py2 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                    @click="resetFilter"
                 >
                     {{ t('fuel_sales_chart.reset') }}
                 </button>
                 <button
-                    @click="applyFilter"
                     :disabled="loading"
                     class="px-5 py-2 text-sm font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    @click="applyFilter"
                 >
                     <svg v-if="loading" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />

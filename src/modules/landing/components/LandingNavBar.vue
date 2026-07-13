@@ -33,16 +33,16 @@
 
                 <!-- Desktop Nav -->
                 <div class="hidden lg:flex items-center gap-8">
-                    <a href="#features" @click.prevent="scrollTo('features')" class="landing-nav-link text-sm">{{
+                    <a href="#features" class="landing-nav-link text-sm" @click.prevent="scrollTo('features')">{{
                         t('landing.nav.features')
                     }}</a>
                     <a
                         href="#how-it-works"
-                        @click.prevent="scrollTo('how-it-works')"
                         class="landing-nav-link text-sm"
+                        @click.prevent="scrollTo('how-it-works')"
                         >{{ t('landing.nav.howItWorks') }}</a
                     >
-                    <a href="#pricing" @click.prevent="scrollTo('pricing')" class="landing-nav-link text-sm">{{
+                    <a href="#pricing" class="landing-nav-link text-sm" @click.prevent="scrollTo('pricing')">{{
                         t('landing.nav.pricing')
                     }}</a>
                     <router-link to="/policy" class="landing-nav-link text-sm">{{
@@ -53,10 +53,10 @@
                 <!-- Right Controls -->
                 <div class="flex items-center gap-3">
                     <!-- Language Switcher -->
-                    <div class="relative" ref="langDropdownRef">
+                    <div ref="langDropdownRef" class="relative">
                         <button
-                            @click.stop="langOpen = !langOpen"
                             class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            @click.stop="langOpen = !langOpen"
                         >
                             <div class="p-0.5 rounded-md bg-gray-100 dark:bg-gray-700">
                                 <Languages class="w-4 h-4" />
@@ -93,12 +93,12 @@
                                 @click.stop
                             >
                                 <button
-                                    @click="setLang('kh')"
                                     class="flex items-center gap-2.5 w-full px-4 py-3 text-sm text-left hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/20 transition-colors"
                                     :class="{
                                         'text-landing-primary-600 dark:text-landing-primary-400 font-semibold bg-landing-primary-50/50 dark:bg-landing-primary-900/10':
                                             locale === 'kh',
                                     }"
+                                    @click="setLang('kh')"
                                 >
                                     <div
                                         class="w-5 h-5 rounded-md bg-landing-primary-100 dark:bg-landing-primary-900/40 flex items-center justify-center text-xs font-bold text-landing-primary-600 dark:text-landing-primary-400 flex-shrink-0"
@@ -108,12 +108,12 @@
                                     ខ្មែរ
                                 </button>
                                 <button
-                                    @click="setLang('en')"
                                     class="flex items-center gap-2.5 w-full px-4 py-3 text-sm text-left hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/20 transition-colors"
                                     :class="{
                                         'text-landing-primary-600 dark:text-landing-primary-400 font-semibold bg-landing-primary-50/50 dark:bg-landing-primary-900/10':
                                             locale === 'en',
                                     }"
+                                    @click="setLang('en')"
                                 >
                                     <div
                                         class="w-5 h-5 rounded-md bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-xs font-bold text-blue-600 dark:text-blue-400 flex-shrink-0"
@@ -128,9 +128,9 @@
 
                     <!-- Dark Mode Toggle (standalone, landing-only) -->
                     <button
-                        @click="$emit('toggle-dark')"
                         class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                         :title="isDark ? 'Light mode' : 'Dark mode'"
+                        @click="$emit('toggle-dark')"
                     >
                         <svg v-if="!isDark" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
@@ -152,16 +152,16 @@
 
                     <a
                         href="#download"
-                        @click.prevent="scrollTo('download')"
                         class="hidden sm:flex landing-btn-primary text-sm py-2 px-5"
+                        @click.prevent="scrollTo('download')"
                     >
                         {{ t('landing.nav.download') }}
                     </a>
 
                     <!-- Mobile Menu Button -->
                     <button
-                        @click="mobileOpen = !mobileOpen"
                         class="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        @click="mobileOpen = !mobileOpen"
                     >
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
@@ -195,33 +195,33 @@
                 <div v-if="mobileOpen" class="lg:hidden border-t border-gray-100 dark:border-gray-800 py-4 space-y-1">
                     <a
                         href="#features"
-                        @click.prevent="scrollTo('features')"
                         class="block px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-landing-primary-600 font-medium rounded-lg hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/10 transition-colors"
+                        @click.prevent="scrollTo('features')"
                         >{{ t('landing.nav.features') }}</a
                     >
                     <a
                         href="#how-it-works"
-                        @click.prevent="scrollTo('how-it-works')"
                         class="block px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-landing-primary-600 font-medium rounded-lg hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/10 transition-colors"
+                        @click.prevent="scrollTo('how-it-works')"
                         >{{ t('landing.nav.howItWorks') }}</a
                     >
                     <a
                         href="#pricing"
-                        @click.prevent="scrollTo('pricing')"
                         class="block px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-landing-primary-600 font-medium rounded-lg hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/10 transition-colors"
+                        @click.prevent="scrollTo('pricing')"
                         >{{ t('landing.nav.pricing') }}</a
                     >
                     <router-link
                         to="/policy"
-                        @click="mobileOpen = false"
                         class="block px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-landing-primary-600 font-medium rounded-lg hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/10 transition-colors"
+                        @click="mobileOpen = false"
                         >{{ t('landing.nav.policy') }}</router-link
                     >
                     <div class="px-4 pt-2">
                         <a
                             href="#download"
-                            @click.prevent="scrollTo('download')"
                             class="landing-btn-primary w-full text-center block"
+                            @click.prevent="scrollTo('download')"
                             >{{ t('landing.nav.download') }}</a
                         >
                     </div>

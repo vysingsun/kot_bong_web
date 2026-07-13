@@ -27,7 +27,7 @@ export function useAuth() {
         }
     })
 
-    const isAdmin = computed(() => userRole.value === 'Admin')
+    const isAdmin = computed(() => userRole.value === 'Admin' || userRole.value === 'Super_Admin')
     const isSuperAdmin = computed(() => userRole.value === 'Super_Admin')
     const isUser = computed(() => userRole.value === 'User')
 

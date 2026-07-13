@@ -23,8 +23,8 @@
                 </div>
                 <!-- Language Toggle -->
                 <button
-                    @click="toggleLang"
                     class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 dark:bg-blue-800 dark:hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+                    @click="toggleLang"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
@@ -444,7 +444,7 @@
                             :title="currentLang === 'kh' ? 'របាយការណ៍លក់ក្នុងមួយបុគ្គលិក' : 'Per-Staff Sales Report'"
                             :owner="true"
                             :staff="false"
-                            :staffNote="currentLang === 'kh' ? 'ផ្ទាល់ខ្លួនប៉ុណ្ណោះ' : 'Own records only'"
+                            :staff-note="currentLang === 'kh' ? 'ផ្ទាល់ខ្លួនប៉ុណ្ណោះ' : 'Own records only'"
                             :desc="
                                 currentLang === 'kh'
                                     ? 'ម្ចាស់: ទាំងអស់ / បុគ្គលិក: ផ្ទាល់ខ្លួន'
@@ -456,7 +456,7 @@
                             :staff-label="currentLang === 'kh' ? 'បុគ្គលិក' : 'Staff'"
                             :title="currentLang === 'kh' ? 'នាំចេញ Excel' : 'Excel Export'"
                             :owner="true"
-                            :ownerNote="currentLang === 'kh' ? 'Pro តែប៉ុណ្ណោះ' : 'Pro only'"
+                            :owner-note="currentLang === 'kh' ? 'Pro តែប៉ុណ្ណោះ' : 'Pro only'"
                             :staff="false"
                             :desc="currentLang === 'kh' ? 'គម្រោង Pro ម្ចាស់ប៉ុណ្ណោះ' : 'Owner Pro plan only'"
                         />
@@ -550,7 +550,7 @@
                                     :trial="true"
                                     :pro="true"
                                     :free="false"
-                                    :freeNote="currentLang === 'kh' ? 'ផ្អាក' : 'Suspended'"
+                                    :free-note="currentLang === 'kh' ? 'ផ្អាក' : 'Suspended'"
                                 />
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'នាំចេញ Excel' : 'Export Excel'"
