@@ -99,18 +99,20 @@
         selectedFiles.value = []
         previews.value = []
 
-        const ok = await store.createEstimate(fd)
-        if (ok) {
-            // Remove temp estimate since the real one has been prepended by the store
+        const realEstimate = await store.createEstimate(fd)
+        if (realEstimate) {
+            // Replace the temp optimistic entry with the real server record in-place
             const tempIndex = store.estimates.findIndex(e => e._id === tempId)
             if (tempIndex !== -1) {
-                store.estimates.splice(tempIndex, 1)
+                store.estimates.splice(tempIndex, 1, realEstimate)
+            } else {
+                // Temp was already replaced (e.g. by socket event) — nothing to do
             }
             nextTick(() => {
                 scrollToBottom()
             })
         } else {
-            // Rollback
+            // Rollback: remove the temp optimistic entry
             const tempIndex = store.estimates.findIndex(e => e._id === tempId)
             if (tempIndex !== -1) {
                 store.estimates.splice(tempIndex, 1)

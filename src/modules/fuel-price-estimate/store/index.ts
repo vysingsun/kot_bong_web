@@ -103,19 +103,19 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         }
     }
 
-    const createEstimate = async (formData: FormData): Promise<boolean> => {
+    const createEstimate = async (formData: FormData): Promise<IEstimate | null> => {
         try {
             submitLoading.value = true
             const { data } = await fuelPriceEstimateService.create(formData)
             if (data.success) {
-                // Prepend to feed
-                estimates.value.unshift(data.data)
-                return true
+                // Do NOT unshift here — the view manages the optimistic entry.
+                // Return the real record so the view can replace its temp placeholder.
+                return data.data as IEstimate
             }
-            return false
+            return null
         } catch (error) {
             console.error('Error creating estimate:', error)
-            return false
+            return null
         } finally {
             submitLoading.value = false
         }
@@ -229,10 +229,14 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
 
             const { data } = await fuelPriceEstimateService.addComment(estimateId, formData)
             if (data.success) {
-                // Replace temp with real server record
-                const idx = comments.value.findIndex(c => c._id === tempId)
-                if (idx !== -1) comments.value[idx] = data.data
-                else comments.value.push(data.data)
+                // Check if the real record is already present (socket beat the HTTP response)
+                const alreadyExists = comments.value.some(c => c._id === data.data._id)
+                if (!alreadyExists) {
+                    // Replace temp with real server record (or push if temp was already removed)
+                    const idx = comments.value.findIndex(c => c._id === tempId)
+                    if (idx !== -1) comments.value[idx] = data.data
+                    // If temp is gone and real is not present, it means neither arrived yet — push it
+                }
                 // Keep feed comment count in sync
                 const est = estimates.value.find(e => e._id === estimateId)
                 if (est) est.commentCount = (est.commentCount ?? 0) + 1
@@ -365,10 +369,23 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         })
 
         socket.on('estimate:created', (newEst: IEstimate) => {
+            // If this real record is already present (e.g. HTTP response already replaced the temp), skip.
             const exists = estimates.value.some(e => e._id === newEst._id)
-            if (!exists) {
-                estimates.value.unshift(newEst)
+            if (exists) return
+
+            // Check if we have a temp optimistic entry from this user — replace it to avoid duplicates.
+            const appData = getFromCache('app_data')
+            const me = appData?.value
+            const isMyPost = newEst.postedBy?._id === me?._id
+            if (isMyPost) {
+                const tempIdx = estimates.value.findIndex(e => e._id.startsWith('temp-'))
+                if (tempIdx !== -1) {
+                    estimates.value.splice(tempIdx, 1, newEst)
+                    return
+                }
             }
+
+            estimates.value.unshift(newEst)
         })
 
         socket.on('estimate:updated', (updatedEst: IEstimate) => {
@@ -389,6 +406,7 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
         })
 
         socket.on('comment:created', (newComment: IComment) => {
+            // If this real record is already present (HTTP response beat the socket), skip.
             const exists = comments.value.some(c => c._id === newComment._id)
             if (!exists) {
                 const appData = getFromCache('app_data')
@@ -396,17 +414,22 @@ export const useFuelPriceEstimateStore = defineStore('fuelPriceEstimateStore', (
                 const isMyComment = newComment.postedBy._id === me?._id
 
                 if (isMyComment) {
+                    // Replace the temp optimistic entry to avoid duplicates
                     const tempIdx = comments.value.findIndex(c => c._id.startsWith('temp_'))
                     if (tempIdx !== -1) {
                         comments.value[tempIdx] = newComment
+                        // Still update comment counts below
+                    } else {
+                        // Temp already replaced by HTTP response — do nothing, avoid duplicate
+                        // (counts were already updated by addComment success path)
                         return
                     }
+                } else {
+                    comments.value.push(newComment)
                 }
-
-                comments.value.push(newComment)
             }
 
-            // Keep comment count in sync
+            // Keep comment count in sync (only for others' comments or when we replaced a temp via socket)
             const estimateId =
                 typeof newComment.estimate === 'string' ? newComment.estimate : (newComment as any).estimate?._id
             if (estimateId) {

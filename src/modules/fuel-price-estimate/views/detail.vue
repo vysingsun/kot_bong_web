@@ -914,11 +914,11 @@
             </div>
         </div>
 
-        <!-- ── Fixed comment input bar ── -->
+        <!-- ── Fixed comment input bar (Super_Admin only) ── -->
         <div
             class="fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
         >
-            <div class="max-w-2xl mx-auto px-3 py-2 space-y-2">
+            <div v-if="isSuperAdmin" class="max-w-2xl mx-auto px-3 py-2 space-y-2">
                 <!-- Previews of images to be attached to comment -->
                 <div v-if="commentPreviews.length" class="flex flex-wrap gap-2 pb-1">
                     <div v-for="(src, i) in commentPreviews" :key="i" class="relative group w-14 h-14">
@@ -985,6 +985,11 @@
                         </svg>
                     </button>
                 </div>
+            </div>
+
+            <!-- Read-only footer for Admin (view only, cannot post comments) -->
+            <div v-else class="max-w-2xl mx-auto px-4 py-3.5 text-center text-sm text-gray-500 dark:text-gray-400">
+                {{ t('fuel_price_estimate.admin_view_only') }}
             </div>
         </div>
 
