@@ -85,5 +85,23 @@ export const useFormatDate = () => {
         return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`
     }
 
-    return { formatDate, formatDateShort }
+    const formatDateTime = (date: Date | string | null | undefined): string => {
+        if (!date) return ''
+        const d = new Date(date)
+        if (isNaN(d.getTime())) return ''
+
+        const day = d.getDate()
+        const month = d.getMonth()
+        const year = d.getFullYear()
+        const hours = String(d.getHours()).padStart(2, '0')
+        const minutes = String(d.getMinutes()).padStart(2, '0')
+
+        if (locale.value === 'kh') {
+            return `${toKhmerDigits(day)} ${khmerMonths[month]} ${toKhmerDigits(year)} ${toKhmerDigits(Number(hours))}:${toKhmerDigits(Number(minutes))}`
+        }
+
+        return `${String(day).padStart(2, '0')} ${englishMonths[month]} ${year}, ${hours}:${minutes}`
+    }
+
+    return { formatDate, formatDateShort, formatDateTime }
 }

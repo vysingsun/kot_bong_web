@@ -198,12 +198,12 @@
                 <!-- CTA button -->
                 <div class="px-5 pb-6 anim-btn">
                     <button
-                        @click="router.push('/subscription')"
                         class="w-full py-4 font-bold rounded-2xl text-base text-white active:scale-95 transition-transform"
                         style="
                             background: linear-gradient(135deg, #3aa246 0%, #277a30 100%);
                             box-shadow: 0 4px 18px rgba(58, 162, 70, 0.35);
                         "
+                        @click="router.push('/subscription')"
                     >
                         {{ t('payment.closeBtn') }}
                     </button>
@@ -449,14 +449,14 @@
             <div class="space-y-2">
                 <button
                     v-if="paymentSessionStatus === 'failed' || paymentSessionStatus === 'expired'"
-                    @click="handleRetry"
                     class="w-full py-3.5 bg-[#E1232E] hover:bg-red-700 active:scale-95 text-white font-bold rounded-2xl transition-all text-sm"
+                    @click="handleRetry"
                 >
                     {{ t('payment.retryBtn') }}
                 </button>
                 <button
-                    @click="handleCancel"
                     class="w-full py-3 text-slate-500 hover:text-slate-700 font-medium text-sm transition-colors"
+                    @click="handleCancel"
                 >
                     {{ paymentSessionStatus === 'pending' ? t('payment.cancelBtn') : t('payment.closeBtn') }}
                 </button>

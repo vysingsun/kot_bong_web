@@ -241,16 +241,16 @@
                                 {{ t('subscription.active') }}
                             </span>
                             <button
-                                @click="router.push({ name: 'payment' })"
                                 class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
+                                @click="router.push({ name: 'payment' })"
                             >
                                 {{ t('plans.pro.ctaRenew') }}
                             </button>
                         </div>
                         <button
                             v-else
-                            @click="router.push({ name: 'payment' })"
                             class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2"
+                            @click="router.push({ name: 'payment' })"
                         >
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path
@@ -307,8 +307,8 @@
                         </ul>
                         <button
                             v-if="subscription.plan === 'free'"
-                            @click="router.push({ name: 'payment' })"
                             class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm transition-colors"
+                            @click="router.push({ name: 'payment' })"
                         >
                             {{ t('plans.free.cta') }}
                         </button>
@@ -320,8 +320,8 @@
 
                 <!-- History toggle -->
                 <button
-                    @click="showHistory = !showHistory"
                     class="w-full flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors"
+                    @click="showHistory = !showHistory"
                 >
                     <span class="text-sm font-semibold text-slate-700">{{ t('subscription.viewHistory') }}</span>
                     <svg

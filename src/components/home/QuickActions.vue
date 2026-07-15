@@ -115,13 +115,13 @@
 
         <!-- Logout -->
         <button
-            @click="onLogout"
             class="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-2xl transition-all duration-200 hover:brightness-110 active:scale-95"
             style="
                 background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), transparent);
                 border: 1px solid rgba(255, 255, 255, 0.45);
                 backdrop-filter: blur(12px);
             "
+            @click="onLogout"
         >
             <div
                 class="w-11 h-11 rounded-xl flex items-center justify-center"

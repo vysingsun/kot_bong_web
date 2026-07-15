@@ -5,6 +5,7 @@ import { FUEL } from '@/modules/fuel/router/index'
 import { STAFF } from '@/modules/staff/router/index'
 import { PAYMENT } from '@/modules/payment/router/index'
 import { SETTING } from '@/modules/setting/router/index'
+import { FUEL_PRICE_ESTIMATE } from '@/modules/fuel-price-estimate/router/index'
 
 export const MODULE_APP_ROUTES = [
     ...CURRENT_STOCK.CURRENT_STOCK_ROUTES,
@@ -14,4 +15,5 @@ export const MODULE_APP_ROUTES = [
     ...STAFF.STAFF_ROUTES,
     ...PAYMENT.PAYMENT_ROUTES,
     ...SETTING.SETTING_ROUTES,
+    ...FUEL_PRICE_ESTIMATE.FUEL_PRICE_ESTIMATE_ROUTES,
 ]

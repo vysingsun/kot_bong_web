@@ -20,6 +20,8 @@ import kh_setting from '@/modules/setting/locales/kh.json'
 import en_setting from '@/modules/setting/locales/en.json'
 import kh_landing from '@/modules/landing/locales/kh.json'
 import en_landing from '@/modules/landing/locales/en.json'
+import kh_fuel_price_estimate from '@/modules/fuel-price-estimate/locales/kh.json'
+import en_fuel_price_estimate from '@/modules/fuel-price-estimate/locales/en.json'
 
 const kh = {
     ...kh_auth,
@@ -33,6 +35,7 @@ const kh = {
     ...kh_payment,
     ...kh_setting,
     ...kh_landing,
+    ...kh_fuel_price_estimate,
 }
 
 const en = {
@@ -47,6 +50,7 @@ const en = {
     ...en_payment,
     ...en_setting,
     ...en_landing,
+    ...en_fuel_price_estimate,
 }
 
 export { kh, en }
