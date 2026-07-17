@@ -187,7 +187,8 @@ router.beforeEach(async (to, from, next) => {
 
     if (allowedRoles && allowedRoles.length > 0) {
         const role = getRoleName()
-        if (!allowedRoles.includes(role)) {
+        const isAllowed = allowedRoles.includes(role) || role === 'Super_Admin'
+        if (!isAllowed) {
             return next('/unauthorized') // or next('/') or next(false)
         }
     }

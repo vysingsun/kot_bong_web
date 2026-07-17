@@ -245,12 +245,18 @@
                                 </svg>
                                 {{ t('subscription.active') }}
                             </span>
-                            <button @click="navigateToPayment('pro')" class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors">
+                            <button
+                                class="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2 transition-colors"
+                                @click="router.push({ name: 'payment' })"
+                            >
                                 {{ t('plans.pro.ctaRenew') }}
                             </button>
                         </div>
-                        <!-- Subscribe (free/trial/pro_max) -->
-                        <button v-else @click="navigateToPayment('pro')" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2">
+                        <button
+                            v-else
+                            class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2"
+                            @click="router.push({ name: 'payment' })"
+                        >
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                             </svg>
@@ -288,7 +294,11 @@
                                 {{ $rt(f) }}
                             </li>
                         </ul>
-                        <button v-if="subscription.plan === 'free'" @click="navigateToPayment('pro')" class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm transition-colors">
+                        <button
+                            v-if="subscription.plan === 'free'"
+                            class="w-full py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm transition-colors"
+                            @click="router.push({ name: 'payment' })"
+                        >
                             {{ t('plans.free.cta') }}
                         </button>
                         <p v-else class="text-center text-xs text-slate-400">{{ t('subscription.appliesAfterTrial') }}</p>
@@ -296,7 +306,10 @@
                 </div>
 
                 <!-- History toggle -->
-                <button @click="showHistory = !showHistory" class="w-full flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors">
+                <button
+                    class="w-full flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors"
+                    @click="showHistory = !showHistory"
+                >
                     <span class="text-sm font-semibold text-slate-700">{{ t('subscription.viewHistory') }}</span>
                     <svg :class="['w-4 h-4 text-slate-400 transition-transform duration-200', showHistory ? 'rotate-180' : '']" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

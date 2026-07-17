@@ -379,24 +379,24 @@
                                     ? 'border-red-500'
                                     : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                             "
+                            required
                             @input="errors.identifier = ''"
                             @keyup.enter="sendOTP"
-                            required
                         />
                         <p v-if="errors.identifier" class="mt-1 text-sm text-red-500">{{ errors.identifier }}</p>
                     </div>
                     <!-- :disabled="!identifier.trim() || appStore.loading" -->
                     <button
-                        @click="sendOTP"
                         class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                        @click="sendOTP"
                     >
                         {{ t('auth.forgotPassword.send_otp') }}
                     </button>
 
                     <button
-                        @click="goBackToLogin"
                         type="button"
                         class="w-full text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-white font-medium py-2 transition-colors"
+                        @click="goBackToLogin"
                     >
                         {{ t('auth.forgotPassword.back_to_login') }}
                     </button>
@@ -430,15 +430,15 @@
                                 type="text"
                                 inputmode="numeric"
                                 maxlength="1"
-                                @input="handleOtpInput(index, $event)"
-                                @keydown="handleOtpKeydown(index, $event)"
-                                @paste="handleOtpPaste"
                                 class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
                                 :class="
                                     errors.otp
                                         ? 'border-red-500'
                                         : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
                                 "
+                                @input="handleOtpInput(index, $event)"
+                                @keydown="handleOtpKeydown(index, $event)"
+                                @paste="handleOtpPaste"
                             />
                         </div>
                         <p v-if="errors.otp" class="mt-1 text-sm text-red-500 text-center">{{ errors.otp }}</p>
@@ -449,9 +449,9 @@
                             t('auth.forgotPassword.didnt_receive')
                         }}</span>
                         <button
-                            @click="resendOTP"
                             :disabled="resendTimer > 0 || appStore.loading"
                             class="text-blue-600 hover:text-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                            @click="resendOTP"
                         >
                             {{
                                 resendTimer > 0
@@ -463,15 +463,15 @@
 
                     <div class="flex space-x-3">
                         <button
-                            @click="currentStep = 1"
                             class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                            @click="currentStep = 1"
                         >
                             {{ t('auth.forgotPassword.back') }}
                         </button>
                         <button
-                            @click="verifyOTP"
                             :disabled="otpCode.length !== 6 || appStore.loading"
                             class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                            @click="verifyOTP"
                         >
                             {{ t('auth.forgotPassword.verify') }}
                         </button>
@@ -504,14 +504,14 @@
                                         ? 'border-red-500'
                                         : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                                 "
-                                @input="checkPasswordStrength"
                                 required
+                                @input="checkPasswordStrength"
                             />
                             <!-- @input="errors.newPassword = ''" -->
                             <button
                                 type="button"
-                                @click="showNewPassword = !showNewPassword"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                @click="showNewPassword = !showNewPassword"
                             >
                                 <svg
                                     v-if="!showNewPassword"
@@ -690,14 +690,14 @@
                                         ? 'border-red-500'
                                         : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                                 "
+                                required
                                 @input="errors.confirmPassword = ''"
                                 @keyup.enter="resetPassword"
-                                required
                             />
                             <button
                                 type="button"
-                                @click="showConfirmPassword = !showConfirmPassword"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                @click="showConfirmPassword = !showConfirmPassword"
                             >
                                 <svg
                                     v-if="!showConfirmPassword"
@@ -735,9 +735,9 @@
                     </div>
 
                     <button
-                        @click="resetPassword"
                         :disabled="!newPassword || !confirmPassword || appStore.loading"
                         class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                        @click="resetPassword"
                     >
                         {{ t('auth.forgotPassword.reset_password') }}
                     </button>

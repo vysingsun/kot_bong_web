@@ -138,10 +138,10 @@
                                 <!-- Toggle — secondary color -->
                                 <button
                                     type="button"
-                                    @click="localIsNozzle = !localIsNozzle"
                                     :class="['toggle-track', localIsNozzle ? 'toggle-on bg-secondary' : 'toggle-off']"
                                     :aria-checked="localIsNozzle"
                                     role="switch"
+                                    @click="localIsNozzle = !localIsNozzle"
                                 >
                                     <span
                                         :class="['toggle-thumb', localIsNozzle ? 'translate-x-7' : 'translate-x-0']"
@@ -196,9 +196,9 @@
                         <div class="flex gap-3 pt-1">
                             <button
                                 type="button"
-                                @click="handleCancel"
                                 :disabled="store.saving || !hasChanges"
                                 class="flex-1 py-3.5 rounded-2xl btn-secondary text-sm font-medium transition-all active:scale-[0.98] disabled:opacity-40"
+                                @click="handleCancel"
                             >
                                 {{ t('station.cancel') }}
                             </button>
