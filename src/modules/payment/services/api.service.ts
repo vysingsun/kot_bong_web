@@ -2,6 +2,7 @@ import axios from 'axios'
 
 export interface InitiatePaymentPayload {
     subscriptionId: string
+    targetPlan?: 'pro' | 'pro_max'
 }
 
 export interface PaymentInitiateResponse {
@@ -44,7 +45,7 @@ export interface Subscription {
     _id: string
     station: string
     owner: string
-    plan: 'trial' | 'pro' | 'free'
+    plan: 'trial' | 'pro' | 'pro_max' | 'free'
     trialStartDate: string
     trialEndDate: string
     trialDurationMonths: number
@@ -61,7 +62,23 @@ export interface Subscription {
     hasProAccess: boolean
     canManageStaff: boolean
     canExportExcel: boolean
+    canViewOilEstimation: boolean
+    maxStaff: number
     id: string
+}
+
+export interface SubscriptionStatus {
+    plan: 'trial' | 'pro' | 'pro_max' | 'free'
+    hasProAccess: boolean
+    canManageStaff: boolean
+    canExportExcel: boolean
+    canViewOilEstimation: boolean
+    maxStaff: number
+    isTrialActive: boolean
+    trialEndDate: string | null
+    proExpiryDate: string | null
+    proNextBillingDate: string | null
+    pricePerMonth: number
 }
 
 export interface StationUser {
@@ -89,5 +106,9 @@ export const paymentService = {
 
     getHistory: async () => {
         return axios.get<{ success: boolean; data: PaymentHistoryItem[] }>('/payments/history')
+    },
+
+    getSubscriptionStatus: async () => {
+        return axios.get<{ success: boolean; data: SubscriptionStatus }>('/subscription/status')
     },
 }
