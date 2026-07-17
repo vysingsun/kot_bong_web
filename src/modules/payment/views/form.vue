@@ -19,7 +19,7 @@
     const planDisplayName = computed(() => targetPlan.value === 'pro_max' ? t('plans.pro_max.name') : t('plans.pro.name'))
 
     // ── Countdown ──────────────────────────────────────────────
-    const countdown = ref(600)
+    const countdown = ref(100)
     let countdownTimer: ReturnType<typeof setInterval> | null = null
 
     const timerLabel = computed(() => {
@@ -30,14 +30,14 @@
 
     const RING_R = 22
     const RING_CIRC = 2 * Math.PI * RING_R
-    const ringOffset = computed(() => RING_CIRC * (1 - countdown.value / 600))
+    const ringOffset = computed(() => RING_CIRC * (1 - countdown.value / 100))
     const timerColor = computed(() =>
-        countdown.value > 300 ? '#16a34a' : countdown.value > 60 ? '#d97706' : '#dc2626',
+        countdown.value > 50 ? '#16a34a' : countdown.value > 20 ? '#d97706' : '#dc2626',
     )
 
     function startCountdown() {
         stopCountdown()
-        countdown.value = 600
+        countdown.value = 100
         countdownTimer = setInterval(() => {
             countdown.value = Math.max(0, countdown.value - 1)
             if (countdown.value === 0) stopCountdown()

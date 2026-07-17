@@ -23,6 +23,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
     const error = ref<string | null>(null)
 
     let pollInterval: ReturnType<typeof setInterval> | null = null
+    let pollTimeout: ReturnType<typeof setTimeout> | null = null
 
     // ── Getters ────────────────────────────────────────────
     const currentPlan = computed(() => subscription.value?.plan ?? null)
@@ -132,13 +133,25 @@ export const usePaymentStore = defineStore('paymentStore', () => {
                     }
                 }
             } catch {}
-        }, 3000)
+        }, 4000)
+
+        // Auto-stop after 100 seconds and mark as expired
+        pollTimeout = setTimeout(() => {
+            stopPolling()
+            if (paymentSessionStatus.value === 'pending') {
+                paymentSessionStatus.value = 'expired'
+            }
+        }, 100_000)
     }
 
     function stopPolling() {
         if (pollInterval) {
             clearInterval(pollInterval)
             pollInterval = null
+        }
+        if (pollTimeout) {
+            clearTimeout(pollTimeout)
+            pollTimeout = null
         }
         isPolling.value = false
     }
