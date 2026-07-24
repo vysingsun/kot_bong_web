@@ -72,7 +72,7 @@
 
                 <!-- Pro badge -->
                 <span
-                    v-if="!store.subscription?.hasProAccess"
+                    v-if="!isSuperAdmin && !store.subscription?.hasProAccess"
                     class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
                 >
                     <svg
@@ -390,7 +390,7 @@
     import { AuthKey } from '@/composables/useAuth'
     import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
-    const { isAdmin } = inject(AuthKey)!
+    const { isAdmin, isSuperAdmin } = inject(AuthKey)!
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
     const router = useRouter()
@@ -573,7 +573,7 @@
     })
 
     const onClickCreate = () => {
-        if (!store.subscription?.canManageStaff) {
+        if (!isSuperAdmin.value && !store.subscription?.canManageStaff) {
             warningModal.value = {
                 show: true,
                 title: t('subscription.pro_required_title'),
