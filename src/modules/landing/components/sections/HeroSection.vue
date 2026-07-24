@@ -91,7 +91,7 @@
                         </a>
                     </div>
 
-                    <!-- Free trial badge -->
+                    <!-- Trust badge -->
                     <div
                         class="mt-6 flex items-center justify-center lg:justify-start gap-2 animate-landing-fade-up landing-animate-delay-400"
                     >
@@ -103,7 +103,7 @@
                             />
                         </svg>
                         <span class="text-sm text-landing-green-600 dark:text-landing-green-400 font-medium">{{
-                            t('landing.hero.ctaFree')
+                            t('landing.hero.trustBadge')
                         }}</span>
                     </div>
                 </div>

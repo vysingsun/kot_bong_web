@@ -455,10 +455,12 @@
             router.push('/profile')
             return
         }
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/view/${staff._id}`)
     }
 
     const onEdit = (staff: IStaff) => {
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/edit/${staff._id}`)
     }
 
@@ -572,16 +574,20 @@
         plan: 'pro' as 'pro' | 'pro_max',
     })
 
-    const onClickCreate = () => {
-        if (!isSuperAdmin.value && !store.subscription?.canManageStaff) {
-            warningModal.value = {
-                show: true,
-                title: t('subscription.pro_required_title'),
-                description: t('subscription.pro_required_desc'),
-                plan: 'pro',
-            }
-            return
+    // Gate create/edit/view of individual staff behind the Pro plan (list itself stays viewable).
+    const requireStaffAccess = () => {
+        if (isSuperAdmin.value || store.subscription?.canManageStaff) return true
+        warningModal.value = {
+            show: true,
+            title: t('subscription.pro_required_title'),
+            description: t('subscription.pro_required_desc'),
+            plan: 'pro',
         }
+        return false
+    }
+
+    const onClickCreate = () => {
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/create`)
     }
 

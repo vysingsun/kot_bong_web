@@ -101,9 +101,13 @@
                     <span class="nav-label">{{ $t('menu.salesGraph') }}</span>
                 </RouterLink>
             </li>
-            <li>
-                <RouterLink to="/fuel-price-estimate" class="nav-item" active-class="nav-item--active">
-                    <span class="nav-icon icon-lime">
+            <li v-if="isAdmin">
+                <a
+                    class="nav-item"
+                    :class="{ 'nav-item--active': isFuelPriceEstimateActive }"
+                    @click="onClickFuelPriceEstimate"
+                >
+                    <span class="nav-icon icon-lime relative">
                         <svg
                             class="w-6 h-6"
                             aria-hidden="true"
@@ -121,19 +125,80 @@
                                 d="M13.6 16.733c.234.269.548.456.895.534a1.4 1.4 0 0 0 1.75-.762c.172-.615-.446-1.287-1.242-1.481-.796-.194-1.41-.861-1.241-1.481a1.4 1.4 0 0 1 1.75-.762c.343.077.654.26.888.524m-1.358 4.017v.617m0-5.939v.725M4 15v4m3-6v6M6 8.5 10.5 5 14 7.5 18 4m0 0h-3.5M18 4v3m2 8a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z"
                             />
                         </svg>
+                        <!-- Pro Max badge -->
+                        <span
+                            v-if="!isSuperAdmin && !subscription?.canViewOilEstimation"
+                            class="pro-max-badge"
+                        >
+                            <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </span>
                     </span>
                     <span class="nav-label">{{ $t('menu.fuel_price_estimate') }}</span>
-                </RouterLink>
+                </a>
             </li>
         </ul>
+
+        <ProUpgradeModal
+            :show="upgradeModal"
+            plan="pro_max"
+            @close="upgradeModal = false"
+            @confirm="onConfirmUpgrade"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-    import { inject } from 'vue'
+    import { inject, onMounted, ref, computed } from 'vue'
+    import { useRoute, useRouter } from 'vue-router'
     import { AuthKey } from '@/composables/useAuth'
+    import { getFromCache } from '@/composables/useCache'
+    import { lookupService } from '@/atoms/lookup/lookup.services'
+    import { usePaymentStore } from '@/modules/payment/store/index'
+    import type { Subscription } from '@/modules/payment/services/api.service'
+    import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
-    const { isAdmin } = inject(AuthKey)!
+    const { isAdmin, isSuperAdmin } = inject(AuthKey)!
+    const route = useRoute()
+    const router = useRouter()
+    const paymentStore = usePaymentStore()
+
+    const subscription = ref<Subscription | null>(null)
+    const upgradeModal = ref(false)
+
+    const isFuelPriceEstimateActive = computed(() => route.path.startsWith('/fuel-price-estimate'))
+
+    onMounted(async () => {
+        if (!isAdmin.value || isSuperAdmin.value) return
+        const appData = getFromCache('app_data')
+        const stationId = appData?.value?.stations?.[0]?._id
+        if (!stationId) return
+        try {
+            const res = await lookupService.getStationById(stationId)
+            subscription.value = res.data.data.subscription
+        } catch {
+            // Leave subscription null — badge/gate simply stay conservative (locked)
+        }
+    })
+
+    const onClickFuelPriceEstimate = () => {
+        if (isSuperAdmin.value || subscription.value?.canViewOilEstimation) {
+            router.push('/fuel-price-estimate')
+            return
+        }
+        upgradeModal.value = true
+    }
+
+    const onConfirmUpgrade = () => {
+        upgradeModal.value = false
+        paymentStore.targetPlan = 'pro_max'
+        router.push('/payment')
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -229,6 +294,27 @@
         &.icon-lime {
             background: rgba(132, 204, 22, 0.12);
             color: #84cc16;
+        }
+    }
+
+    /* Pro Max badge — mirrors the badge used on gated buttons elsewhere */
+    .pro-max-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 9999px;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            width: 11px;
+            height: 11px;
+            color: #2563eb;
         }
     }
 

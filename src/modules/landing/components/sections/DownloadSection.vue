@@ -26,10 +26,10 @@
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
                 <!-- Google Play -->
-                <a
-                    href="https://kotpreng.com"
-                    target="_blank"
+                <button
+                    type="button"
                     class="group flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-black border border-white/10 hover:bg-gray-900 hover:border-white/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-black/50 min-w-[200px]"
+                    @click="showComingSoon = true"
                 >
                     <img src="@/assets/images/play-store.png" alt="play-store" class="w-8 h-8 flex-shrink-0" />
                     <div class="text-left">
@@ -38,13 +38,13 @@
                         </div>
                         <div class="text-white font-bold text-base leading-tight">Google Play</div>
                     </div>
-                </a>
+                </button>
 
                 <!-- App Store -->
-                <a
-                    href="https://kotpreng.com"
-                    target="_blank"
+                <button
+                    type="button"
                     class="group flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-black border border-white/10 hover:bg-gray-900 hover:border-white/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-black/50 min-w-[200px]"
+                    @click="showComingSoon = true"
                 >
                     <img src="@/assets/images/app-store.png" alt="app-store" class="w-8 h-8 flex-shrink-0" />
                     <div class="text-left">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="text-white font-bold text-base leading-tight">App Store</div>
                     </div>
-                </a>
+                </button>
 
                 <!-- Web App -->
                 <a
@@ -119,11 +119,17 @@
                 </div>
             </div>
         </div>
+
+        <ComingSoonModal :show="showComingSoon" @close="showComingSoon = false" />
     </section>
 </template>
 
 <script setup lang="ts">
+    import { ref } from 'vue'
     import { useI18n } from 'vue-i18n'
     import { Download } from 'lucide-vue-next'
+    import ComingSoonModal from '@/modules/landing/components/ComingSoonModal.vue'
     const { t, locale } = useI18n()
+
+    const showComingSoon = ref(false)
 </script>

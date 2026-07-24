@@ -4,15 +4,11 @@
         "subtitle": "Choose the right plan for your business",
         "currentPlan": "Current Plan",
         "active": "Active",
-        "trialDaysLeft": "days remaining",
         "nextBilling": "Next billing",
         "viewHistory": "Payment History",
         "noHistory": "No payment records yet.",
         "currentBadge": "Current",
-        "popularBadge": "Most Popular",
-        "trialBadge": "Free Trial",
         "freeBadge": "Basic",
-        "appliesAfterTrial": "Applies after trial ends",
         "status": {
             "success": "Paid",
             "failed": "Failed",
@@ -43,14 +39,6 @@
         "renewBadge": "Renew"
     },
     "plans": {
-        "trial": {
-            "name": "Free Trial",
-            "price": "Free",
-            "period": "3 months",
-            "desc": "Full Pro Max access for the trial period — no payment needed.",
-            "features": ["All Pro Max features", "Unlimited staff", "Oil price estimation", "Excel export"],
-            "cta": "Your Current Plan"
-        },
         "pro": {
             "name": "Pro",
             "price": "$10",
@@ -85,9 +73,8 @@
             "name": "Free",
             "price": "$0",
             "period": "/ month",
-            "desc": "Limited access after trial ends.",
-            "features": ["No staff management", "No Excel export", "Standard support"],
-            "cta": "Subscribe to Pro"
+            "desc": "Basic access with no staff management or Excel export.",
+            "features": ["No staff management", "No Excel export", "Standard support"]
         }
     },
     "payment": {
