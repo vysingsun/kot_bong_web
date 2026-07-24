@@ -340,6 +340,7 @@
 
     const onChangeFuelType = () => {
         store.filters.fuel_type = fuel_type.value
+        store.filterForm.fuel_type = fuel_type.value
         store.filterForm.createdBy = store.filters.createdBy
         prepareFilterParams()
     }
