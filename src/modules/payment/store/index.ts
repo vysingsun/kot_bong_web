@@ -28,12 +28,6 @@ export const usePaymentStore = defineStore('paymentStore', () => {
     // ── Getters ────────────────────────────────────────────
     const currentPlan = computed(() => subscription.value?.plan ?? null)
 
-    const trialDaysLeft = computed(() => {
-        if (!subscription.value?.trialEndDate) return 0
-        const diff = new Date(subscription.value.trialEndDate).getTime() - Date.now()
-        return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)))
-    })
-
     const nextBillingDate = computed(() => {
         if (!subscription.value?.proNextBillingDate) return null
         return new Date(subscription.value.proNextBillingDate)
@@ -186,7 +180,6 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         isPolling,
         error,
         currentPlan,
-        trialDaysLeft,
         nextBillingDate,
         isQrExpired,
         paymentAmount,

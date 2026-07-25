@@ -9,6 +9,7 @@ export const routes = [
         meta: {
             title: MODULE_NAME,
             roles: ['Super_Admin', 'Admin'],
+            requiredPlan: 'pro_max',
         },
         component: () => import('@/modules/fuel-price-estimate/views/index.vue'),
     },
@@ -19,6 +20,7 @@ export const routes = [
         meta: {
             title: `${MODULE_NAME}.detail`,
             roles: ['Super_Admin', 'Admin'],
+            requiredPlan: 'pro_max',
         },
         component: () => import('@/modules/fuel-price-estimate/views/detail.vue'),
     },

@@ -11,6 +11,7 @@ import { useThemeStore } from '@/stores/theme'
 import { appService } from '@/modules/app/services/api.service'
 import { getRoleName } from '@/composables/useAuth'
 import { LANDING_ROUTES } from '@/modules/landing/router'
+import { paymentService } from '@/modules/payment/services/api.service'
 
 // Routes that skip all guards
 const PUBLIC_ROUTES = ['Login', 'Register', 'Policy', 'not-found', 'ForgotPassword', 'LandingHome', 'LandingPolicy']
@@ -76,6 +77,9 @@ const router = createRouter({
             name: 'menu.stockGraph',
             beforeEnter: isAuthenticated,
             component: Default_header,
+            meta: {
+                roles: ['Admin'],
+            },
             children: [
                 {
                     path: '',
@@ -184,12 +188,28 @@ router.beforeEach(async (to, from, next) => {
     }
 
     const allowedRoles = to.meta.roles as string[] | undefined
+    const role = getRoleName()
 
     if (allowedRoles && allowedRoles.length > 0) {
-        const role = getRoleName()
         const isAllowed = allowedRoles.includes(role) || role === 'Super_Admin'
         if (!isAllowed) {
             return next('/unauthorized') // or next('/') or next(false)
+        }
+    }
+
+    // ── Plan-gated routes (Pro / Pro Max features) ─────────
+    // Super_Admin always bypasses — they operate the system, not a paying station.
+    const requiredPlan = to.meta.requiredPlan as 'pro' | 'pro_max' | undefined
+    if (requiredPlan && role !== 'Super_Admin') {
+        try {
+            const res = await paymentService.getSubscriptionStatus()
+            const status = res.data?.data
+            const hasAccess = requiredPlan === 'pro_max' ? status?.canViewOilEstimation : status?.hasProAccess
+            if (!hasAccess) {
+                return next('/unauthorized')
+            }
+        } catch {
+            return next('/unauthorized')
         }
     }
 

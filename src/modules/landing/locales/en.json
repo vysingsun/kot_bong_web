@@ -16,7 +16,7 @@
             "titleEnd": "Smarter",
             "subtitle": "A complete Fuel Inventory Management System for gas stations — from stock tracking to sales reports, everything in your hands.",
             "cta": "Get Started Free",
-            "ctaFree": "3 Months Free",
+            "trustBadge": "No credit card required",
             "watchDemo": "Watch Demo",
             "trustedBy": "Trusted by gas stations"
         },
@@ -100,7 +100,7 @@
         "pricing": {
             "badge": "Pricing",
             "title": "Plans for Every Station",
-            "subtitle": "Start free today — 3 months full access, then just $10/mo.",
+            "subtitle": "Choose Free, Pro, or Pro Max — flexible plans for every station.",
             "free": {
                 "name": "Free",
                 "price": "$0",
@@ -144,7 +144,8 @@
             "tagline": "Fuel Inventory Management System",
             "links": "Links",
             "contact": "Contact",
-            "rights": "© 2025 Kot Preng. All rights reserved."
+            "rights": "© 2025 Kot Preng. All rights reserved.",
+            "paymentAccepted": "We accept"
         }
     }
 }

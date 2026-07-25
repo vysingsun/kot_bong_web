@@ -10,57 +10,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                <!-- Trial Card -->
-                <div
-                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-2xl shadow-amber-500/30 relative overflow-hidden"
-                >
-                    <div
-                        class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
-                    ></div>
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="mb-6">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
-                            >
-                                <Gift class="w-3.5 h-3.5" /> {{ locale === 'kh' ? '៣-៦ ខែ' : '3–6 Months Free' }}
-                            </span>
-                            <h3 class="font-black text-2xl">{{ locale === 'kh' ? 'ជំនាន់សាកល្បង' : 'Trial' }}</h3>
-                            <p class="text-amber-100 text-sm mt-1">
-                                {{ locale === 'kh' ? 'ប្រើ Pro ដោយឥតគិតថ្លៃ' : 'Full Pro access, free' }}
-                            </p>
-                        </div>
-                        <div class="mb-6">
-                            <span class="text-5xl font-black">$0</span>
-                            <span class="text-amber-200 text-sm">/{{ locale === 'kh' ? 'ខែ' : 'month' }}</span>
-                        </div>
-                        <ul class="space-y-2.5 flex-1 mb-8">
-                            <li v-for="feat in trialFeatures" :key="feat.en" class="flex items-center gap-2.5">
-                                <svg
-                                    class="w-4 h-4 text-amber-200 flex-shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
-                            </li>
-                        </ul>
-                        <a
-                            href="#download"
-                            class="landing-btn-white w-full text-center text-orange-600"
-                            @click.prevent="scrollTo('download')"
-                            >{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a
-                        >
-                    </div>
-                </div>
-
                 <!-- Pro Card -->
                 <div
-                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-landing-primary-600 to-indigo-700 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden scale-105 z-10"
+                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-landing-primary-600 to-indigo-700 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden"
                 >
                     <div
                         class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
@@ -104,6 +56,54 @@
                             class="landing-btn-white w-full text-center text-landing-primary-700"
                             @click.prevent="scrollTo('download')"
                             >{{ locale === 'kh' ? 'ទទួល Pro' : 'Get Pro' }}</a
+                        >
+                    </div>
+                </div>
+
+                <!-- Pro Max Card -->
+                <div
+                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-2xl shadow-blue-600/30 relative overflow-hidden scale-105 z-10"
+                >
+                    <div
+                        class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
+                    ></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="mb-6">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
+                            >
+                                <Crown class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'ដ៏ល្អបំផុត' : 'Best Value' }}
+                            </span>
+                            <h3 class="font-black text-2xl">Pro Max</h3>
+                            <p class="text-blue-100 text-sm mt-1">
+                                {{ locale === 'kh' ? 'គ្មានដែនកំណត់ទាំងអស់' : 'Unlimited everything' }}
+                            </p>
+                        </div>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black">$15</span>
+                            <span class="text-blue-200 text-sm">/{{ locale === 'kh' ? 'ខែ' : 'month' }}</span>
+                        </div>
+                        <ul class="space-y-2.5 flex-1 mb-8">
+                            <li v-for="feat in proMaxFeatures" :key="feat.en" class="flex items-center gap-2.5">
+                                <svg
+                                    class="w-4 h-4 text-blue-200 flex-shrink-0"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
+                            </li>
+                        </ul>
+                        <a
+                            href="#download"
+                            class="landing-btn-white w-full text-center text-blue-700"
+                            @click.prevent="scrollTo('download')"
+                            >{{ locale === 'kh' ? 'ទទួល Pro Max' : 'Get Pro Max' }}</a
                         >
                     </div>
                 </div>
@@ -187,8 +187,8 @@
                 </svg>
                 {{
                     locale === 'kh'
-                        ? 'ម្ចាស់ថ្មីអាចប្រើ Trial ឥតគិតថ្លៃ ៣ ខែ — មិនត្រូវការប័ណ្ណឥណទាន'
-                        : 'New owners get Trial (full Pro) free for 3 months — no credit card required'
+                        ? 'ដំឡើង ឬបន្ថយគម្រោងបានគ្រប់ពេល — គ្មានកិច្ចសន្យារយៈពេលវែងទេ'
+                        : 'Upgrade, downgrade, or cancel anytime — no long-term contract'
                 }}
             </p>
         </div>
@@ -197,20 +197,10 @@
 
 <script setup lang="ts">
     import { useI18n } from 'vue-i18n'
-    import { CreditCard, Gift, Star } from 'lucide-vue-next'
+    import { CreditCard, Crown, Star } from 'lucide-vue-next'
     import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
     const { t, locale } = useI18n()
     const { scrollTo } = useLandingScroll()
-
-    const trialFeatures = [
-        { en: 'Create fuel types', km: 'បង្កើតប្រភេទឥន្ធនៈ' },
-        { en: 'Create sales records', km: 'កំណត់ការលក់' },
-        { en: 'Create stock income records', km: 'ស្តុកចូល' },
-        { en: 'View all reports', km: 'មើលរបាយការណ៍ទាំងអស់' },
-        { en: 'View Current Stock of Fuel', km: 'មើលស្តុកឥន្ធនៈបច្ចុប្បន្ន' },
-        { en: 'Create & manage staff', km: 'បង្កើត & គ្រប់គ្រងបុគ្គលិក' },
-        { en: 'Export Excel', km: 'ទាញ Excel' },
-    ]
 
     const proFeatures = [
         { en: 'Create fuel types', km: 'បង្កើតប្រភេទឥន្ធនៈ' },
@@ -220,6 +210,20 @@
         { en: 'View Current Stock of Fuel', km: 'មើលស្តុកឥន្ធនៈបច្ចុប្បន្ន' },
         { en: 'Create & manage staff', km: 'បង្កើត & គ្រប់គ្រងបុគ្គលិក' },
         { en: 'Export Excel', km: 'ទាញ Excel' },
+    ]
+
+    // Everything in Pro, plus the Pro Max exclusives — Pro Max must never look
+    // like it offers less than the cheaper Pro plan.
+    const proMaxFeatures = [
+        { en: 'Create fuel types', km: 'បង្កើតប្រភេទឥន្ធនៈ' },
+        { en: 'Create sales records', km: 'កំណត់ការលក់' },
+        { en: 'Create stock income records', km: 'ស្តុកចូល' },
+        { en: 'View all reports', km: 'មើលរបាយការណ៍ទាំងអស់' },
+        { en: 'View Current Stock of Fuel', km: 'មើលស្តុកឥន្ធនៈបច្ចុប្បន្ន' },
+        { en: 'Unlimited staff accounts', km: 'បុគ្គលិកគ្មានដែនកំណត់' },
+        { en: 'Export Excel', km: 'ទាញ Excel' },
+        { en: 'Oil price estimation', km: 'ប៉ាន់ស្មានតម្លៃប្រេង' },
+        { en: 'Priority support', km: 'ជំនួយអាទិភាព' },
     ]
 
     const freeFeatures = [
