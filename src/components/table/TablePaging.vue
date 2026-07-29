@@ -577,8 +577,8 @@
             const hasFilter = Object.values(filters).some(v => v !== undefined && v !== null && v !== '')
 
             if (downloadOption.value === 'all') {
-                // All records — stationId only, no filters, no pagination
-                await triggerApiDownload({ stationId, all: 'true' }, 'all')
+                // All matching records — active filters applied, no pagination
+                await triggerApiDownload({ stationId, ...filters, all: 'true' }, 'all')
             } else {
                 // Current view — send active filters + current page params
                 // if (hasFilter) {

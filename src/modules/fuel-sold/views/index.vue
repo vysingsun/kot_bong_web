@@ -38,6 +38,11 @@
         if (appData && appData.value?.stations?.[0]?._id) {
             stationId.value = appData.value.stations[0]._id
 
+            // store.filters is shared with report.vue's own filter UI — reset here so
+            // a filter left active on the report page doesn't silently carry over.
+            date_range.value = []
+            store.resetFilters()
+
             // Call at the same time
             await Promise.all([
                 // Load fuel sales
