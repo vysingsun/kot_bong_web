@@ -54,7 +54,8 @@
         "stocksReport": "Stocks Report",
         "stockGraph": "Stock Graph",
         "salesReport": "Sales Report",
-        "salesGraph": "Sales Graph"
+        "salesGraph": "Sales Graph",
+        "fuel_price_estimate": "Fuel Price Estimate"
     },
     "coming_soon": {
         "title": "Coming Soon!",
@@ -164,10 +165,9 @@
     },
     "unauthorized": {
         "title": "Access Denied",
-        "description": "Sorry! You don't have permission to view this page. Please contact your administrator if you think this is a mistake.",
+        "description": "Sorry! You don't have permission to view this page.",
         "goBack": "Go Back",
-        "goHome": "Go Home",
-        "roleHint": "Your current role: {role}"
+        "goHome": "Go Home"
     },
     "accountDeleted": {
         "title": "Account Deactivated",

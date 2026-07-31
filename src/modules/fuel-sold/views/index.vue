@@ -38,6 +38,11 @@
         if (appData && appData.value?.stations?.[0]?._id) {
             stationId.value = appData.value.stations[0]._id
 
+            // store.filters is shared with report.vue's own filter UI — reset here so
+            // a filter left active on the report page doesn't silently carry over.
+            date_range.value = []
+            store.resetFilters()
+
             // Call at the same time
             await Promise.all([
                 // Load fuel sales
@@ -260,8 +265,8 @@
                     </p>
                 </div>
                 <button
-                    @click="handleCreate"
                     class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg transition-colors shadow-md"
+                    @click="handleCreate"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
@@ -281,7 +286,7 @@
                     <h3 class="text-base font-semibold text-gray-900 dark:text-white">
                         {{ t('fuel_sold.filters') }}
                     </h3>
-                    <button @click="showFilters = !showFilters" class="text-primary hover:text-primary-dark">
+                    <button class="text-primary hover:text-primary-dark" @click="showFilters = !showFilters">
                         <svg
                             class="w-5 h-5 transition-transform"
                             :class="{ 'rotate-180': showFilters }"
@@ -311,9 +316,9 @@
                             <input
                                 v-model="store.filters.search"
                                 type="text"
-                                @input="handleSearch"
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
                                 :placeholder="t('fuel_sold.search_placeholder')"
+                                @input="handleSearch"
                             />
                         </div>
 
@@ -324,8 +329,8 @@
                             </label>
                             <select
                                 v-model="store.filters.createdBy"
-                                @change="handleSearch"
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
+                                @change="handleSearch"
                             >
                                 <option value="">{{ t('filter.all_staff') }}</option>
                                 <option v-for="user in users" :key="user._id" :value="user._id">
@@ -341,8 +346,8 @@
                             </label>
                             <select
                                 v-model="store.filters.fuel_type"
-                                @change="handleSearch"
                                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-secondary focus:border-transparent"
+                                @change="handleSearch"
                             >
                                 <option value="">{{ t('fuel_sold.all_fuels') }}</option>
                                 <option v-for="fuel in fuelStore.fuels" :key="fuel._id" :value="fuel._id">
@@ -370,8 +375,8 @@
                         <!-- Reset Button -->
                         <div class="sm:col-span-2 flex justify-end">
                             <button
-                                @click="handleResetFilters"
                                 class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
+                                @click="handleResetFilters"
                             >
                                 {{ t('fuel_sold.reset_filters') }}
                             </button>
@@ -494,9 +499,9 @@
                                         <!-- Action Buttons -->
                                         <div class="flex gap-2" @click.stop>
                                             <button
-                                                @click="handleEdit(sale)"
                                                 class="p-1.5 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded transition-colors"
                                                 :title="t('fuel_sold.edit')"
+                                                @click="handleEdit(sale)"
                                             >
                                                 <svg
                                                     class="w-4 h-4"
@@ -513,9 +518,9 @@
                                                 </svg>
                                             </button>
                                             <button
-                                                @click="handleDeleteClick(sale, index)"
                                                 class="p-1.5 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded transition-colors"
                                                 :title="t('fuel_sold.delete')"
+                                                @click="handleDeleteClick(sale, index)"
                                             >
                                                 <svg
                                                     class="w-4 h-4"
@@ -729,8 +734,8 @@
                     <li>
                         <button
                             :disabled="!canLoadPrevious"
-                            @click="loadPrevious"
                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            @click="loadPrevious"
                         >
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -751,8 +756,8 @@
                     <li>
                         <button
                             :disabled="!hasMoreRecords"
-                            @click="loadMore"
                             class="flex items-center justify-center h-full py-1.5 px-3 text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            @click="loadMore"
                         >
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path

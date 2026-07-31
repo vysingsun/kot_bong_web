@@ -233,15 +233,15 @@
                 <!-- Actions -->
                 <div class="flex gap-4 mt-8">
                     <button
-                        @click="handleCancel"
                         class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors"
+                        @click="handleCancel"
                     >
                         {{ t('fuel.cancel') }}
                     </button>
                     <button
-                        @click="handleSave"
                         :disabled="saving"
                         class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-600-hover disabled:bg-gray-400 text-on-primary font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                        @click="handleSave"
                     >
                         <svg v-if="saving" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />

@@ -634,7 +634,7 @@
                             >
                                 {{ t('profile.change_company') }}
                             </label>
-                            <div class="relative" :ref="el => (companyDropdownRefs[station._id] = el as HTMLElement)">
+                            <div :ref="el => (companyDropdownRefs[station._id] = el as HTMLElement)" class="relative">
                                 <button
                                     type="button"
                                     class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary dark:bg-gray-700 dark:border-gray-600 dark:text-white flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-sm"

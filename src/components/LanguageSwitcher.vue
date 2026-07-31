@@ -82,13 +82,13 @@
 </script>
 
 <template>
-    <div class="relative" ref="dropdownRef">
+    <div ref="dropdownRef" class="relative">
         <!-- Trigger Button -->
         <button
-            @click="isOpen = !isOpen"
             type="button"
             :disabled="isLoading"
             class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg transition-all glass-card hover:brightness-105 disabled:opacity-60 disabled:cursor-not-allowed"
+            @click="isOpen = !isOpen"
         >
             <!-- Spinner or Flag -->
             <span v-if="isLoading" class="w-5 h-4 flex items-center justify-center">
@@ -130,11 +130,11 @@
                     <li
                         v-for="lang in languages"
                         :key="lang.code"
-                        @click="changeLanguage(lang)"
                         class="flex items-center gap-2.5 px-3 py-2.5 cursor-pointer transition-colors hover:bg-white/30 dark:hover:bg-white/10"
                         :class="{
                             'bg-white/40 dark:bg-white/10': currentLanguage.code === lang.code,
                         }"
+                        @click="changeLanguage(lang)"
                     >
                         <img :src="lang.flag" :alt="lang.name" class="w-5 h-4 object-cover rounded-sm" />
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ lang.code }}</span>

@@ -136,13 +136,13 @@
                                     :placeholder="t('register.passwordPlaceholder')"
                                     class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     :class="{ 'border-red-500': errors.password }"
-                                    @input="checkPasswordStrength"
                                     required
+                                    @input="checkPasswordStrength"
                                 />
                                 <button
                                     type="button"
-                                    @click="showPassword = !showPassword"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                    @click="showPassword = !showPassword"
                                 >
                                     <svg
                                         v-if="!showPassword"
@@ -332,8 +332,8 @@
                                 />
                                 <button
                                     type="button"
-                                    @click="showConfirmPassword = !showConfirmPassword"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                    @click="showConfirmPassword = !showConfirmPassword"
                                 >
                                     <svg
                                         v-if="!showConfirmPassword"
@@ -372,9 +372,9 @@
 
                         <button
                             type="button"
-                            @click="proceedToStep2"
                             :disabled="loading"
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                            @click="proceedToStep2"
                         >
                             {{ loading ? t('register.loading') : t('register.continue') }}
                         </button>
@@ -426,11 +426,11 @@
                                     type="text"
                                     inputmode="numeric"
                                     maxlength="1"
+                                    class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    :class="{ 'border-red-500': errors.otp }"
                                     @input="handleOtpInput(index, $event)"
                                     @keydown="handleOtpKeydown(index, $event)"
                                     @paste="handleOtpPaste"
-                                    class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                                    :class="{ 'border-red-500': errors.otp }"
                                 />
                             </div>
                             <p v-if="errors.otp" class="mt-1 text-sm text-red-500 text-center">{{ errors.otp }}</p>
@@ -442,9 +442,9 @@
                             </span>
                             <button
                                 type="button"
-                                @click="resendOTP"
                                 :disabled="resendTimer > 0 || loading"
                                 class="text-blue-600 hover:text-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                                @click="resendOTP"
                             >
                                 {{
                                     resendTimer > 0 ? `${t('register.resend')} (${resendTimer}s)` : t('register.resend')
@@ -455,16 +455,16 @@
                         <div class="flex space-x-3">
                             <button
                                 type="button"
-                                @click="currentStep = 1"
                                 class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                                @click="currentStep = 1"
                             >
                                 {{ t('register.back') }}
                             </button>
                             <button
                                 type="button"
-                                @click="verifyOTP"
                                 :disabled="loading || otpCode.length !== 6"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                @click="verifyOTP"
                             >
                                 {{ loading ? t('register.verifying') : t('register.verify') }}
                             </button>
@@ -525,8 +525,8 @@
                     <div class="grid grid-cols-2 gap-3">
                         <button
                             type="button"
-                            @click="loginWithGoogle"
                             class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                            @click="loginWithGoogle"
                         >
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
                                 <path
@@ -551,8 +551,8 @@
 
                         <button
                             type="button"
-                            @click="loginWithFacebook"
                             class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                            @click="loginWithFacebook"
                         >
                             <svg class="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
                                 <path
@@ -707,8 +707,8 @@
                         <!-- See more toggle -->
                         <div class="mb-6">
                             <button
-                                @click="showErrorDetails = !showErrorDetails"
                                 class="w-full flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                                @click="showErrorDetails = !showErrorDetails"
                             >
                                 <span>{{
                                     showErrorDetails ? t('register.errors.seeLess') : t('register.errors.seeMore')
@@ -750,8 +750,8 @@
                         </div>
 
                         <button
-                            @click="handleErrorModalConfirm"
                             class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                            @click="handleErrorModalConfirm"
                         >
                             {{ t('register.errors.tryAgain') }}
                         </button>

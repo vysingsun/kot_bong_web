@@ -169,6 +169,7 @@ export const useFuelSoldStore = defineStore('fuelSoldStore', () => {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
+                timeZone: 'Asia/Phnom_Penh',
             })
             if (!groups[date]) groups[date] = []
             groups[date].push(sale)

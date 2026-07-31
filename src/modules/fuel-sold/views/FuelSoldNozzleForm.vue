@@ -116,9 +116,7 @@
 
                     <div class="w-full flex justify-between gap-2">
                         <div class="w-1/2 date-time-cell">
-                            <label class="field-label">
-                                {{ t('fuel_sold.start_time') }} <span class="req">*</span>
-                            </label>
+                            <label class="field-label"> {{ t('fuel_sold.start_time') }} </label>
                             <TimePicker
                                 v-model="store.formData.startTime"
                                 :disabled="mode === 'view'"
@@ -126,9 +124,7 @@
                             />
                         </div>
                         <div class="w-1/2 date-time-cell">
-                            <label class="field-label">
-                                {{ t('fuel_sold.end_time') }} <span class="req">*</span>
-                            </label>
+                            <label class="field-label"> {{ t('fuel_sold.end_time') }} </label>
                             <TimePicker
                                 v-model="store.formData.endTime"
                                 :disabled="mode === 'view'"
@@ -152,11 +148,14 @@
             </div>
 
             <!-- ④ Sale by or Created by -->
-            <div v-if="mode === 'view'">
+            <div v-if="mode !== 'create'">
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     {{ t('fuel_sold.sold_by') }}
                 </label>
-                <input :value="createdByName" disabled class="field-input" />
+                <select v-if="mode === 'edit' && isAdmin" v-model="selectedCreatedById" class="field-input">
+                    <option v-for="s in staffOptions" :key="s._id" :value="s._id">{{ s.name }}</option>
+                </select>
+                <input v-else :value="createdByName" disabled class="field-input" />
             </div>
 
             <!-- ④ Edit by or Updated by -->
@@ -171,12 +170,14 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+    import { ref, computed, onMounted, onBeforeUnmount, watch, inject } from 'vue'
     import { useRoute, onBeforeRouteUpdate } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { fuel_soldService } from '@/modules/fuel-sold/services/api.service'
     import { useFuelSoldStore } from '@/modules/fuel-sold/store/index'
     import { getFromCache } from '@/composables/useCache'
+    import { AuthKey } from '@/composables/useAuth'
+    import { staffService } from '@/modules/staff/services/api.service'
     import VueDatePicker from '@vuepic/vue-datepicker'
     import '@vuepic/vue-datepicker/dist/main.css'
     import { initFlowbite } from 'flowbite'
@@ -186,6 +187,7 @@
         fuels: any[]
     }>()
     const { t } = useI18n()
+    const { isAdmin } = inject(AuthKey)!
     const store = useFuelSoldStore()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -249,7 +251,54 @@
         return `${user.firstName} ${user.lastName}`.trim()
     })
 
+    // ── Sold-by reassignment (Admin/Super_Admin only) ──────────────────
+    const staffOptions = ref<{ _id: string; name: string }[]>([])
+
+    const selectedCreatedById = computed({
+        get() {
+            const user = store.formData.createdBy as any
+            return typeof user === 'object' ? user?._id : user
+        },
+        set(value: string) {
+            store.formData.createdBy = value as any
+        },
+    })
+
+    const loadStaffOptions = async () => {
+        try {
+            const res = await staffService.getStaffByStationId()
+            staffOptions.value = (res.data.data ?? []).map((s: any) => ({
+                _id: s._id,
+                name: `${s.firstName} ${s.lastName}`.trim(),
+            }))
+        } catch {
+            staffOptions.value = []
+        }
+    }
+
     // ── Lifecycle ─────────────────────────────────────────────────────────
+    // Shared by onMounted and onBeforeRouteUpdate — the route reuses this
+    // component when only :mode changes (e.g. view → edit → view via Cancel),
+    // so both must reload the pristine record rather than trusting stale state.
+    const loadRecordForMode = async () => {
+        if (mode.value === 'edit') {
+            await store.readDataFromApi(fuel_sold_id)
+            store.fuels = []
+            store.fuels = props.fuels
+            if (isAdmin.value) {
+                await loadStaffOptions()
+                // Normalize to a plain id — readDataFromApi loads it as a populated
+                // user object, but submitting must always send just the id.
+                const createdBy = store.formData.createdBy as any
+                if (createdBy && typeof createdBy === 'object') {
+                    store.formData.createdBy = createdBy._id
+                }
+            }
+        } else if (mode.value === 'view') {
+            await store.readDataFromApi(fuel_sold_id)
+        }
+    }
+
     onMounted(async () => {
         initFlowbite()
         stationId.value = appData.value?.stations?.[0]?._id ?? ''
@@ -261,12 +310,8 @@
             store.formData.createdAt = new Date()
             store.formData.startTime = appData.value?.startTime ?? ''
             store.formData.endTime = appData.value?.endTime ?? ''
-        } else if (mode.value === 'edit') {
-            await store.readDataFromApi(fuel_sold_id)
-            store.fuels = []
-            store.fuels = props.fuels
-        } else if (mode.value === 'view') {
-            await store.readDataFromApi(fuel_sold_id)
+        } else {
+            await loadRecordForMode()
         }
 
         loadingForm.value = false
@@ -285,8 +330,9 @@
         store.resetData()
     })
 
-    onBeforeRouteUpdate((to, _from, next) => {
+    onBeforeRouteUpdate(async (to, _from, next) => {
         mode.value = to.params.mode
+        await loadRecordForMode()
         next()
     })
 </script>

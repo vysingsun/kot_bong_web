@@ -323,6 +323,17 @@
 
     onMounted(() => {
         initFlowbite()
+
+        // store.filters/filterForm are shared with index.vue's own filter UI —
+        // reset here so a filter left active on the list page doesn't carry over.
+        date_range.value = []
+        fuel_type.value = ''
+        store.filters.createdBy = ''
+        store.filters.fuel_type = ''
+        store.filterForm.fuel_type = ''
+        store.filterForm.createdBy = ''
+        store.filterForm.date_range = {}
+
         onSelect()
     })
 
@@ -340,6 +351,7 @@
 
     const onChangeFuelType = () => {
         store.filters.fuel_type = fuel_type.value
+        store.filterForm.fuel_type = fuel_type.value
         store.filterForm.createdBy = store.filters.createdBy
         prepareFilterParams()
     }
