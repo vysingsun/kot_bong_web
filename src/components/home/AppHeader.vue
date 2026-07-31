@@ -5,7 +5,7 @@
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
     import { AuthKey } from '@/composables/useAuth'
 
-    const { isAdmin } = inject(AuthKey)!
+    const { isAdmin, isSuperAdmin } = inject(AuthKey)!
 
     interface User {
         _id: string
@@ -105,7 +105,7 @@
                         <li class="px-4">
                             <LanguageSwitcher />
                         </li>
-                        <li v-if="isAdmin">
+                        <li v-if="isAdmin && !isSuperAdmin">
                             <RouterLink
                                 to="/subscription"
                                 class="flex justify-between items-center py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"

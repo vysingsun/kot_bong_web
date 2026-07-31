@@ -69,9 +69,9 @@
         <!-- Header -->
         <AppHeader
             :user="user"
-            :userName="`${user?.firstName} ${user?.lastName}`"
-            :userEmail="user?.email"
-            :onLogout="showModal"
+            :user-name="`${user?.firstName} ${user?.lastName}`"
+            :user-email="user?.email"
+            :on-logout="showModal"
         />
 
         <!-- Sidebar -->
@@ -88,10 +88,10 @@
         <main class="p-4 md:ml-64 pt-20 relative z-10 mb-42">
             <div class="space-y-4 mb-4 h-[760px]">
                 <!-- Welcome Banner -->
-                <WelcomeBanner :owner="user?.stations?.[0]?.owner" :customBannerImage="customBannerImage" />
+                <WelcomeBanner :owner="user?.stations?.[0]?.owner" :custom-banner-image="customBannerImage" />
 
                 <!-- Quick Actions -->
-                <QuickActions :onLogout="showModal" />
+                <QuickActions :on-logout="showModal" />
 
                 <div class="pb-24">
                     <FuelLiterBarChart :response="apiResponse" :loading="loading" :currency="currency" />
@@ -105,11 +105,11 @@
 
     <!-- Logout Confirmation Modal -->
     <BaseModal
-        :isVisible="isVisible"
+        :is-visible="isVisible"
         type="error"
         :title="$t('home.logout_confirmation')"
-        :confirmLabel="$t('home.logout_button')"
-        :cancelLabel="$t('common.cancel')"
+        :confirm-label="$t('home.logout_button')"
+        :cancel-label="$t('common.cancel')"
         @confirm="handleConfirm"
         @close="closeModal"
     >

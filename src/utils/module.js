@@ -8,8 +8,8 @@ const moduleName = process.argv[2]
     @desc Auto Generate Folder for Router
  */
 const setupRouteFolder = (folderPath, moduleName) => {
-  try {
-    const content = `
+    try {
+        const content = `
 import prefetchResources from '@/middlewares/prefetch-resources'
 
 const MODULE_NAME = '${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}'
@@ -46,18 +46,18 @@ const ${moduleName.toUpperCase()}_ROUTES = [
 
 export const ${moduleName.toUpperCase()} = { ${moduleName.toUpperCase()}_ROUTES, MODULE_NAME, MODULE_PATH }
         `
-    fs.writeFileSync(path.join(folderPath, 'index.ts'), content)
-  } catch (err) {
-    console.error(chalk.black.bgRed('Error creating file'), err.message)
-  }
+        fs.writeFileSync(path.join(folderPath, 'index.ts'), content)
+    } catch (err) {
+        console.error(chalk.black.bgRed('Error creating file'), err.message)
+    }
 }
 
 /*
     @desc Auto Generate Folder for Service
  */
 const setupServiceFolder = (folderPath, moduleName) => {
-  try {
-    const content = `
+    try {
+        const content = `
 import axios from 'axios'
 class ApiService {
     async getAll<T>(params?: object): Promise<T> {
@@ -79,18 +79,18 @@ class ApiService {
 }
 export default new ApiService()
         `
-    fs.writeFileSync(path.join(folderPath, 'api.service.ts'), content)
-  } catch (err) {
-    console.error(chalk.black.bgRed('Error creating file'), err.message)
-  }
+        fs.writeFileSync(path.join(folderPath, 'api.service.ts'), content)
+    } catch (err) {
+        console.error(chalk.black.bgRed('Error creating file'), err.message)
+    }
 }
 
 /*
     @desc Auto Generate Folder for Store
  */
 const setupStoreFolder = (folderPath, moduleName) => {
-  try {
-    const content = `
+    try {
+        const content = `
 import { defineStore } from 'pinia'
 
 interface I${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}Store {}
@@ -102,18 +102,18 @@ export const use${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}Store
 })
 
         `
-    fs.writeFileSync(path.join(folderPath, 'index.ts'), content)
-  } catch (err) {
-    console.error(chalk.black.bgRed('Error creating file'), err.message)
-  }
+        fs.writeFileSync(path.join(folderPath, 'index.ts'), content)
+    } catch (err) {
+        console.error(chalk.black.bgRed('Error creating file'), err.message)
+    }
 }
 
 /*
     @desc Auto Generate Folder for View
  */
 const setupViewFolder = (folderPath, moduleName) => {
-  try {
-    const contentForm = `
+    try {
+        const contentForm = `
 <template>
   <div>
     <h1>Form ${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)} Page</h1>
@@ -129,7 +129,7 @@ const setupViewFolder = (folderPath, moduleName) => {
 </style>
         `
 
-    const contentIndex = `
+        const contentIndex = `
 <template>
   <div>
     <h1>${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)} Index Page</h1>
@@ -145,67 +145,67 @@ const setupViewFolder = (folderPath, moduleName) => {
 </style>
 
         `
-    fs.writeFileSync(path.join(folderPath, 'form.vue'), contentForm)
-    fs.writeFileSync(path.join(folderPath, 'index.vue'), contentIndex)
-  } catch (err) {
-    console.error(chalk.black.bgRed('Error creating file'), err.message)
-  }
+        fs.writeFileSync(path.join(folderPath, 'form.vue'), contentForm)
+        fs.writeFileSync(path.join(folderPath, 'index.vue'), contentIndex)
+    } catch (err) {
+        console.error(chalk.black.bgRed('Error creating file'), err.message)
+    }
 }
 
 /*
     @desc Auto Generate Folder for Locales
  */
 const setupLocalesFolder = (folderPath, moduleName) => {
-  try {
-    const content = `
+    try {
+        const content = `
 {
     "${moduleName}": "${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}"
 }
         `
-    fs.writeFileSync(path.join(folderPath, 'en.json'), content)
-    fs.writeFileSync(path.join(folderPath, 'kh.json'), content)
-  } catch (err) {
-    console.error(chalk.black.bgRed('Error creating file'), err.message)
-  }
+        fs.writeFileSync(path.join(folderPath, 'en.json'), content)
+        fs.writeFileSync(path.join(folderPath, 'kh.json'), content)
+    } catch (err) {
+        console.error(chalk.black.bgRed('Error creating file'), err.message)
+    }
 }
 
 /*
     @desc Auto Generate Folder and SubFolder
  */
-const createFolder = (targetDir) => {
-  const sep = path.sep
-  const baseDir = path.resolve('./src/modules')
-  const folders = targetDir.split(sep)
-  let currentPath = ''
+const createFolder = targetDir => {
+    const sep = path.sep
+    const baseDir = path.resolve('./src/modules')
+    const folders = targetDir.split(sep)
+    let currentPath = ''
 
-  currentPath = path.join(baseDir, currentPath, targetDir)
-  console.log(currentPath, 'crr path')
+    currentPath = path.join(baseDir, currentPath, targetDir)
+    console.log(currentPath, 'crr path')
 
-  try {
-    fs.mkdirSync(currentPath)
-    fs.mkdirSync(currentPath + '/assets')
-    fs.mkdirSync(currentPath + '/router')
-    fs.mkdirSync(currentPath + '/services')
-    fs.mkdirSync(currentPath + '/store')
-    fs.mkdirSync(currentPath + '/components')
-    fs.mkdirSync(currentPath + '/views')
-    fs.mkdirSync(currentPath + '/locales')
+    try {
+        fs.mkdirSync(currentPath)
+        fs.mkdirSync(currentPath + '/assets')
+        fs.mkdirSync(currentPath + '/router')
+        fs.mkdirSync(currentPath + '/services')
+        fs.mkdirSync(currentPath + '/store')
+        fs.mkdirSync(currentPath + '/components')
+        fs.mkdirSync(currentPath + '/views')
+        fs.mkdirSync(currentPath + '/locales')
 
-    // Get last path of folder set as module name
-    const moduleName = path.basename(currentPath)
-    setupRouteFolder(currentPath + '/router', moduleName)
-    setupServiceFolder(currentPath + '/services', moduleName)
-    setupViewFolder(currentPath + '/views', moduleName)
-    setupStoreFolder(currentPath + '/store', moduleName)
-    setupLocalesFolder(currentPath + '/locales', moduleName)
-    console.log(chalk.black.bgGreen('Create module successfully'), currentPath)
-  } catch (error) {
-    if (error.code === 'EEXIST') {
-      console.error(chalk.black.bgRed('Module already exists!'), currentPath)
-    } else {
-      console.error(chalk.black.bgRed('Error creating folder'), currentPath)
+        // Get last path of folder set as module name
+        const moduleName = path.basename(currentPath)
+        setupRouteFolder(currentPath + '/router', moduleName)
+        setupServiceFolder(currentPath + '/services', moduleName)
+        setupViewFolder(currentPath + '/views', moduleName)
+        setupStoreFolder(currentPath + '/store', moduleName)
+        setupLocalesFolder(currentPath + '/locales', moduleName)
+        console.log(chalk.black.bgGreen('Create module successfully'), currentPath)
+    } catch (error) {
+        if (error.code === 'EEXIST') {
+            console.error(chalk.black.bgRed('Module already exists!'), currentPath)
+        } else {
+            console.error(chalk.black.bgRed('Error creating folder'), currentPath)
+        }
     }
-  }
 }
 
 createFolder(moduleName)

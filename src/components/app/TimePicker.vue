@@ -4,15 +4,15 @@
         <button
             type="button"
             :disabled="disabled"
-            @click="open = true"
             class="time-trigger w-full flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm transition-all"
             :class="[
                 disabled
                     ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-500'
                     : open
-                      ? 'bg-white border-secondary ring-1 ring-secondary dark:bg-gray-700 dark:border-secondary dark:text-white'
-                      : 'bg-gray-50 border-gray-300 text-gray-900 hover:border-secondary dark:bg-gray-600 dark:border-gray-500 dark:text-white',
+                        ? 'bg-white border-secondary ring-1 ring-secondary dark:bg-gray-700 dark:border-secondary dark:text-white'
+                        : 'bg-gray-50 border-gray-300 text-gray-900 hover:border-secondary dark:bg-gray-600 dark:border-gray-500 dark:text-white',
             ]"
+            @click="open = true"
         >
             <!-- Clock icon -->
             <svg
@@ -38,12 +38,12 @@
             <!-- Clear -->
             <svg
                 v-if="modelValue && !disabled"
-                @click.stop="clear"
                 class="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-pointer flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 stroke-width="2.5"
+                @click.stop="clear"
             >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -91,7 +91,7 @@
                                 <!-- selection rail -->
                                 <div class="rail-wrap">
                                     <div class="selection-rail" />
-                                    <div class="scroll-col" ref="hourWrapRef">
+                                    <div ref="hourWrapRef" class="scroll-col">
                                         <!-- padding items so selection sits centre -->
                                         <div class="scroll-pad" />
                                         <div
@@ -118,7 +118,7 @@
                                 <p class="col-label">{{ t('time_picker.minute') }}</p>
                                 <div class="rail-wrap">
                                     <div class="selection-rail" />
-                                    <div class="scroll-col" ref="minWrapRef">
+                                    <div ref="minWrapRef" class="scroll-col">
                                         <div class="scroll-pad" />
                                         <div
                                             v-for="m in minutes"

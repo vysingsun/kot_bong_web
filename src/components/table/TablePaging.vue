@@ -52,11 +52,11 @@
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                         />
                     </svg>
-                    {{ t('common.export_excel') }} {{ subscription?.hasProAccess }}
+                    {{ t('common.export_excel') }}
                 </button>
 
                 <span
-                    v-if="!subscription?.hasProAccess"
+                    v-if="!isSuperAdmin && !subscription?.hasProAccess"
                     class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
                 >
                     <svg
@@ -410,7 +410,7 @@
     import { getFromCache } from '@/composables/useCache'
     import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
-    const { isAdmin } = inject(AuthKey)!
+    const { isAdmin, isSuperAdmin } = inject(AuthKey)!
     const appStore = useAppStore()
     const { t } = useI18n()
     const { isVisible, showModal, closeModal } = useModal()
@@ -477,7 +477,7 @@
     })
 
     const openDownloadModal = () => {
-        if (props.exportable && !subscription.value?.hasProAccess) {
+        if (props.exportable && !isSuperAdmin.value && !subscription.value?.hasProAccess) {
             warningModal.value = {
                 show: true,
                 title: t('subscription.pro_required_title'),
@@ -577,8 +577,8 @@
             const hasFilter = Object.values(filters).some(v => v !== undefined && v !== null && v !== '')
 
             if (downloadOption.value === 'all') {
-                // All records — stationId only, no filters, no pagination
-                await triggerApiDownload({ stationId, all: 'true' }, 'all')
+                // All matching records — active filters applied, no pagination
+                await triggerApiDownload({ stationId, ...filters, all: 'true' }, 'all')
             } else {
                 // Current view — send active filters + current page params
                 // if (hasFilter) {

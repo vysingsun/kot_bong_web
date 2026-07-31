@@ -14,13 +14,13 @@
                     <button
                         v-for="p in periods"
                         :key="p.value"
-                        @click="selectPeriod(p.value)"
                         :class="[
                             'px-3.5 py-1.5 text-sm font-semibold transition-colors',
                             filters.period === p.value
                                 ? 'bg-gray-900 text-white'
                                 : 'bg-white text-gray-500 hover:bg-gray-50',
                         ]"
+                        @click="selectPeriod(p.value)"
                     >
                         {{ t(`fuel_sold_chart.${p.value}`) }}
                     </button>
@@ -34,16 +34,16 @@
                 </label>
                 <div class="flex items-center gap-2">
                     <button
-                        @click="changeAmount(-1)"
                         :disabled="filters.amount <= 1"
                         class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-600 font-bold text-lg flex items-center justify-center hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        @click="changeAmount(-1)"
                     >
                         −
                     </button>
                     <span class="w-8 text-center font-extrabold text-gray-900 tabular-nums">{{ filters.amount }}</span>
                     <button
-                        @click="changeAmount(1)"
                         class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-600 font-bold text-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+                        @click="changeAmount(1)"
                     >
                         +
                     </button>
@@ -57,8 +57,8 @@
                 </label>
                 <select
                     v-model="filters.fuel_type"
-                    @change="fetchChartData"
                     class="px-3 py-1.5 text-sm font-semibold border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    @change="fetchChartData"
                 >
                     <option value="">{{ t('fuel_sold_chart.all_fuels') }}</option>
                     <option v-for="fuel in fuels" :key="fuel._id" :value="fuel._id">
@@ -74,8 +74,8 @@
                 </label>
                 <select
                     v-model="filters.createdBy"
-                    @change="fetchChartData"
                     class="px-3 py-1.5 text-sm font-semibold border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    @change="fetchChartData"
                 >
                     <option value="">{{ t('fuel_sold_chart.all_staff') }}</option>
                     <option v-for="staff in staffList" :key="staff._id" :value="staff._id">
@@ -104,15 +104,15 @@
             <!-- Actions -->
             <div class="flex gap-2 ml-auto">
                 <button
-                    @click="resetFilters"
                     class="px-4 py-2 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    @click="resetFilters"
                 >
                     {{ t('fuel_sold_chart.reset') }}
                 </button>
                 <button
-                    @click="fetchChartData"
                     :disabled="loading"
                     class="px-5 py-2 text-sm font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+                    @click="fetchChartData"
                 >
                     <svg v-if="loading" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
@@ -144,13 +144,13 @@
                     <button
                         v-for="m in metrics"
                         :key="m.value"
-                        @click="activeMetric = m.value"
                         :class="[
                             'px-3 py-1 text-xs font-bold rounded-lg border transition-colors',
                             activeMetric === m.value
                                 ? 'bg-gray-900 text-white border-gray-900'
                                 : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50',
                         ]"
+                        @click="activeMetric = m.value"
                     >
                         {{ t(`fuel_sold_chart.${m.value}`) }}
                     </button>

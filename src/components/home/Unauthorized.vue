@@ -53,7 +53,7 @@
                 </button>
 
                 <RouterLink
-                    to="/"
+                    to="/home"
                     class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,23 +67,15 @@
                     {{ $t('unauthorized.goHome') }}
                 </RouterLink>
             </div>
-
-            <!-- Role hint -->
-            <p class="mt-8 text-xs text-gray-400 dark:text-gray-600">
-                {{ $t('unauthorized.roleHint') }}
-            </p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { inject, onMounted, ref } from 'vue'
+    import { onMounted, ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import { AuthKey } from '@/composables/useAuth'
 
     const router = useRouter()
-    const auth = inject(AuthKey)!
-    const { userRole } = auth
 
     const displayNumber = ref(0)
 

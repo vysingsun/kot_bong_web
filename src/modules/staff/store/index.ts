@@ -60,6 +60,7 @@ export const useStaffStore = defineStore('staffStore', () => {
     ])
 
     const saveStaff = async () => {
+        // Let errors propagate so the caller can handle STAFF_LIMIT_REACHED
         const res = await staffService.create(formData.value)
         return res.data.success
     }

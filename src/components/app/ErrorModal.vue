@@ -95,8 +95,8 @@
                     <!-- See more toggle (only show if there's an error message) -->
                     <div v-if="errorMessage" class="mb-6">
                         <button
-                            @click="showErrorDetails = !showErrorDetails"
                             class="w-full flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                            @click="showErrorDetails = !showErrorDetails"
                         >
                             <span>{{ showErrorDetails ? t('common.error.seeLess') : t('common.error.seeMore') }}</span>
                             <svg
@@ -137,8 +137,8 @@
 
                     <!-- Confirm Button -->
                     <button
-                        @click="handleConfirm"
                         class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
+                        @click="handleConfirm"
                     >
                         {{ getButtonText() }}
                     </button>

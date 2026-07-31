@@ -18,6 +18,7 @@ export const routes = [
         meta: {
             title: MODULE_NAME,
             roles: ['Admin'],
+            requiredPlan: 'pro',
         },
         component: () => import('@/modules/staff/views/form.vue'),
     },

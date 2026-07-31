@@ -118,10 +118,10 @@
                                 </svg>
                             </div>
                             <input
+                                id="identifier"
                                 v-model="identifier"
                                 type="text"
                                 name="identifier"
-                                id="identifier"
                                 class="bg-white border text-gray-900 rounded-xl block w-full pl-10 p-3 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-colors"
                                 :class="
                                     errors.identifier
@@ -129,8 +129,8 @@
                                         : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600'
                                 "
                                 :placeholder="t('auth.login.identifier_placeholder')"
-                                @input="errors.identifier = ''"
                                 required
+                                @input="errors.identifier = ''"
                             />
                         </div>
                         <p v-if="errors.identifier" class="mt-1 text-sm text-red-500">{{ errors.identifier }}</p>
@@ -155,10 +155,10 @@
                                 </svg>
                             </div>
                             <input
+                                id="password"
                                 v-model="password"
                                 :type="showPassword ? 'text' : 'password'"
                                 name="password"
-                                id="password"
                                 class="bg-white border text-gray-900 rounded-xl block w-full pl-10 pr-10 p-3 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white transition-colors"
                                 :class="
                                     errors.password
@@ -166,14 +166,14 @@
                                         : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600'
                                 "
                                 :placeholder="t('auth.login.password_placeholder')"
+                                required
                                 @input="errors.password = ''"
                                 @keyup.enter="onlogin"
-                                required
                             />
                             <button
                                 type="button"
-                                @click="showPassword = !showPassword"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                @click="showPassword = !showPassword"
                             >
                                 <svg
                                     v-if="!showPassword"
@@ -211,9 +211,9 @@
                     <!-- Forgot Password -->
                     <div class="flex justify-end">
                         <button
-                            @click="goToForgotPassword"
                             type="button"
                             class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                            @click="goToForgotPassword"
                         >
                             {{ t('auth.login.forgot_password') }}
                         </button>
@@ -221,8 +221,8 @@
 
                     <!-- Sign In Button -->
                     <button
-                        @click="onlogin"
                         class="w-full flex justify-center text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed font-medium rounded-xl text-sm px-5 py-3 text-center transition-colors"
+                        @click="onlogin"
                     >
                         {{ t('auth.login.sign_in_button') }}
                     </button>
@@ -239,10 +239,10 @@
                     <!-- Social Login Buttons -->
                     <div class="space-y-3">
                         <button
-                            @click="loginWithGoogle"
                             :disabled="appStore.loading"
                             type="button"
                             class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium rounded-xl text-sm px-5 py-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600 transition-colors"
+                            @click="loginWithGoogle"
                         >
                             <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                                 <path
@@ -268,10 +268,10 @@
                         </button>
 
                         <button
-                            @click="loginWithFacebook"
                             :disabled="appStore.loading"
                             type="button"
                             class="w-full flex items-center justify-center gap-3 bg-[#1877F2] hover:bg-[#166FE5] disabled:opacity-50 disabled:cursor-not-allowed font-medium rounded-xl text-sm px-5 py-3 text-white transition-colors"
+                            @click="loginWithFacebook"
                         >
                             <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -286,9 +286,9 @@
                     <p class="text-sm text-center text-gray-500 dark:text-gray-400">
                         {{ t('auth.login.no_account') }}
                         <button
-                            @click="goToRegister"
                             type="button"
                             class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                            @click="goToRegister"
                         >
                             {{ t('auth.login.sign_up') }}
                         </button>

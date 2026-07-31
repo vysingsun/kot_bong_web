@@ -67,16 +67,16 @@
 
                         <!-- Title -->
                         <h2 class="text-center text-xl font-semibold text-gray-800 mb-1.5 tracking-tight">
-                            {{ t('subscription.modal_title') }}
+                            {{ plan === 'pro_max' ? t('subscription.modal_pro_max_title') : t('subscription.modal_title') }}
                         </h2>
                         <p class="text-center text-sm mb-6">
-                            {{ t('subscription.modal_subtitle') }}
+                            {{ plan === 'pro_max' ? t('subscription.modal_pro_max_subtitle') : t('subscription.modal_subtitle') }}
                         </p>
 
                         <!-- Feature pills -->
                         <div class="flex gap-2 mb-6">
                             <div
-                                v-for="pill in pills"
+                                v-for="pill in (plan === 'pro_max' ? proMaxPills : pills)"
                                 :key="pill.key"
                                 class="flex-1 flex flex-col items-center gap-1.5 py-2.5 px-2 rounded-2xl text-center"
                                 style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.1)"
@@ -127,6 +127,20 @@
                                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                                         />
                                     </svg>
+                                    <svg
+                                        v-if="pill.key === 'oil'"
+                                        class="w-3.5 h-3.5"
+                                        fill="none"
+                                        stroke="#fbbf24"
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                                        />
+                                    </svg>
                                 </div>
                                 <span class="text-xs leading-tight">{{ t(pill.label) }}</span>
                             </div>
@@ -138,22 +152,23 @@
                         <!-- CTA -->
                         <button
                             class="relative w-full py-3.5 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2 overflow-hidden mb-2.5 transition-all hover:brightness-110"
-                            style="
-                                background: rgba(255, 255, 255, 0.82);
-                                border: 1px solid rgba(255, 255, 255);
-                                box-shadow: 0 0 20px #2563eb33;
-                            "
+                            :style="plan === 'pro_max'
+                                ? 'background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; border: none; box-shadow: 0 0 20px #7c3aed33;'
+                                : 'background: rgba(255,255,255,0.82); border: 1px solid rgba(255,255,255); box-shadow: 0 0 20px #2563eb33;'"
                             @click="$emit('confirm')"
                         >
                             <span class="upgrade-shine" />
-                            <svg class="w-4 h-4" fill="#2563eb" viewBox="0 0 20 20">
+                            <svg class="w-4 h-4" :fill="plan === 'pro_max' ? 'white' : '#2563eb'" viewBox="0 0 20 20">
                                 <path
                                     fill-rule="evenodd"
                                     d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                            {{ t('subscription.upgrade_now') }} — $10/{{ t('subscription.month') }}
+                            <span :style="plan === 'pro_max' ? 'color: white' : 'color: #2563eb'">
+                                {{ plan === 'pro_max' ? t('subscription.upgrade_to_pro_max') : t('subscription.upgrade_now') }}
+                                — ${{ plan === 'pro_max' ? '15' : '10' }}/{{ t('subscription.month') }}
+                            </span>
                         </button>
 
                         <button
@@ -173,7 +188,7 @@
 <script setup lang="ts">
     import { useI18n } from 'vue-i18n'
 
-    defineProps<{ show: boolean }>()
+    defineProps<{ show: boolean; plan?: 'pro' | 'pro_max' }>()
     defineEmits(['close', 'confirm'])
 
     const { t } = useI18n()
@@ -182,6 +197,12 @@
         { key: 'staff', bg: 'rgba(251,191,36,0.15)', label: 'subscription.pill_staff' },
         { key: 'reports', bg: 'rgba(99,102,241,0.15)', label: 'subscription.pill_reports' },
         { key: 'support', bg: 'rgba(34,197,94,0.12)', label: 'subscription.pill_support' },
+    ]
+
+    const proMaxPills = [
+        { key: 'staff', bg: 'rgba(124,58,237,0.15)', label: 'subscription.pill_staff_unlimited' },
+        { key: 'oil', bg: 'rgba(251,191,36,0.15)', label: 'subscription.pill_oil' },
+        { key: 'reports', bg: 'rgba(99,102,241,0.15)', label: 'subscription.pill_reports' },
     ]
 </script>
 

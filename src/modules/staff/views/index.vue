@@ -7,6 +7,15 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                     {{ t('staff.total_staff', { count: totalRecords }) }}
                 </p>
+                <!-- Staff slot usage -->
+                <p v-if="store.subscription?.canManageStaff" class="text-xs mt-0.5" :class="store.subscription?.maxStaff === Infinity || store.subscription?.plan === 'pro_max' || store.subscription?.plan === 'trial' ? 'text-violet-500' : 'text-slate-400'">
+                    <template v-if="store.subscription?.plan === 'pro_max' || store.subscription?.plan === 'trial'">
+                        {{ t('subscription.staff_unlimited') }}
+                    </template>
+                    <template v-else>
+                        {{ t('subscription.staff_slots', { current: totalRecords, max: store.subscription?.maxStaff }) }}
+                    </template>
+                </p>
             </div>
             <!-- <router-link
                 v-if="isAdmin"
@@ -63,7 +72,7 @@
 
                 <!-- Pro badge -->
                 <span
-                    v-if="!store.subscription?.hasProAccess"
+                    v-if="!isSuperAdmin && !store.subscription?.hasProAccess"
                     class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-gray-800 shadow"
                 >
                     <svg
@@ -361,7 +370,7 @@
         @close="warningModal.show = false"
         @confirm="handleSuccessConfirm"
     /> -->
-    <ProUpgradeModal :show="warningModal.show" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
+    <ProUpgradeModal :show="warningModal.show" :plan="warningModal.plan" @close="warningModal.show = false" @confirm="handleSuccessConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -371,6 +380,7 @@
     import _ from 'lodash'
     import { staffService } from '@/modules/staff/services/api.service'
     import { useStaffStore } from '@/modules/staff/store/index'
+    import { usePaymentStore } from '@/modules/payment/store/index'
     import { useModal } from '@/composables/useModal'
     import { useAppStore } from '@/modules/app/store/index'
     import { getFromCache } from '@/composables/useCache'
@@ -380,12 +390,13 @@
     import { AuthKey } from '@/composables/useAuth'
     import ProUpgradeModal from '@/components/app/ProUpgradeModal.vue'
 
-    const { isAdmin } = inject(AuthKey)!
+    const { isAdmin, isSuperAdmin } = inject(AuthKey)!
     const { formatDate } = useFormatDate()
     const { t } = useI18n()
     const router = useRouter()
     const route = useRoute()
     const store = useStaffStore()
+    const paymentStore = usePaymentStore()
     const appStore = useAppStore()
     const { isVisible, showModal, closeModal } = useModal()
 
@@ -444,10 +455,12 @@
             router.push('/profile')
             return
         }
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/view/${staff._id}`)
     }
 
     const onEdit = (staff: IStaff) => {
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/edit/${staff._id}`)
     }
 
@@ -558,22 +571,31 @@
         show: false,
         title: '',
         description: '',
+        plan: 'pro' as 'pro' | 'pro_max',
     })
 
-    const onClickCreate = () => {
-        if (!store.subscription?.hasProAccess) {
-            warningModal.value = {
-                show: true,
-                title: t('subscription.pro_required_title'),
-                description: t('subscription.pro_required_desc'),
-            }
-            return
+    // Gate create/edit/view of individual staff behind the Pro plan (list itself stays viewable).
+    const requireStaffAccess = () => {
+        if (isSuperAdmin.value || store.subscription?.canManageStaff) return true
+        warningModal.value = {
+            show: true,
+            title: t('subscription.pro_required_title'),
+            description: t('subscription.pro_required_desc'),
+            plan: 'pro',
         }
+        return false
+    }
+
+    const onClickCreate = () => {
+        if (!requireStaffAccess()) return
         router.push(`${basePath}/create`)
     }
 
     const handleSuccessConfirm = () => {
         warningModal.value.show = false
+        if (warningModal.value.plan === 'pro_max') {
+            paymentStore.targetPlan = 'pro_max'
+        }
         router.push('/payment')
     }
 </script>
