@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-    import { useRouter, useRoute } from 'vue-router'
+    import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { storeToRefs } from 'pinia'
     import { usePaymentStore } from '../store/index'
@@ -13,12 +13,15 @@
     const router = useRouter()
     const route = useRoute()
     const store = usePaymentStore()
-    const { station, subscription, currentPayment, paymentSessionStatus, isInitiatingPayment, targetPlan, paymentAmount } = storeToRefs(store)
+    const { station, subscription, currentPayment, paymentSessionStatus, isInitiatingPayment, targetPlan, paymentAmount, error } = storeToRefs(store)
 
     // Plan name for display
     const planDisplayName = computed(() => targetPlan.value === 'pro_max' ? t('plans.pro_max.name') : t('plans.pro.name'))
 
     // ── Countdown ──────────────────────────────────────────────
+    // Total is derived from the server's expiresAt (not hardcoded) so this
+    // ring always matches the backend's actual QR/session lifetime.
+    const countdownTotal = ref(100)
     const countdown = ref(100)
     let countdownTimer: ReturnType<typeof setInterval> | null = null
 
@@ -30,14 +33,22 @@
 
     const RING_R = 22
     const RING_CIRC = 2 * Math.PI * RING_R
-    const ringOffset = computed(() => RING_CIRC * (1 - countdown.value / 100))
+    const ringOffset = computed(() => RING_CIRC * (1 - countdown.value / countdownTotal.value))
     const timerColor = computed(() =>
-        countdown.value > 50 ? '#16a34a' : countdown.value > 20 ? '#d97706' : '#dc2626',
+        countdown.value > countdownTotal.value * 0.5
+            ? '#16a34a'
+            : countdown.value > countdownTotal.value * 0.2
+              ? '#d97706'
+              : '#dc2626',
     )
 
     function startCountdown() {
         stopCountdown()
-        countdown.value = 100
+        const secondsLeft = currentPayment.value?.expiresAt
+            ? Math.max(0, Math.round((new Date(currentPayment.value.expiresAt).getTime() - Date.now()) / 1000))
+            : 100
+        countdownTotal.value = secondsLeft
+        countdown.value = secondsLeft
         countdownTimer = setInterval(() => {
             countdown.value = Math.max(0, countdown.value - 1)
             if (countdown.value === 0) stopCountdown()
@@ -60,10 +71,33 @@
         if (currentPayment.value) startCountdown()
     }
 
+    // Set right before an intentional exit (Cancel button) so the route
+    // guard below doesn't double-prompt on top of that deliberate action.
+    let allowLeave = false
+
     async function handleCancel() {
+        allowLeave = true
         await store.cancelPayment()
         stopCountdown()
         router.push('/subscription')
+    }
+
+    // The backend only tracks a payment while this screen is actively
+    // polling it — closing the tab or navigating away mid-payment abandons
+    // that tracking, so warn before any accidental navigation while pending.
+    onBeforeRouteLeave((_to, _from, next) => {
+        if (paymentSessionStatus.value === 'pending' && !allowLeave) {
+            next(window.confirm(t('payment.leaveConfirm')))
+        } else {
+            next()
+        }
+    })
+
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+        if (paymentSessionStatus.value === 'pending') {
+            e.preventDefault()
+            e.returnValue = ''
+        }
     }
 
     async function handleRetry() {
@@ -88,10 +122,12 @@
         const appData = getFromCache('app_data')
         const stationId = appData.value?.stations?.[0]?._id
         if (stationId && !subscription.value) await store.fetchStation(stationId)
+        window.addEventListener('beforeunload', handleBeforeUnload)
         await generate()
     })
 
     onUnmounted(() => {
+        window.removeEventListener('beforeunload', handleBeforeUnload)
         store.stopPolling()
         stopCountdown()
     })
@@ -382,7 +418,7 @@
                         </div>
                         <div>
                             <p class="font-bold text-slate-900">{{ t('payment.failed.title') }}</p>
-                            <p class="text-sm text-slate-500 mt-1">{{ t('payment.failed.desc') }}</p>
+                            <p class="text-sm text-slate-500 mt-1">{{ error || t('payment.failed.desc') }}</p>
                         </div>
                     </div>
 
@@ -465,14 +501,18 @@
                 >
                     {{ t('payment.retryBtn') }}
                 </button>
+                <!-- Hidden while pending: cancelling here would call cancelSession
+                     and stop backend tracking mid-payment — exactly what the
+                     stay-on-screen warning tells the user not to trigger. -->
                 <button
+                    v-if="paymentSessionStatus !== 'pending'"
                     class="w-full py-3 text-slate-500 hover:text-slate-700 font-medium text-sm transition-colors"
                     @click="handleCancel"
                 >
-                    {{ paymentSessionStatus === 'pending' ? t('payment.cancelBtn') : t('payment.closeBtn') }}
+                    {{ t('payment.closeBtn') }}
                 </button>
             </div>
         </div>
     </div>
-    <BottomNavigation />
+    <BottomNavigation v-if="paymentSessionStatus !== 'pending'" />
 </template>

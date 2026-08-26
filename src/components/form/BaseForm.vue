@@ -167,7 +167,7 @@
     import { useAppStore } from '@/modules/app/store/index'
 
     const appStore = useAppStore()
-    const { t } = useI18n()
+    const { t, locale } = useI18n()
     const router = useRouter()
     const route = useRoute()
     const mode = ref(route.params.mode)
@@ -268,6 +268,20 @@
         errorModal.value.show = false
     }
 
+    // Backend errors come in three shapes: a bilingual object { en, km },
+    // a plain string, or a native Error — pick the text for the active locale.
+    const resolveErrorMessage = (err: unknown): string => {
+        if (!err) return ''
+        if (typeof err === 'string') return err
+        if (err instanceof Error) return err.message
+        if (typeof err === 'object') {
+            const obj = err as Record<string, any>
+            const localeKey = locale.value === 'kh' ? 'km' : locale.value
+            return obj[localeKey] ?? obj.en ?? obj.km ?? (typeof obj.message === 'string' ? obj.message : '')
+        }
+        return String(err)
+    }
+
     const onSave = async () => {
         isSaving.value = true
         emits('on-save', true)
@@ -284,11 +298,12 @@
                         description: '',
                     }
                 } else {
+                    const backendMessage = resolveErrorMessage(res.data.error)
                     errorModal.value = {
                         show: true,
                         title: '',
-                        description: t('form.create_error'),
-                        message: res.error instanceof Error ? res.error.message : String(res.error),
+                        description: backendMessage || t('form.create_error'),
+                        message: backendMessage,
                     }
                 }
             } else {
@@ -302,21 +317,23 @@
                         description: '',
                     }
                 } else {
+                    const backendMessage = resolveErrorMessage(res.data.error)
                     errorModal.value = {
                         show: true,
                         title: '',
-                        description: t('form.update_error'),
-                        message: res.error instanceof Error ? res.error.message : String(res.error),
+                        description: backendMessage || t('form.update_error'),
+                        message: backendMessage,
                     }
                 }
             }
         } catch (error: any) {
+            const backendMessage = resolveErrorMessage(error?.response?.data?.error)
             errorModal.value = {
                 show: true,
                 title: '',
-                // description: isSaving.value ? t('form.create_error') : t('form.update_error'),
-                description: error?.response?.data?.error,
-                message: error?.response?.data?.suggestion || error.message,
+                description:
+                    backendMessage || (mode.value === 'create' ? t('form.create_error') : t('form.update_error')),
+                message: backendMessage || error?.response?.data?.suggestion || error.message,
             }
         } finally {
             isSaving.value = false

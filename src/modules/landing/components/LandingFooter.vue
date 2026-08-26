@@ -106,7 +106,7 @@
                     <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">
                         {{ t('landing.footer.paymentAccepted') }}
                     </h4>
-                    <img src="@/assets/images/KHQR.svg" alt="KHQR" class="h-10 w-auto" />
+                    <img src="@/assets/images/KHQR.svg" alt="KHQR" class="h-5 w-auto" />
                 </div>
             </div>
 

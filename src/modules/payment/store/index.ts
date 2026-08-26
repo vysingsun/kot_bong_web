@@ -100,7 +100,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
             const res = await paymentService.initiate({ subscriptionId, targetPlan: targetPlan.value })
             currentPayment.value = res.data.data
             paymentSessionStatus.value = 'pending'
-            startPolling(res.data.data.md5)
+            startPolling(res.data.data.md5, res.data.data.expiresAt)
         } catch (err: any) {
             error.value = err?.response?.data?.message ?? 'Failed to generate QR'
         } finally {
@@ -108,7 +108,7 @@ export const usePaymentStore = defineStore('paymentStore', () => {
         }
     }
 
-    function startPolling(md5: string) {
+    function startPolling(md5: string, expiresAt: string) {
         stopPolling()
         isPolling.value = true
 
@@ -116,6 +116,16 @@ export const usePaymentStore = defineStore('paymentStore', () => {
             try {
                 const res = await paymentService.getStatus(md5)
                 const { resolved, data } = res.data
+
+                // Gateway/infra error (rate limit, proxy down, etc). The backend
+                // keeps the session alive so `resolved` stays false — stop polling
+                // ourselves instead of waiting out the full TTL to "expired".
+                if (!resolved && data.status === 'error') {
+                    stopPolling()
+                    paymentSessionStatus.value = 'failed'
+                    error.value = data.errorMessage ?? null
+                    return
+                }
 
                 if (resolved) {
                     stopPolling()
@@ -129,13 +139,16 @@ export const usePaymentStore = defineStore('paymentStore', () => {
             } catch {}
         }, 4000)
 
-        // Auto-stop after 100 seconds and mark as expired
+        // Auto-stop once the QR's own expiry passes — driven by the server's
+        // expiresAt rather than a hardcoded duration, so this can never drift
+        // out of sync with the backend's actual session lifetime again.
+        const msUntilExpiry = Math.max(0, new Date(expiresAt).getTime() - Date.now())
         pollTimeout = setTimeout(() => {
             stopPolling()
             if (paymentSessionStatus.value === 'pending') {
                 paymentSessionStatus.value = 'expired'
             }
-        }, 100_000)
+        }, msUntilExpiry)
     }
 
     function stopPolling() {

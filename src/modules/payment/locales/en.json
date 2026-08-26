@@ -82,9 +82,9 @@
         "amount": "Amount",
         "expiresIn": "Expires in",
         "scanHint": "Open Bakong or any bank app and scan the QR code to pay",
+        "leaveConfirm": "Your payment is still in progress. Leaving now may prevent it from being confirmed. Leave anyway?",
         "generating": "Generating QR Code…",
         "waitingPayment": "Waiting for payment…",
-        "cancelBtn": "Cancel",
         "retryBtn": "Generate New QR",
         "closeBtn": "Back to Plans",
         "success": {

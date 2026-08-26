@@ -16,7 +16,12 @@ export interface PaymentInitiateResponse {
 export interface PaymentStatusResponse {
     resolved: boolean
     data: {
-        status: 'pending' | 'success' | 'failed' | 'expired'
+        // 'error' = the Bakong gateway/proxy failed (rate limit, unreachable, etc).
+        // The session is kept alive (resolved stays false) so this keeps being
+        // reported until the client cancels or the QR naturally expires.
+        status: 'pending' | 'error' | 'success' | 'failed' | 'expired'
+        errorMessage?: string | null
+        errorCode?: number | string | null
         paidAt?: string | null
         bakongFromAccountId?: string | null
         bakongTransactionHash?: string | null

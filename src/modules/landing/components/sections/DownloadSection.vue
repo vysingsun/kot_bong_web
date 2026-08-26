@@ -26,7 +26,7 @@
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
                 <!-- Google Play -->
-                <button
+                <!-- <button
                     type="button"
                     class="group flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-black border border-white/10 hover:bg-gray-900 hover:border-white/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-black/50 min-w-[200px]"
                     @click="showComingSoon = true"
@@ -38,7 +38,23 @@
                         </div>
                         <div class="text-white font-bold text-base leading-tight">Google Play</div>
                     </div>
-                </button>
+                </button> -->
+
+                <!-- Google Play -->
+                <a
+                    href="https://play.google.com/store/apps/details?id=com.kotpreng.kot_bong_mobile"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-black border border-white/10 hover:bg-gray-900 hover:border-white/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-black/50 min-w-[200px]"
+                >
+                    <img src="@/assets/images/play-store.png" alt="play-store" class="w-8 h-8 flex-shrink-0" />
+                    <div class="text-left">
+                        <div class="text-white/60 text-xs leading-none mb-0.5">
+                            {{ locale === 'kh' ? 'ទាញពី' : 'GET IT ON' }}
+                        </div>
+                        <div class="text-white font-bold text-base leading-tight">Google Play</div>
+                    </div>
+                </a>
 
                 <!-- App Store -->
                 <button
