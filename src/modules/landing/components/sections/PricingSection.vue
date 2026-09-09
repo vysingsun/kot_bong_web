@@ -1,6 +1,6 @@
 <template>
     <section id="pricing" class="py-24 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <CreditCard class="w-3.5 h-3.5" /> {{ t('landing.pricing.badge') }}
@@ -12,7 +12,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                 <!-- Pro Card -->
                 <div
-                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-landing-primary-600 to-indigo-700 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden"
+                    class="flex flex-col p-8 rounded-3xl bg-landing-primary-600 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden"
                 >
                     <div
                         class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
@@ -62,7 +62,7 @@
 
                 <!-- Pro Max Card -->
                 <div
-                    class="flex flex-col p-8 rounded-3xl bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-2xl shadow-blue-600/30 relative overflow-hidden scale-105 z-10"
+                    class="flex flex-col p-8 rounded-3xl bg-blue-800 text-white shadow-2xl shadow-blue-600/30 relative overflow-hidden scale-105 z-10"
                 >
                     <div
                         class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"

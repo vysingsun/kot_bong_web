@@ -1,19 +1,16 @@
 <template>
-    <section
-        id="download"
-        class="py-24 bg-gradient-to-br from-gray-950 via-landing-primary-950 to-gray-950 relative overflow-hidden"
-    >
+    <section id="download" class="py-24 bg-gray-950 relative overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div
                 class="animate-landing-blob blob-1 absolute top-0 left-0 w-72 h-72 rounded-full bg-landing-primary-600/20 blur-3xl"
             ></div>
             <div
-                class="animate-landing-blob blob-2 absolute bottom-0 right-0 w-80 h-80 rounded-full bg-indigo-600/15 blur-3xl"
+                class="animate-landing-blob blob-2 absolute bottom-0 right-0 w-80 h-80 rounded-full bg-landing-primary-600/15 blur-3xl"
             ></div>
             <div class="absolute inset-0 landing-bg-grid-pattern opacity-20"></div>
         </div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <span
                 class="landing-feature-chip mb-6 inline-flex items-center gap-1.5 border-landing-primary-500/30 text-landing-primary-300 bg-landing-primary-600/20"
             >

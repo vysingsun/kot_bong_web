@@ -1,6 +1,6 @@
 <template>
     <section class="py-16 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <div v-for="stat in stats" :key="stat.label" class="text-center group">
                     <div
