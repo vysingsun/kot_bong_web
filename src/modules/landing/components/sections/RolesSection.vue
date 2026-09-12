@@ -1,6 +1,6 @@
 <template>
     <section class="py-24 bg-white dark:bg-gray-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Users class="w-3.5 h-3.5" /> {{ t('landing.roles.badge') }}
@@ -11,7 +11,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Owner Card -->
                 <div
-                    class="relative rounded-3xl bg-gradient-to-br from-landing-primary-600 to-indigo-700 text-white overflow-hidden shadow-2xl shadow-landing-primary-600/30"
+                    class="relative rounded-3xl bg-landing-primary-600 text-white overflow-hidden shadow-2xl shadow-landing-primary-600/30"
                 >
                     <div
                         class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
