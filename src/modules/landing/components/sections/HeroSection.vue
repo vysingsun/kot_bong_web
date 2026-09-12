@@ -1,22 +1,24 @@
 <template>
     <section
-        class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-landing-primary-950 dark:to-gray-950"
+        class="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-gray-950"
     >
-        <!-- Decorative blobs -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div
-                class="animate-landing-blob blob-1 absolute -top-40 -left-40 w-96 h-96 rounded-full bg-landing-primary-300/30 dark:bg-landing-primary-600/20 blur-3xl"
-            ></div>
-            <div
-                class="animate-landing-blob blob-2 absolute top-1/3 right-0 w-80 h-80 rounded-full bg-indigo-300/30 dark:bg-indigo-600/15 blur-3xl"
-            ></div>
-            <div
-                class="animate-landing-blob blob-3 absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-purple-300/20 dark:bg-purple-600/10 blur-3xl"
-            ></div>
-            <div class="absolute inset-0 landing-bg-grid-pattern opacity-40 dark:opacity-20"></div>
-        </div>
+        <!-- Decorative wave — anchored to the section's own top-right corner.
+             The header has no background of its own now, so this washes
+             straight through the header and down the right side of the Hero. -->
+        <svg
+            class="absolute top-0 right-0 w-[30rem] h-[30rem] lg:w-[52rem] lg:h-[43rem] max-w-[110%] text-blue-400 dark:text-blue-400 pointer-events-none"
+            viewBox="280 7 393 298"
+            fill="none"
+            preserveAspectRatio="none"
+        >
+            <path
+                opacity=".16"
+                d="M319.883 7C301.96 44.568 306.667 82.98 334 122.238c41 58.887 138.227 21.23 183.906 98.434 30.453 51.469 82.151 79.28 155.094 83.433V7H319.883z"
+                fill="currentColor"
+            />
+        </svg>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 w-full">
+        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-4 lg:px-6 py-32 lg:py-40 w-full">
             <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                 <!-- Left: Text Content -->
                 <div class="flex-1 text-center lg:text-left">
@@ -39,7 +41,7 @@
                         class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 dark:text-white leading-tight mb-6 animate-landing-fade-up"
                     >
                         {{ t('landing.hero.title') }}<br />
-                        <span class="landing-gradient-text">{{ t('landing.hero.titleHighlight') }}</span
+                        <span class="landing-highlight-text">{{ t('landing.hero.titleHighlight') }}</span
                         ><br />
                         <span class="text-gray-700 dark:text-gray-200">{{ t('landing.hero.titleEnd') }}</span>
                     </h1>
@@ -108,113 +110,21 @@
                     </div>
                 </div>
 
-                <!-- Right: App Preview Card -->
+                <!-- Right: Illustration — shown above the text on mobile, to
+                     the right of it from lg upward. -->
                 <div
-                    class="flex-1 flex justify-center lg:justify-end animate-landing-fade-up landing-animate-delay-200"
+                    class="order-first lg:order-none flex-1 flex justify-center lg:justify-end animate-landing-fade-up landing-animate-delay-200 w-full"
                 >
-                    <div class="relative w-full max-w-sm">
+                    <div class="relative w-[75%] lg:w-full max-w-lg">
                         <!-- Glow -->
                         <div
                             class="absolute inset-0 bg-landing-primary-400/20 dark:bg-landing-primary-600/30 blur-3xl rounded-full"
                         ></div>
-                        <!-- Card -->
-                        <div
-                            class="relative rounded-3xl bg-white dark:bg-gray-900 shadow-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-4"
-                        >
-                            <div
-                                class="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800"
-                            >
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-landing-primary-600"
-                                    >
-                                        <svg aria-hidden="true" fill="white" viewBox="0 0 20 20" class="w-4 h-4">
-                                            <path
-                                                fill-rule="evenodd"
-                                                d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
-                                                clip-rule="evenodd"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <span class="text-gray-900 dark:text-white font-bold text-sm">Kot Preng</span>
-                                </div>
-                                <span
-                                    class="text-xs text-landing-green-600 bg-landing-green-100 dark:text-landing-green-400 dark:bg-landing-green-400/10 px-2 py-1 rounded-full font-semibold"
-                                    >● Live</span
-                                >
-                            </div>
-
-                            <!-- Fuel stock list -->
-                            <div class="space-y-3">
-                                <div
-                                    v-for="fuel in fuelItems"
-                                    :key="fuel.name"
-                                    class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800"
-                                >
-                                    <div class="flex items-center gap-2.5">
-                                        <div
-                                            class="w-8 h-8 rounded-lg flex items-center justify-center"
-                                            :class="fuel.iconBg"
-                                        >
-                                            <component :is="fuel.icon" class="w-4 h-4" :class="fuel.iconColor" />
-                                        </div>
-                                        <span class="text-gray-800 dark:text-white text-sm font-semibold">{{
-                                            fuel.name
-                                        }}</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="text-gray-800 dark:text-white text-sm font-bold">
-                                            {{ fuel.stock }}
-                                        </div>
-                                        <div
-                                            class="w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mt-1 overflow-hidden"
-                                        >
-                                            <div
-                                                class="h-full rounded-full"
-                                                :class="fuel.color"
-                                                :style="`width:${fuel.pct}%`"
-                                            ></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Quick stats -->
-                            <div class="grid grid-cols-2 gap-3 pt-1">
-                                <div
-                                    class="p-3 rounded-xl bg-landing-primary-50 dark:bg-landing-primary-600/20 text-center"
-                                >
-                                    <div class="text-xl font-bold text-landing-primary-700 dark:text-white">$1,240</div>
-                                    <div class="text-xs text-landing-primary-500 dark:text-landing-primary-300 mt-0.5">
-                                        {{ locale === 'kh' ? 'ការលក់ថ្ងៃនេះ' : 'Today Sales' }}
-                                    </div>
-                                </div>
-                                <div
-                                    class="p-3 rounded-xl bg-landing-green-50 dark:bg-landing-green-500/10 text-center"
-                                >
-                                    <div class="text-xl font-bold text-landing-green-600 dark:text-white">+12%</div>
-                                    <div class="text-xs text-landing-green-500 dark:text-landing-green-300 mt-0.5">
-                                        {{ locale === 'kh' ? 'ធៀបម្សិលមិញ' : 'vs Yesterday' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Floating badges -->
-                        <div class="absolute -top-4 -right-4 animate-landing-float">
-                            <div
-                                class="bg-landing-green-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-landing-green-500/40 flex items-center gap-1.5"
-                            >
-                                <Check class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'ស្តុកធម្មតា' : 'Stock OK' }}
-                            </div>
-                        </div>
-                        <div class="absolute -bottom-4 -left-4 animate-landing-float landing-animate-delay-300">
-                            <div
-                                class="bg-landing-primary-600 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-lg shadow-landing-primary-600/40 flex items-center gap-1.5"
-                            >
-                                <BarChart2 class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'របាយការណ៍' : 'Reports' }}
-                            </div>
-                        </div>
+                        <img
+                            src="@/assets/images/base-station-blue.svg"
+                            alt="Gas station illustration"
+                            class="relative w-full animate-landing-float"
+                        />
                     </div>
                 </div>
             </div>
@@ -235,47 +145,7 @@
 
 <script setup lang="ts">
     import { useI18n } from 'vue-i18n'
-    import { Fuel, Flame, Truck, Wind, Check, BarChart2 } from 'lucide-vue-next'
     import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
     const { t, locale } = useI18n()
     const { scrollTo } = useLandingScroll()
-
-    const fuelItems = [
-        {
-            name: 'Regular',
-            icon: Fuel,
-            stock: '2,450 L',
-            pct: 72,
-            color: 'bg-blue-500',
-            iconBg: 'bg-blue-100 dark:bg-blue-900/30',
-            iconColor: 'text-blue-600 dark:text-blue-400',
-        },
-        {
-            name: 'Super',
-            icon: Flame,
-            stock: '1,820 L',
-            pct: 54,
-            color: 'bg-orange-500',
-            iconBg: 'bg-orange-100 dark:bg-orange-900/30',
-            iconColor: 'text-orange-600 dark:text-orange-400',
-        },
-        {
-            name: 'Diesel',
-            icon: Truck,
-            stock: '3,100 L',
-            pct: 85,
-            color: 'bg-landing-green-500',
-            iconBg: 'bg-landing-green-100 dark:bg-landing-green-900/30',
-            iconColor: 'text-landing-green-600 dark:text-landing-green-400',
-        },
-        {
-            name: 'Gas',
-            icon: Wind,
-            stock: '950 L',
-            pct: 28,
-            color: 'bg-yellow-500',
-            iconBg: 'bg-yellow-100 dark:bg-yellow-900/30',
-            iconColor: 'text-yellow-600 dark:text-yellow-400',
-        },
-    ]
 </script>

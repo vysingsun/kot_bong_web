@@ -1,6 +1,6 @@
 <template>
     <section class="py-24 bg-white dark:bg-gray-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Fuel class="w-3.5 h-3.5" /> {{ t('landing.fuelTypes.badge') }}
@@ -13,8 +13,8 @@
                 <div
                     v-for="fuel in fuels"
                     :key="fuel.key"
-                    class="group relative p-6 rounded-3xl bg-gradient-to-br border-2 text-center cursor-default hover:scale-105 transition-all duration-300"
-                    :class="[fuel.gradient, fuel.border]"
+                    class="group relative p-6 rounded-3xl border-2 text-center cursor-default hover:scale-105 transition-all duration-300"
+                    :class="[fuel.bg, fuel.border]"
                 >
                     <div
                         class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform"
@@ -63,28 +63,28 @@
             key: 'regular',
             icon: Fuel,
             name: t('landing.fuelTypes.regular'),
-            gradient: 'from-blue-500 to-blue-700',
+            bg: 'bg-blue-600',
             border: 'border-blue-400/50',
         },
         {
             key: 'super',
             icon: Flame,
             name: t('landing.fuelTypes.super'),
-            gradient: 'from-orange-500 to-orange-700',
+            bg: 'bg-orange-600',
             border: 'border-orange-400/50',
         },
         {
             key: 'diesel',
             icon: Truck,
             name: t('landing.fuelTypes.diesel'),
-            gradient: 'from-landing-green-400 to-landing-green-600',
+            bg: 'bg-landing-green-500',
             border: 'border-landing-green-300/50',
         },
         {
             key: 'gas',
             icon: Wind,
             name: t('landing.fuelTypes.gas'),
-            gradient: 'from-cyan-500 to-cyan-700',
+            bg: 'bg-cyan-600',
             border: 'border-cyan-400/50',
         },
     ])

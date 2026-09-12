@@ -1,13 +1,9 @@
 <template>
     <header
         class="fixed top-0 inset-x-0 z-50 transition-all duration-300"
-        :class="
-            scrolled
-                ? 'bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-lg shadow-gray-900/5'
-                : 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-md'
-        "
+        :class="scrolled ? 'backdrop-blur-xl shadow-lg shadow-gray-900/5' : 'backdrop-blur-md'"
     >
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
                 <!-- Logo -->
                 <router-link to="/" class="flex items-center gap-2.5 group">
