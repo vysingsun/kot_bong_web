@@ -1,6 +1,6 @@
 <template>
     <section id="how-it-works" class="py-24 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Zap class="w-3.5 h-3.5" /> {{ t('landing.howItWorks.badge') }}
@@ -11,7 +11,7 @@
             <!-- 3 steps -->
             <div class="relative mb-20">
                 <div
-                    class="hidden lg:block absolute top-16 left-1/2 -translate-x-1/2 w-2/3 h-0.5 bg-gradient-to-r from-landing-primary-600 via-indigo-500 to-purple-600"
+                    class="hidden lg:block absolute top-16 left-1/2 -translate-x-1/2 w-2/3 h-0.5 bg-landing-primary-600"
                 ></div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     <div v-for="(step, i) in steps" :key="i" class="relative flex flex-col items-center text-center">

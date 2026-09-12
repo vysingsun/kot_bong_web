@@ -1,6 +1,6 @@
 <template>
     <section id="features" class="py-24 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex">
