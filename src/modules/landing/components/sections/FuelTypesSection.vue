@@ -23,7 +23,7 @@
                     </div>
                     <h3 class="font-bold text-white text-lg mb-1">{{ fuel.name }}</h3>
                     <p class="text-white/70 text-xs">
-                        {{ locale === 'kh' ? 'បានបង្កើតដោយស្វ័យប្រវត្តិ' : 'Auto-created' }}
+                        {{ locale === 'km' ? 'បានបង្កើតដោយស្វ័យប្រវត្តិ' : 'Auto-created' }}
                     </p>
                     <div
                         class="absolute top-3 right-3 w-2 h-2 rounded-full bg-white/60 animate-landing-pulse-slow"
@@ -42,7 +42,7 @@
                 </div>
                 <p class="text-landing-primary-700 dark:text-landing-primary-300 font-medium text-sm">
                     {{
-                        locale === 'kh'
+                        locale === 'km'
                             ? 'អ្នកអាចបន្ថែម ឬកែប្រែប្រភេទប្រេងឥន្ធនៈតាមការចង់បានរបស់អ្នក!'
                             : 'You can create or edit fuel types as you wish!'
                     }}

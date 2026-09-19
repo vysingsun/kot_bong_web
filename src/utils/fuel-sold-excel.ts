@@ -17,7 +17,7 @@ const HEADERS = {
         title: '⛽ FUEL SALES REPORT',
         sheet: 'Fuel Sales',
     },
-    kh: {
+    km: {
         no: 'លរ',
         date: 'កាលបរិច្ឆេទ',
         fuel: 'ប្រភេទប្រេង',
@@ -44,7 +44,7 @@ const createdBy = (item: any) => {
 }
 
 export const fuelSoldColumns = (lang: string): ExcelColumn[] => {
-    const h = lang === 'kh' ? HEADERS.kh : HEADERS.en
+    const h = lang === 'km' ? HEADERS.km : HEADERS.en
     return [
         { key: '#', header: h.no, width: 6, align: 'center' },
         { key: 'createdAt', header: h.date, width: 16, align: 'center', getValue: item => fmtD(item.createdAt) },
@@ -60,8 +60,8 @@ export const fuelSoldColumns = (lang: string): ExcelColumn[] => {
     ]
 }
 
-export const fuelSoldTitle = (lang: string) => (lang === 'kh' ? HEADERS.kh.title : HEADERS.en.title)
-export const fuelSoldSheet = (lang: string) => (lang === 'kh' ? HEADERS.kh.sheet : HEADERS.en.sheet)
+export const fuelSoldTitle = (lang: string) => (lang === 'km' ? HEADERS.km.title : HEADERS.en.title)
+export const fuelSoldSheet = (lang: string) => (lang === 'km' ? HEADERS.km.sheet : HEADERS.en.sheet)
 export const fuelSoldTotalsKeys = [
     { colIndex: 3, key: 'quantity_sold_liter', numFmt: '#,##0.000"L"' },
     { colIndex: 4, key: 'quantity_sold_ton', numFmt: '#,##0.000"T"' },

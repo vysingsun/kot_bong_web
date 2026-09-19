@@ -31,7 +31,7 @@
                     <img src="@/assets/images/play-store.png" alt="play-store" class="w-8 h-8 flex-shrink-0" />
                     <div class="text-left">
                         <div class="text-white/60 text-xs leading-none mb-0.5">
-                            {{ locale === 'kh' ? 'ទាញពី' : 'GET IT ON' }}
+                            {{ locale === 'km' ? 'ទាញពី' : 'GET IT ON' }}
                         </div>
                         <div class="text-white font-bold text-base leading-tight">Google Play</div>
                     </div>
@@ -47,7 +47,7 @@
                     <img src="@/assets/images/play-store.png" alt="play-store" class="w-8 h-8 flex-shrink-0" />
                     <div class="text-left">
                         <div class="text-white/60 text-xs leading-none mb-0.5">
-                            {{ locale === 'kh' ? 'ទាញពី' : 'GET IT ON' }}
+                            {{ locale === 'km' ? 'ទាញពី' : 'GET IT ON' }}
                         </div>
                         <div class="text-white font-bold text-base leading-tight">Google Play</div>
                     </div>
@@ -62,7 +62,7 @@
                     <img src="@/assets/images/app-store.png" alt="app-store" class="w-8 h-8 flex-shrink-0" />
                     <div class="text-left">
                         <div class="text-white/60 text-xs leading-none mb-0.5">
-                            {{ locale === 'kh' ? 'ទាញពី' : 'Download on the' }}
+                            {{ locale === 'km' ? 'ទាញពី' : 'Download on the' }}
                         </div>
                         <div class="text-white font-bold text-base leading-tight">App Store</div>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="text-left">
                         <div class="text-landing-primary-200 text-xs leading-none mb-0.5">kotpreng.com</div>
                         <div class="text-white font-bold text-base leading-tight">
-                            {{ locale === 'kh' ? 'ប្រើលើវែប' : 'Use on Web' }}
+                            {{ locale === 'km' ? 'ប្រើលើវែប' : 'Use on Web' }}
                         </div>
                     </div>
                 </a>

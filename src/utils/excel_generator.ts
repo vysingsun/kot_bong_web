@@ -94,7 +94,7 @@ const fmtDate = (d?: string | Date | null): string => {
 
 const LABELS: Record<string, Record<string, string>> = {
     en: { period: 'Period', generated: 'Generated', allRecords: 'All Records', total: 'TOTAL', records: 'records' },
-    kh: {
+    km: {
         period: 'រយៈពេល',
         generated: 'បង្កើតនៅ',
         allRecords: 'កំណត់ត្រាទាំងអស់',
@@ -122,8 +122,8 @@ export const generateExcel = async ({
     totals = [],
     totalLabelSpan = 3,
 }: GenerateExcelOptions): Promise<Blob> => {
-    const isKh = lang === 'kh'
-    const L = LABELS[isKh ? 'kh' : 'en']
+    const isKh = lang === 'km'
+    const L = LABELS[isKh ? 'km' : 'en']
     const font = isKh ? 'Kantumruy Pro' : 'Calibri'
     const NCOLS = columns.length
 
