@@ -163,7 +163,7 @@ const setupLocalesFolder = (folderPath, moduleName) => {
 }
         `
         fs.writeFileSync(path.join(folderPath, 'en.json'), content)
-        fs.writeFileSync(path.join(folderPath, 'kh.json'), content)
+        fs.writeFileSync(path.join(folderPath, 'km.json'), content)
     } catch (err) {
         console.error(chalk.black.bgRed('Error creating file'), err.message)
     }

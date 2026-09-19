@@ -57,7 +57,7 @@
                             <div class="p-0.5 rounded-md bg-gray-100 dark:bg-gray-700">
                                 <Languages class="w-4 h-4" />
                             </div>
-                            <span class="hidden sm:block">{{ locale === 'kh' ? 'ខ្មែរ' : 'English' }}</span>
+                            <span class="hidden sm:block">{{ locale === 'km' ? 'ខ្មែរ' : 'English' }}</span>
                             <svg
                                 class="w-3 h-3 transition-transform duration-200"
                                 :class="{ 'rotate-180': langOpen }"
@@ -92,9 +92,9 @@
                                     class="flex items-center gap-2.5 w-full px-4 py-3 text-sm text-left hover:bg-landing-primary-50 dark:hover:bg-landing-primary-900/20 transition-colors"
                                     :class="{
                                         'text-landing-primary-600 dark:text-landing-primary-400 font-semibold bg-landing-primary-50/50 dark:bg-landing-primary-900/10':
-                                            locale === 'kh',
+                                            locale === 'km',
                                     }"
-                                    @click="setLang('kh')"
+                                    @click="setLang('km')"
                                 >
                                     <div
                                         class="w-5 h-5 rounded-md bg-landing-primary-100 dark:bg-landing-primary-900/40 flex items-center justify-center text-xs font-bold text-landing-primary-600 dark:text-landing-primary-400 flex-shrink-0"

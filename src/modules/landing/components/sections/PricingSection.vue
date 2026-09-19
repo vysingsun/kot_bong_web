@@ -22,17 +22,17 @@
                             <span
                                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
                             >
-                                <Star class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'ពេញនិយម' : 'Most Popular' }}
+                                <Star class="w-3.5 h-3.5" /> {{ locale === 'km' ? 'ពេញនិយម' : 'Most Popular' }}
                             </span>
                             <h3 class="font-black text-2xl">Pro</h3>
                             <p class="text-landing-primary-200 text-sm mt-1">
-                                {{ locale === 'kh' ? 'មុខងារទាំងអស់' : 'All features unlocked' }}
+                                {{ locale === 'km' ? 'មុខងារទាំងអស់' : 'All features unlocked' }}
                             </p>
                         </div>
                         <div class="mb-6">
                             <span class="text-5xl font-black">$10</span>
                             <span class="text-landing-primary-300 text-sm"
-                                >/{{ locale === 'kh' ? 'ខែ' : 'month' }}</span
+                                >/{{ locale === 'km' ? 'ខែ' : 'month' }}</span
                             >
                         </div>
                         <ul class="space-y-2.5 flex-1 mb-8">
@@ -48,14 +48,14 @@
                                         clip-rule="evenodd"
                                     />
                                 </svg>
-                                <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
+                                <span class="text-sm">{{ locale === 'km' ? feat.km : feat.en }}</span>
                             </li>
                         </ul>
                         <a
                             href="#download"
                             class="landing-btn-white w-full text-center text-landing-primary-700"
                             @click.prevent="scrollTo('download')"
-                            >{{ locale === 'kh' ? 'ទទួល Pro' : 'Get Pro' }}</a
+                            >{{ locale === 'km' ? 'ទទួល Pro' : 'Get Pro' }}</a
                         >
                     </div>
                 </div>
@@ -72,16 +72,16 @@
                             <span
                                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
                             >
-                                <Crown class="w-3.5 h-3.5" /> {{ locale === 'kh' ? 'ដ៏ល្អបំផុត' : 'Best Value' }}
+                                <Crown class="w-3.5 h-3.5" /> {{ locale === 'km' ? 'ដ៏ល្អបំផុត' : 'Best Value' }}
                             </span>
                             <h3 class="font-black text-2xl">Pro Max</h3>
                             <p class="text-blue-100 text-sm mt-1">
-                                {{ locale === 'kh' ? 'គ្មានដែនកំណត់ទាំងអស់' : 'Unlimited everything' }}
+                                {{ locale === 'km' ? 'គ្មានដែនកំណត់ទាំងអស់' : 'Unlimited everything' }}
                             </p>
                         </div>
                         <div class="mb-6">
                             <span class="text-5xl font-black">$15</span>
-                            <span class="text-blue-200 text-sm">/{{ locale === 'kh' ? 'ខែ' : 'month' }}</span>
+                            <span class="text-blue-200 text-sm">/{{ locale === 'km' ? 'ខែ' : 'month' }}</span>
                         </div>
                         <ul class="space-y-2.5 flex-1 mb-8">
                             <li v-for="feat in proMaxFeatures" :key="feat.en" class="flex items-center gap-2.5">
@@ -96,14 +96,14 @@
                                         clip-rule="evenodd"
                                     />
                                 </svg>
-                                <span class="text-sm">{{ locale === 'kh' ? feat.km : feat.en }}</span>
+                                <span class="text-sm">{{ locale === 'km' ? feat.km : feat.en }}</span>
                             </li>
                         </ul>
                         <a
                             href="#download"
                             class="landing-btn-white w-full text-center text-blue-700"
                             @click.prevent="scrollTo('download')"
-                            >{{ locale === 'kh' ? 'ទទួល Pro Max' : 'Get Pro Max' }}</a
+                            >{{ locale === 'km' ? 'ទទួល Pro Max' : 'Get Pro Max' }}</a
                         >
                     </div>
                 </div>
@@ -116,18 +116,18 @@
                         <div class="mb-6">
                             <span
                                 class="inline-block px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold mb-3"
-                                >{{ locale === 'kh' ? 'គម្រងមូលដ្ឋាន' : 'Basic Plan' }}</span
+                                >{{ locale === 'km' ? 'គម្រងមូលដ្ឋាន' : 'Basic Plan' }}</span
                             >
                             <h3 class="font-black text-2xl text-gray-900 dark:text-white">
-                                {{ locale === 'kh' ? 'ឥតគិតថ្លៃ' : 'Free' }}
+                                {{ locale === 'km' ? 'ឥតគិតថ្លៃ' : 'Free' }}
                             </h3>
                             <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                                {{ locale === 'kh' ? 'មុខងារកំណត់' : 'Limited features' }}
+                                {{ locale === 'km' ? 'មុខងារកំណត់' : 'Limited features' }}
                             </p>
                         </div>
                         <div class="mb-6">
                             <span class="text-5xl font-black text-gray-900 dark:text-white">$0</span>
-                            <span class="text-gray-400 text-sm">/{{ locale === 'kh' ? 'ខែ' : 'month' }}</span>
+                            <span class="text-gray-400 text-sm">/{{ locale === 'km' ? 'ខែ' : 'month' }}</span>
                         </div>
                         <ul class="space-y-2.5 flex-1 mb-8">
                             <li v-for="feat in freeFeatures" :key="feat.en" class="flex items-start gap-2.5">
@@ -160,7 +160,7 @@
                                             : 'text-gray-400 dark:text-gray-500 line-through'
                                     "
                                 >
-                                    {{ locale === 'kh' ? feat.km : feat.en }}
+                                    {{ locale === 'km' ? feat.km : feat.en }}
                                 </span>
                             </li>
                         </ul>
@@ -168,7 +168,7 @@
                             href="#download"
                             class="landing-btn-outline w-full text-center"
                             @click.prevent="scrollTo('download')"
-                            >{{ locale === 'kh' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a
+                            >{{ locale === 'km' ? 'ចាប់ផ្តើម' : 'Get Started' }}</a
                         >
                     </div>
                 </div>
@@ -186,7 +186,7 @@
                     />
                 </svg>
                 {{
-                    locale === 'kh'
+                    locale === 'km'
                         ? 'ដំឡើង ឬបន្ថយគម្រោងបានគ្រប់ពេល — គ្មានកិច្ចសន្យារយៈពេលវែងទេ'
                         : 'Upgrade, downgrade, or cancel anytime — no long-term contract'
                 }}

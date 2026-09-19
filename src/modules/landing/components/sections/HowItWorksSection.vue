@@ -35,7 +35,7 @@
                 class="p-8 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
             >
                 <h3 class="text-center font-bold text-gray-900 dark:text-white text-xl mb-8">
-                    {{ locale === 'kh' ? 'វិធីចុះឈ្មោះ / ចូល' : 'Sign-up / Login Methods' }}
+                    {{ locale === 'km' ? 'វិធីចុះឈ្មោះ / ចូល' : 'Sign-up / Login Methods' }}
                 </h3>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Facebook -->
@@ -102,10 +102,10 @@
                             </svg>
                         </div>
                         <span class="text-sm font-bold text-gray-800 dark:text-gray-100">{{
-                            locale === 'kh' ? 'លេខទូរស័ព្ទ' : 'Phone Number'
+                            locale === 'km' ? 'លេខទូរស័ព្ទ' : 'Phone Number'
                         }}</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">{{
-                            locale === 'kh' ? 'ផ្ទៀងផ្ទាត់ OTP' : 'OTP verify'
+                            locale === 'km' ? 'ផ្ទៀងផ្ទាត់ OTP' : 'OTP verify'
                         }}</span>
                     </div>
 
@@ -127,7 +127,7 @@
                         </div>
                         <span class="text-sm font-bold text-gray-800 dark:text-gray-100">Email</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">{{
-                            locale === 'kh' ? 'ផ្ទៀងផ្ទាត់ OTP' : 'OTP verify'
+                            locale === 'km' ? 'ផ្ទៀងផ្ទាត់ OTP' : 'OTP verify'
                         }}</span>
                     </div>
                 </div>

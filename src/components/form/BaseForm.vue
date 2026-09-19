@@ -276,7 +276,7 @@
         if (err instanceof Error) return err.message
         if (typeof err === 'object') {
             const obj = err as Record<string, any>
-            const localeKey = locale.value === 'kh' ? 'km' : locale.value
+            const localeKey = locale.value
             return obj[localeKey] ?? obj.en ?? obj.km ?? (typeof obj.message === 'string' ? obj.message : '')
         }
         return String(err)

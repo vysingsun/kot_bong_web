@@ -11,6 +11,7 @@ import type {
 } from '@/modules/auth/interfaces/index'
 import { useThemeStore } from '@/stores/theme'
 import { COMPANY_THEMES } from '@/configs/themes'
+import i18n from '@/plugins/i18n'
 
 export const useAuthStore = defineStore('authStore', () => {
     const user = ref(null)
@@ -33,10 +34,18 @@ export const useAuthStore = defineStore('authStore', () => {
                 alert(error)
             })
     }
+    // Current UI language, forwarded to the backend so a brand-new OAuth
+    // account is created with the language the user had selected — mirrors
+    // what register()/registerBySMS() already send as `language` below.
+    // Reads the live i18n locale rather than localStorage directly, so it
+    // always matches what's on screen (see LanguageSwitcher.vue for why
+    // localStorage alone isn't reliable enough for this).
+    const currentLocale = () => i18n.global.locale.value || 'km'
+
     const googleOAuth = async () => {
         try {
             // Redirect to backend Google OAuth route
-            window.location.href = `${backendUrl}/auth/google`
+            window.location.href = `${backendUrl}/auth/google?lang=${currentLocale()}`
         } catch (error) {
             console.error('Google OAuth error:', error)
             alert('Failed to initialize Google login')
@@ -46,7 +55,7 @@ export const useAuthStore = defineStore('authStore', () => {
     const facebookOAuth = async () => {
         try {
             // Redirect to backend Google OAuth route
-            window.location.href = `${backendUrl}/auth/facebook`
+            window.location.href = `${backendUrl}/auth/facebook?lang=${currentLocale()}`
         } catch (error) {
             console.error('Google OAuth error:', error)
             alert('Failed to initialize Google login')

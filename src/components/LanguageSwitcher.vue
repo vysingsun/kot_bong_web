@@ -20,7 +20,7 @@
             code: 'KH',
             name: 'ខ្មែរ',
             flag: 'https://flagcdn.com/w20/kh.png',
-            locale: 'kh',
+            locale: 'km',
         },
     ]
 
@@ -69,10 +69,18 @@
         const appData = getFromCache('app_data')?.value
         const appLocale = appData?.language || appData?.data?.language
 
-        const resolvedLocale = savedLocale || appLocale || 'en'
+        // 'km' matches the app-wide default (plugins/i18n.ts, mobile's
+        // LocaleProvider, register.vue) — was 'en' here, which fought with
+        // that default on first-ever visits.
+        const resolvedLocale = savedLocale || appLocale || 'km'
         const matched = languages.find(lang => lang.locale === resolvedLocale)
         currentLanguage.value = matched || languages[0]
         locale.value = currentLanguage.value.locale
+        // Persist immediately — other code (register.vue's submit, the
+        // Google/Facebook OAuth redirect) reads localStorage directly and
+        // was previously seeing null until the user manually toggled this
+        // switcher at least once.
+        localStorage.setItem('locale', currentLanguage.value.locale)
         document.addEventListener('click', handleClickOutside)
     })
 
