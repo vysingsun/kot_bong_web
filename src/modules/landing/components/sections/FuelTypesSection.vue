@@ -1,6 +1,6 @@
 <template>
     <section class="py-24 bg-white dark:bg-gray-950">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Fuel class="w-3.5 h-3.5" /> {{ t('landing.fuelTypes.badge') }}
@@ -23,7 +23,7 @@
                     </div>
                     <h3 class="font-bold text-white text-lg mb-1">{{ fuel.name }}</h3>
                     <p class="text-white/70 text-xs">
-                        {{ locale === 'kh' ? 'បានបង្កើតដោយស្វ័យប្រវត្តិ' : 'Auto-created' }}
+                        {{ locale === 'km' ? 'បានបង្កើតដោយស្វ័យប្រវត្តិ' : 'Auto-created' }}
                     </p>
                     <div
                         class="absolute top-3 right-3 w-2 h-2 rounded-full bg-white/60 animate-landing-pulse-slow"
@@ -42,7 +42,7 @@
                 </div>
                 <p class="text-landing-primary-700 dark:text-landing-primary-300 font-medium text-sm">
                     {{
-                        locale === 'kh'
+                        locale === 'km'
                             ? 'អ្នកអាចបន្ថែម ឬកែប្រែប្រភេទប្រេងឥន្ធនៈតាមការចង់បានរបស់អ្នក!'
                             : 'You can create or edit fuel types as you wish!'
                     }}

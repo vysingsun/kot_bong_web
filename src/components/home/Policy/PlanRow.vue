@@ -8,11 +8,11 @@
             type: String,
             required: true,
         },
-        trial: {
+        pro: {
             type: Boolean,
             default: false,
         },
-        pro: {
+        proMax: {
             type: Boolean,
             default: false,
         },
@@ -36,12 +36,12 @@
         </td>
 
         <td class="text-center px-3 py-2.5">
-            <span v-if="trial" class="text-green-500 font-bold">✔</span>
-            <span v-else class="text-gray-300 dark:text-gray-600">—</span>
+            <span v-if="pro" class="text-green-500 font-bold">✔</span>
+            <span v-else class="text-red-400 font-bold">✗</span>
         </td>
 
         <td class="text-center px-3 py-2.5">
-            <span v-if="pro" class="text-green-500 font-bold">✔</span>
+            <span v-if="proMax" class="text-green-500 font-bold">✔</span>
             <span v-else class="text-red-400 font-bold">✗</span>
         </td>
 
