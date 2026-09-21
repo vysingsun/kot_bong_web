@@ -1,6 +1,6 @@
 <template>
     <section id="pricing" class="py-24 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <CreditCard class="w-3.5 h-3.5" /> {{ t('landing.pricing.badge') }}
@@ -12,7 +12,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                 <!-- Pro Card -->
                 <div
-                    class="flex flex-col p-8 rounded-3xl bg-landing-primary-600 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden"
+                    class="flex flex-col p-8 rounded-3xl bg-[#7dce5c] text-white shadow-2xl shadow-[#7dce5c]/40 relative overflow-hidden"
                 >
                     <div
                         class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
@@ -25,18 +25,62 @@
                                 <Star class="w-3.5 h-3.5" /> {{ locale === 'km' ? 'ពេញនិយម' : 'Most Popular' }}
                             </span>
                             <h3 class="font-black text-2xl">Pro</h3>
-                            <p class="text-landing-primary-200 text-sm mt-1">
+                            <p class="text-white/90 text-sm mt-1">
                                 {{ locale === 'km' ? 'មុខងារទាំងអស់' : 'All features unlocked' }}
                             </p>
                         </div>
                         <div class="mb-6">
                             <span class="text-5xl font-black">$10</span>
+                            <span class="text-white/80 text-sm">/{{ locale === 'km' ? 'ខែ' : 'month' }}</span>
+                        </div>
+                        <ul class="space-y-2.5 flex-1 mb-8">
+                            <li v-for="feat in proFeatures" :key="feat.en" class="flex items-center gap-2.5">
+                                <svg class="w-4 h-4 text-white flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span class="text-sm">{{ locale === 'km' ? feat.km : feat.en }}</span>
+                            </li>
+                        </ul>
+                        <a
+                            href="#download"
+                            class="landing-btn-white w-full text-center text-green-700"
+                            @click.prevent="scrollTo('download')"
+                            >{{ locale === 'km' ? 'ទទួល Pro' : 'Get Pro' }}</a
+                        >
+                    </div>
+                </div>
+
+                <!-- Pro Max Card -->
+                <div
+                    class="flex flex-col p-8 rounded-3xl bg-landing-primary-600 text-white shadow-2xl shadow-landing-primary-600/40 relative overflow-hidden scale-105 z-10"
+                >
+                    <div
+                        class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
+                    ></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="mb-6">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
+                            >
+                                <Crown class="w-3.5 h-3.5" /> {{ locale === 'km' ? 'ដ៏ល្អបំផុត' : 'Best Value' }}
+                            </span>
+                            <h3 class="font-black text-2xl">Pro Max</h3>
+                            <p class="text-landing-primary-200 text-sm mt-1">
+                                {{ locale === 'km' ? 'គ្មានដែនកំណត់ទាំងអស់' : 'Unlimited everything' }}
+                            </p>
+                        </div>
+                        <div class="mb-6">
+                            <span class="text-5xl font-black">$15</span>
                             <span class="text-landing-primary-300 text-sm"
                                 >/{{ locale === 'km' ? 'ខែ' : 'month' }}</span
                             >
                         </div>
                         <ul class="space-y-2.5 flex-1 mb-8">
-                            <li v-for="feat in proFeatures" :key="feat.en" class="flex items-center gap-2.5">
+                            <li v-for="feat in visibleProMaxFeatures" :key="feat.en" class="flex items-center gap-2.5">
                                 <svg
                                     class="w-4 h-4 text-landing-green-300 flex-shrink-0"
                                     fill="currentColor"
@@ -54,54 +98,6 @@
                         <a
                             href="#download"
                             class="landing-btn-white w-full text-center text-landing-primary-700"
-                            @click.prevent="scrollTo('download')"
-                            >{{ locale === 'km' ? 'ទទួល Pro' : 'Get Pro' }}</a
-                        >
-                    </div>
-                </div>
-
-                <!-- Pro Max Card -->
-                <div
-                    class="flex flex-col p-8 rounded-3xl bg-blue-800 text-white shadow-2xl shadow-blue-600/30 relative overflow-hidden scale-105 z-10"
-                >
-                    <div
-                        class="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"
-                    ></div>
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="mb-6">
-                            <span
-                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3"
-                            >
-                                <Crown class="w-3.5 h-3.5" /> {{ locale === 'km' ? 'ដ៏ល្អបំផុត' : 'Best Value' }}
-                            </span>
-                            <h3 class="font-black text-2xl">Pro Max</h3>
-                            <p class="text-blue-100 text-sm mt-1">
-                                {{ locale === 'km' ? 'គ្មានដែនកំណត់ទាំងអស់' : 'Unlimited everything' }}
-                            </p>
-                        </div>
-                        <div class="mb-6">
-                            <span class="text-5xl font-black">$15</span>
-                            <span class="text-blue-200 text-sm">/{{ locale === 'km' ? 'ខែ' : 'month' }}</span>
-                        </div>
-                        <ul class="space-y-2.5 flex-1 mb-8">
-                            <li v-for="feat in proMaxFeatures" :key="feat.en" class="flex items-center gap-2.5">
-                                <svg
-                                    class="w-4 h-4 text-blue-200 flex-shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <span class="text-sm">{{ locale === 'km' ? feat.km : feat.en }}</span>
-                            </li>
-                        </ul>
-                        <a
-                            href="#download"
-                            class="landing-btn-white w-full text-center text-blue-700"
                             @click.prevent="scrollTo('download')"
                             >{{ locale === 'km' ? 'ទទួល Pro Max' : 'Get Pro Max' }}</a
                         >
@@ -196,11 +192,14 @@
 </template>
 
 <script setup lang="ts">
+    import { computed } from 'vue'
     import { useI18n } from 'vue-i18n'
     import { CreditCard, Crown, Star } from 'lucide-vue-next'
     import { useLandingScroll } from '@/modules/landing/composables/useLandingScroll'
+    import { useAppSettings } from '@/composables/useAppSettings'
     const { t, locale } = useI18n()
     const { scrollTo } = useLandingScroll()
+    const { fuelPriceEstimateEnabled } = useAppSettings()
 
     const proFeatures = [
         { en: 'Create fuel types', km: 'បង្កើតប្រភេទឥន្ធនៈ' },
@@ -222,9 +221,17 @@
         { en: 'View Current Stock of Fuel', km: 'មើលស្តុកឥន្ធនៈបច្ចុប្បន្ន' },
         { en: 'Unlimited staff accounts', km: 'បុគ្គលិកគ្មានដែនកំណត់' },
         { en: 'Export Excel', km: 'ទាញ Excel' },
-        { en: 'Oil price estimation', km: 'ប៉ាន់ស្មានតម្លៃប្រេង' },
+        { en: 'Oil price estimation', km: 'មើលការព្យាករណ៍តម្លៃប្រេង' },
         { en: 'Priority support', km: 'ជំនួយអាទិភាព' },
     ]
+
+    // Global Super_Admin kill-switch (GET /app-settings/public) — hide the
+    // "Oil price estimation" bullet from the marketing copy when disabled.
+    const visibleProMaxFeatures = computed(() =>
+        fuelPriceEstimateEnabled.value
+            ? proMaxFeatures
+            : proMaxFeatures.filter(f => f.en !== 'Oil price estimation'),
+    )
 
     const freeFeatures = [
         { available: true, en: 'Create fuel types', km: 'បង្កើតប្រភេទឥន្ធនៈ' },

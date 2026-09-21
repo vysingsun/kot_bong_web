@@ -10,7 +10,7 @@
             <div class="absolute inset-0 landing-bg-grid-pattern opacity-20"></div>
         </div>
 
-        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 text-center">
             <span
                 class="landing-feature-chip mb-6 inline-flex items-center gap-1.5 border-landing-primary-500/30 text-landing-primary-300 bg-landing-primary-600/20"
             >

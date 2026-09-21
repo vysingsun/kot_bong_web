@@ -48,7 +48,7 @@
             },
             "multiAuth": {
                 "title": "Multiple Sign-in Methods",
-                "desc": "Register/login with Google, Facebook, phone number, or email + OTP."
+                "desc": "Register/login with Google, phone number, or email + OTP."
             },
             "mobile": {
                 "title": "Mobile & Web",
@@ -69,7 +69,7 @@
             "badge": "How It Works",
             "title": "Get Started in 3 Steps",
             "step1Title": "Register",
-            "step1Desc": "Sign up with Google, Facebook, phone, or email — default fuel types created automatically.",
+            "step1Desc": "Sign up with Google, phone, or email — default fuel types created automatically.",
             "step2Title": "Add Stock & Sales",
             "step2Desc": "Manage incoming stock, log sales records, and add staff members.",
             "step3Title": "View Reports",
