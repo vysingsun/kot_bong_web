@@ -1,6 +1,6 @@
 <template>
     <section class="py-24 bg-white dark:bg-gray-950">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Users class="w-3.5 h-3.5" /> {{ t('landing.roles.badge') }}
@@ -25,11 +25,11 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-2xl leading-tight">
-                                    {{ locale === 'kh' ? 'ម្ចាស់ (Owner)' : 'Owner' }}
+                                    {{ locale === 'km' ? 'ម្ចាស់ (Owner)' : 'Owner' }}
                                 </h3>
                                 <p class="text-landing-primary-200 text-sm mt-1 leading-relaxed">
                                     {{
-                                        locale === 'kh'
+                                        locale === 'km'
                                             ? 'ម្ចាស់គណនីចម្បង ដែលមានការគ្រប់គ្រង ពេញលេញទាំងការគ្រប់គ្រង និងប្រតិបត្តិការ'
                                             : 'The Owner is the primary account holder with full administrative and operational control.'
                                     }}
@@ -62,7 +62,7 @@
                                     class="text-sm leading-relaxed"
                                     :class="feat.can ? 'text-white' : 'text-white/60'"
                                 >
-                                    {{ locale === 'kh' ? feat.km : feat.en }}
+                                    {{ locale === 'km' ? feat.km : feat.en }}
                                     <span
                                         v-if="feat.pro"
                                         class="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-yellow-400/20 text-yellow-200 border border-yellow-400/30"
@@ -90,11 +90,11 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-2xl text-gray-900 dark:text-white leading-tight">
-                                    {{ locale === 'kh' ? 'បុគ្គលិក (Staff)' : 'Staff' }}
+                                    {{ locale === 'km' ? 'បុគ្គលិក (Staff)' : 'Staff' }}
                                 </h3>
                                 <p class="text-gray-500 dark:text-gray-400 text-sm mt-1 leading-relaxed">
                                     {{
-                                        locale === 'kh'
+                                        locale === 'km'
                                             ? 'គណនីបុគ្គលិកបង្កើតដោយម្ចាស់។ ការលក់ម្នាក់ៗត្រូវវន្តជាប់ជាមួយ បុគ្គលិកម្នាក់ ដើម្បីតាមដានការលក់ម្នាក់ៗ'
                                             : 'Staff accounts are created by the Owner. Each sales record is attributed to the staff member who created it, enabling per-person sales tracking.'
                                     }}
@@ -131,7 +131,7 @@
                                             : 'text-gray-400 dark:text-gray-500 line-through'
                                     "
                                 >
-                                    {{ locale === 'kh' ? feat.km : feat.en }}
+                                    {{ locale === 'km' ? feat.km : feat.en }}
                                 </span>
                             </li>
                         </ul>

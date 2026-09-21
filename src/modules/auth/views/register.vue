@@ -522,10 +522,10 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div>
                         <button
                             type="button"
-                            class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                            class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                             @click="loginWithGoogle"
                         >
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -547,19 +547,6 @@
                                 />
                             </svg>
                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
-                        </button>
-
-                        <button
-                            type="button"
-                            class="flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                            @click="loginWithFacebook"
-                        >
-                            <svg class="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
-                                <path
-                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-                                />
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Facebook</span>
                         </button>
                     </div>
                 </div>
@@ -770,7 +757,7 @@
     import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
     const router = useRouter()
-    const { t } = useI18n()
+    const { t, locale } = useI18n()
     const authStore = useAuthStore()
 
     const currentStep = ref(1)
@@ -1059,7 +1046,6 @@
         loading.value = true
 
         try {
-            const locale = localStorage.getItem('locale') || 'kh'
             const owner = `${formData.firstName} ${formData.lastName}`.trim()
 
             const payload = {
@@ -1071,7 +1057,10 @@
                 lastName: formData.lastName,
                 station_name: `Tela`,
                 owner: owner,
-                language: locale,
+                // Live reactive locale (set by <LanguageSwitcher /> above) —
+                // always matches what's on screen, unlike reading
+                // localStorage directly.
+                language: locale.value,
             }
 
             if (!isEmail.value) {
@@ -1119,10 +1108,6 @@
     // Social login handlers
     const loginWithGoogle = () => {
         authStore.googleOAuth()
-    }
-
-    const loginWithFacebook = () => {
-        authStore.facebookOAuth()
     }
 </script>
 

@@ -15,7 +15,9 @@
                 "identifier_required": "Email or phone number is required",
                 "password_required": "Password is required",
                 "login_failed": "Login failed. Please check your credentials."
-            }
+            },
+            "policy_agree": "By continuing, you agree to our",
+            "policy_link": "Policy and Terms"
         },
         "forgotPassword": {
             "title": "Forgot Password",

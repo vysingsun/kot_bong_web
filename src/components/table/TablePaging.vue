@@ -434,14 +434,14 @@
         totals: { type: Object as () => Record<string, any> | null, default: null },
         exportable: { type: Boolean, default: false },
         exportFilename: { type: String, default: 'report' },
-        // (lang: 'en'|'kh') => ExcelColumn[]  — called at download time with current lang
+        // (lang: 'en'|'km') => ExcelColumn[]  — called at download time with current lang
         // This lets every header/getValue switch language automatically.
         exportColumns: { type: Function as unknown as () => (lang: string) => ExcelColumn[], default: null },
         // Totals for the footer row — static pre-computed values (takes priority over exportTotalsKeys)
         exportTotals: { type: Array as () => ExcelTotal[], default: () => [] },
-        // (lang: 'en'|'kh') => string  — banner title, switches with language
+        // (lang: 'en'|'km') => string  — banner title, switches with language
         exportTitle: { type: Function as unknown as () => (lang: string) => string, default: null },
-        // (lang: 'en'|'kh') => string  — sheet name, switches with language
+        // (lang: 'en'|'km') => string  — sheet name, switches with language
         exportSheet: { type: Function as unknown as () => (lang: string) => string, default: null },
         // Auto-sum these fields for the totals footer — used when exportTotals=[]
         // Shape: { colIndex: number, key: string, numFmt?: string }[]
@@ -497,7 +497,7 @@
     // ── Current data: generate Excel in-browser, zero API call ─
     const exportCurrentInBrowser = async () => {
         // Detect language from the app store (same source the server uses)
-        const lang: string = (appStore as any).currentUser?.language === 'kh' ? 'kh' : 'en'
+        const lang: string = (appStore as any).currentUser?.language === 'km' ? 'km' : 'en'
         const snapshot = items.value // stable reference for indexOf
 
         // Call exportColumns(lang) — returns translated ExcelColumn[]

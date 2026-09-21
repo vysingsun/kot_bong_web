@@ -1,17 +1,32 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useI18n } from 'vue-i18n'
     import { storeToRefs } from 'pinia'
     import { usePaymentStore } from '../store/index'
     import { getFromCache } from '@/composables/useCache'
+    import { appSettingsService } from '@/modules/app/services/api.service'
 
-    const { t } = useI18n()
+    const { t, tm } = useI18n()
     const router = useRouter()
     const store = usePaymentStore()
     const { subscription, paymentHistory, isLoadingStation } = storeToRefs(store)
 
     const showHistory = ref(false)
+
+    // Global Super_Admin kill-switch — hides "Oil price estimation" from the
+    // Pro Max feature list below when disabled. This page is always behind
+    // login, so it uses the authenticated GET /app-settings (unlike the
+    // signed-out landing/policy pages, which use the public variant).
+    const fuelPriceEstimateEnabled = ref(true)
+    // "Oil price estimation" is always index 1 in plans.pro_max.features
+    // (see modules/payment/locales/{en,km}.json) — mirrors the mobile app's
+    // subscription_view.dart, which likewise conditionally includes a fixed
+    // feature index rather than matching on translated text.
+    const proMaxFeatures = computed(() => {
+        const all = tm('plans.pro_max.features') as string[]
+        return fuelPriceEstimateEnabled.value ? all : all.filter((_, i) => i !== 1)
+    })
 
     function formatDate(d: string | null) {
         if (!d) return '—'
@@ -35,6 +50,15 @@
         if (stationId) {
             await store.fetchStation(stationId)
             await store.fetchHistory()
+        }
+
+        try {
+            const { data } = await appSettingsService.get()
+            if (data?.success && typeof data.data?.fuelPriceEstimateEnabled === 'boolean') {
+                fuelPriceEstimateEnabled.value = data.data.fuelPriceEstimateEnabled
+            }
+        } catch {
+            // Non-fatal — keep the default.
         }
     })
 </script>
@@ -69,7 +93,7 @@
                             subscription.plan === 'pro_max'
                                 ? 'bg-blue-100'
                                 : subscription.plan === 'pro'
-                                  ? 'bg-lime-100'
+                                  ? 'bg-[#e8f7e0]'
                                   : 'bg-slate-100'
                         "
                     >
@@ -78,7 +102,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                         </svg>
                         <!-- Pro icon -->
-                        <svg v-else-if="subscription.plan === 'pro'" class="w-5 h-5 text-lime-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg v-else-if="subscription.plan === 'pro'" class="w-5 h-5 text-[#5fa842]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <!-- Free icon -->
@@ -122,7 +146,7 @@
                         </div>
                         <p class="text-sm text-slate-500 mb-3 leading-relaxed">{{ t('plans.pro_max.desc') }}</p>
                         <ul class="space-y-1.5 mb-5">
-                            <li v-for="(f, i) in $tm('plans.pro_max.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
+                            <li v-for="(f, i) in proMaxFeatures" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
                                 <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
@@ -162,7 +186,7 @@
                 <div
                     :class="[
                         'bg-white rounded-2xl border-2 shadow-sm overflow-hidden',
-                        subscription.plan === 'pro' ? 'border-lime-400' : 'border-slate-200',
+                        subscription.plan === 'pro' ? 'border-[#7dce5c]' : 'border-slate-200',
                     ]"
                 >
                     <div class="p-5">
@@ -178,7 +202,7 @@
                         <p class="text-sm text-slate-500 mb-3 leading-relaxed">{{ t('plans.pro.desc') }}</p>
                         <ul class="space-y-1.5 mb-5">
                             <li v-for="(f, i) in $tm('plans.pro.features')" :key="i" class="flex items-center gap-2 text-sm text-slate-700">
-                                <svg class="w-4 h-4 text-lime-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <svg class="w-4 h-4 text-[#7dce5c] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
                                 {{ $rt(f) }}
@@ -186,7 +210,7 @@
                         </ul>
                         <!-- Active Pro -->
                         <div v-if="subscription.plan === 'pro'" class="flex items-center justify-between">
-                            <span class="text-sm font-semibold text-lime-600 flex items-center gap-1">
+                            <span class="text-sm font-semibold text-[#5fa842] flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -201,7 +225,7 @@
                         </div>
                         <button
                             v-else
-                            class="w-full py-3 rounded-xl bg-lime-400 hover:bg-lime-300 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2"
+                            class="w-full py-3 rounded-xl bg-[#7dce5c] hover:bg-[#8fd671] active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2"
                             @click="router.push({ name: 'payment' })"
                         >
                             {{ t('plans.pro.cta') }}

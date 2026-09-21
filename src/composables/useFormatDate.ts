@@ -62,7 +62,7 @@ export const useFormatDate = () => {
         const month = d.getMonth()
         const year = d.getFullYear()
 
-        if (locale.value === 'kh') {
+        if (locale.value === 'km') {
             return `${toKhmerDigits(day)} ${khmerMonths[month]} ${toKhmerDigits(year)}`
         }
 
@@ -78,7 +78,7 @@ export const useFormatDate = () => {
         const month = d.getMonth() + 1
         const year = d.getFullYear()
 
-        if (locale.value === 'kh') {
+        if (locale.value === 'km') {
             return `${toKhmerDigits(day)}/${toKhmerDigits(month)}/${toKhmerDigits(year)}`
         }
 
@@ -96,7 +96,7 @@ export const useFormatDate = () => {
         const hours = String(d.getHours()).padStart(2, '0')
         const minutes = String(d.getMinutes()).padStart(2, '0')
 
-        if (locale.value === 'kh') {
+        if (locale.value === 'km') {
             return `${toKhmerDigits(day)} ${khmerMonths[month]} ${toKhmerDigits(year)} ${toKhmerDigits(Number(hours))}:${toKhmerDigits(Number(minutes))}`
         }
 

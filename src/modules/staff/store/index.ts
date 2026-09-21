@@ -11,7 +11,7 @@ class FormData {
     email?: string | null = null
     role?: any
     stations?: string | null = null
-    language: string = 'kh'
+    language: string = 'km'
     password?: string = ''
     startTime?: string = ''
     endTime?: string = ''
@@ -102,7 +102,7 @@ export const useStaffStore = defineStore('staffStore', () => {
         email = undefined,
         role = null,
         stations = null,
-        language = 'kh',
+        language = 'km',
         startTime = '',
         endTime = '',
     }: Partial<FormData> = {}) => {

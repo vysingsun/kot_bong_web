@@ -18,7 +18,7 @@
             />
         </svg>
 
-        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-4 lg:px-6 py-32 lg:py-40 w-full">
+        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-4 lg:px-6 xl:px-10 2xl:px-16 py-32 lg:py-40 w-full">
             <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                 <!-- Left: Text Content -->
                 <div class="flex-1 text-center lg:text-left">
@@ -135,7 +135,7 @@
             href="#features"
             class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 dark:text-gray-500 hover:text-landing-primary-500 transition-colors"
         >
-            <span class="text-xs font-medium">{{ locale === 'kh' ? 'រំកិលចុះ' : 'Scroll down' }}</span>
+            <span class="text-xs font-medium">{{ locale === 'km' ? 'រំកិលចុះ' : 'Scroll down' }}</span>
             <div class="w-6 h-10 rounded-full border-2 border-current flex items-start justify-center p-1">
                 <div class="w-1 h-2 bg-current rounded-full animate-bounce"></div>
             </div>

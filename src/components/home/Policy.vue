@@ -112,16 +112,6 @@
                     <SubSection :title="currentLang === 'kh' ? '២.២ វិធីសាស្ត្រចុះឈ្មោះ' : '2.2 Registration Methods'">
                         <div class="space-y-3">
                             <AuthMethod
-                                icon="facebook"
-                                :label="currentLang === 'kh' ? 'OAuth 2.0 តាមរយៈ Facebook' : 'OAuth 2.0 via Facebook'"
-                            >
-                                {{
-                                    currentLang === 'kh'
-                                        ? 'ចូលប្រព័ន្ធដោយសុវត្ថិភាពតាមគណនី Facebook ដែលមានស្រាប់។ ប្រព័ន្ធនឹងបង្កើតគណនីម្ចាស់ ភ្ជាប់ជាមួយ Facebook ដោយស្វ័យប្រវត្តិ។'
-                                        : 'Log in securely using an existing Facebook account. The system will automatically create an Owner account linked to the Facebook profile.'
-                                }}
-                            </AuthMethod>
-                            <AuthMethod
                                 icon="google"
                                 :label="currentLang === 'kh' ? 'OAuth 2.0 តាមរយៈ Google' : 'OAuth 2.0 via Google'"
                             >
@@ -468,29 +458,6 @@
                     :number="currentLang === 'kh' ? '៦' : '6'"
                     :title="currentLang === 'kh' ? 'គម្រោងការជាវ និងតម្លៃ' : 'Subscription & Pricing'"
                 >
-                    <!-- Trial -->
-                    <div
-                        class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 mb-4"
-                    >
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                            <span class="font-semibold text-green-800 dark:text-green-300 text-sm">
-                                {{
-                                    currentLang === 'kh'
-                                        ? 'ការសាកល្បងឥតគិតថ្លៃ — ៣ ទៅ ៦ ខែ'
-                                        : 'Free Trial — 3 to 6 Months'
-                                }}
-                            </span>
-                        </div>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">
-                            {{
-                                currentLang === 'kh'
-                                    ? 'ម្ចាស់ថ្មីទាំងអស់ទទួលបានការប្រើប្រាស់ Pro ពេញលេញ ឥតគិតថ្លៃ រយៈពេល ៣ ទៅ ៦ ខែ។ រយៈពេលអាចប្រែប្រួលតាមការផ្សព្វផ្សាយ។'
-                                    : 'All new Owner accounts receive full Pro access for free for 3 to 6 months. The exact duration may vary based on active promotions.'
-                            }}
-                        </p>
-                    </div>
-
                     <!-- Plan Comparison Table -->
                     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
                         <table class="w-full text-xs">
@@ -499,11 +466,11 @@
                                     <th class="text-left px-3 py-2.5 text-gray-600 dark:text-gray-300 font-semibold">
                                         {{ currentLang === 'kh' ? 'មុខងារ' : 'Feature' }}
                                     </th>
-                                    <th class="text-center px-3 py-2.5 text-blue-600 dark:text-blue-400 font-semibold">
-                                        {{ currentLang === 'kh' ? 'សាកល្បង' : 'Trial' }}
+                                    <th class="text-center px-3 py-2.5 text-[#5fa842] dark:text-[#7dce5c] font-bold">
+                                        Pro
                                     </th>
                                     <th class="text-center px-3 py-2.5 text-blue-700 dark:text-blue-300 font-bold">
-                                        Pro
+                                        Pro Max
                                     </th>
                                     <th class="text-center px-3 py-2.5 text-gray-500 dark:text-gray-400 font-semibold">
                                         {{ currentLang === 'kh' ? 'ឥតគិតថ្លៃ' : 'Free' }}
@@ -513,58 +480,82 @@
                             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'បង្កើតប្រភេទឥន្ធនៈ' : 'Create fuel types'"
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="true"
                                 />
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'បង្កើតកំណត់ត្រាលក់' : 'Create sales records'"
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="true"
                                 />
                                 <PlanRow
                                     :feature="
                                         currentLang === 'kh' ? 'បង្កើតកំណត់ត្រាស្តុកចូល' : 'Create stock income records'
                                     "
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="true"
                                 />
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'មើលរបាយការណ៍ទាំងអស់' : 'View all reports'"
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="true"
                                 />
                                 <PlanRow
                                     :feature="
                                         currentLang === 'kh' ? 'បង្កើត និងគ្រប់គ្រងបុគ្គលិក' : 'Create & manage staff'
                                     "
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="false"
                                 />
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'បុគ្គលិកចូលប្រើ' : 'Existing staff access'"
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
                                     :free="false"
                                     :free-note="currentLang === 'kh' ? 'ផ្អាក' : 'Suspended'"
                                 />
                                 <PlanRow
                                     :feature="currentLang === 'kh' ? 'នាំចេញ Excel' : 'Export Excel'"
-                                    :trial="true"
                                     :pro="true"
+                                    :pro-max="true"
+                                    :free="false"
+                                />
+                                <!-- Pro Max exclusives -->
+                                <PlanRow
+                                    :feature="
+                                        currentLang === 'kh' ? 'បុគ្គលិកគ្មានដែនកំណត់' : 'Unlimited staff accounts'
+                                    "
+                                    :pro="false"
+                                    :pro-max="true"
+                                    :free="false"
+                                />
+                                <PlanRow
+                                    v-if="fuelPriceEstimateEnabled"
+                                    :feature="currentLang === 'kh' ? 'មើលការព្យាករណ៍តម្លៃប្រេង' : 'Oil price estimation'"
+                                    :pro="false"
+                                    :pro-max="true"
+                                    :free="false"
+                                />
+                                <PlanRow
+                                    :feature="currentLang === 'kh' ? 'ជំនួយអាទិភាព' : 'Priority support'"
+                                    :pro="false"
+                                    :pro-max="true"
                                     :free="false"
                                 />
                                 <tr class="bg-blue-50 dark:bg-blue-900/20">
                                     <td class="px-3 py-2.5 font-semibold text-gray-700 dark:text-gray-200">
                                         {{ currentLang === 'kh' ? 'ថ្លៃខែ' : 'Monthly cost' }}
                                     </td>
-                                    <td class="text-center px-3 py-2.5 font-bold text-green-600">$0</td>
-                                    <td class="text-center px-3 py-2.5 font-bold text-blue-700 dark:text-blue-300">
+                                    <td class="text-center px-3 py-2.5 font-bold text-[#5fa842] dark:text-[#7dce5c]">
                                         $10
+                                    </td>
+                                    <td class="text-center px-3 py-2.5 font-bold text-blue-700 dark:text-blue-300">
+                                        $15
                                     </td>
                                     <td class="text-center px-3 py-2.5 font-bold text-green-600">$0</td>
                                 </tr>
@@ -666,6 +657,12 @@
     import ReportRow from './Policy/ReportRow.vue'
     import PlanRow from './Policy/PlanRow.vue'
     import AuthMethod from './Policy/AuthMethod.vue'
+    import { useAppSettings } from '@/composables/useAppSettings'
+
+    // Global Super_Admin kill-switch (GET /app-settings/public) — hides the
+    // Oil price estimation row from the Pro Max column below when disabled.
+    // Mirrors landing/components/sections/PricingSection.vue.
+    const { fuelPriceEstimateEnabled } = useAppSettings()
 
     const currentLang = ref('kh')
     const toggleLang = () => {
