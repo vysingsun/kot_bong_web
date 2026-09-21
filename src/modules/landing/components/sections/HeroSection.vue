@@ -18,7 +18,7 @@
             />
         </svg>
 
-        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-4 lg:px-6 py-32 lg:py-40 w-full">
+        <div class="relative max-w-screen-2xl mx-auto px-4 sm:px-4 lg:px-6 xl:px-10 2xl:px-16 py-32 lg:py-40 w-full">
             <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                 <!-- Left: Text Content -->
                 <div class="flex-1 text-center lg:text-left">

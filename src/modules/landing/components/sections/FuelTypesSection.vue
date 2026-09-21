@@ -1,6 +1,6 @@
 <template>
     <section class="py-24 bg-white dark:bg-gray-950">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20">
             <div class="text-center mb-16">
                 <span class="landing-feature-chip mb-4 inline-flex items-center gap-1.5">
                     <Fuel class="w-3.5 h-3.5" /> {{ t('landing.fuelTypes.badge') }}

@@ -21,6 +21,17 @@ export const appService = {
     },
 }
 
+// Global feature flags, managed by Super_Admin (e.g. whether Fuel Price
+// Estimate is currently advertised/visible). Authenticated variant — for
+// in-app screens like the subscription page, which is always behind login.
+// Pages viewed signed out (landing, policy) use useAppSettings() instead,
+// which hits the public GET /app-settings/public route.
+export const appSettingsService = {
+    get: async () => {
+        return axios.get('/app-settings')
+    },
+}
+
 export const userService = {
     get: async () => {
         return axios.get('/auth/me')
